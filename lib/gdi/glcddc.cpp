@@ -5,6 +5,21 @@
 
 gLCDDC *gLCDDC::instance;
 
+#ifdef HAVE_GRAPHLCD
+static inline int time_after(struct timespec oldtime, uint32_t delta_ms)
+{
+	// calculate the oldtime + add on the delta
+	uint64_t oldtime_ms = (oldtime.tv_sec * 1000) + (oldtime.tv_nsec / 1000000);
+	oldtime_ms += delta_ms;
+	// calculate the nowtime
+	struct timespec nowtime;
+	clock_gettime(CLOCK_MONOTONIC, &nowtime);
+	uint64_t nowtime_ms = (nowtime.tv_sec * 1000) + (nowtime.tv_nsec / 1000000);
+	// check
+	return nowtime_ms > oldtime_ms;
+}
+#endif
+
 gLCDDC::gLCDDC()
 {
 	lcd = new eDBoxLCD();
@@ -23,11 +38,18 @@ gLCDDC::gLCDDC()
 	eDebug("LCD resolution: %d x %d x %d (stride: %d)", surface.x, surface.y, surface.bpp, surface.stride);
 
 	m_pixmap = new gPixmap(&surface);
+#ifdef HAVE_GRAPHLCD
+	clock_gettime(CLOCK_MONOTONIC, &last_update);
+#endif
 }
 
 gLCDDC::~gLCDDC()
 {
+#ifndef HAVE_GRAPHLCD
+//konfetti: not sure why, but calling the destructor if external lcd (pearl) is selected
+//e2 crashes. this is also true if the destructor does not contain any code !!!
 	delete lcd;
+#endif
 	instance = 0;
 }
 
@@ -46,8 +68,16 @@ void gLCDDC::exec(const gOpcode *o)
 		break;
 #endif
 	case gOpcode::flush:
+#ifdef HAVE_GRAPHLCD
+		if (update)
+		{
+			lcd->update();
+			clock_gettime(CLOCK_MONOTONIC, &last_update);
+		}
+#else
 //		if (update)
 			lcd->update();
+#endif
 	default:
 		gDC::exec(o);
 		break;

@@ -36,7 +36,10 @@ class FrontendInfo(Converter, object):
 		if self.type == self.BER: # as count
 			count = self.source.ber
 			if count is not None:
-				return str(count)
+				#freebox
+				#return str(count)
+				#return "%.1e" % (count * 256.0 / 4147200) #ber
+				return "%.1e" % (count  / 1000000.0) #ber
 			else:
 				return "N/A"
 		elif self.type == self.AGC:

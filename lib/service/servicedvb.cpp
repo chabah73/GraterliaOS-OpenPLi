@@ -625,6 +625,9 @@ eServiceFactoryDVB::eServiceFactoryDVB()
 	if (sc)
 	{
 		std::list<std::string> extensions;
+#if defined(__sh__) //Topfield original recording extension
+		extensions.push_back("rec");
+#endif
 		extensions.push_back("ts");
 		extensions.push_back("trp");
 		sc->addServiceFactory(eServiceFactoryDVB::id, this, extensions);

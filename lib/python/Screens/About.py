@@ -1,162 +1,89 @@
-from Screen import Screen
-from Components.ActionMap import ActionMap
-from Components.Sources.StaticText import StaticText
-from Components.Harddisk import harddiskmanager
-from Components.NimManager import nimmanager
-from Components.About import about
-from Components.ScrollLabel import ScrollLabel
-from Components.Button import Button
+import sys
+import os
+import time
+from Tools.Directories import resolveFilename, SCOPE_SYSETC
+from os import popen
 
-from Tools.StbHardware import getFPVersion
-from enigma import eTimer
+def getVersionString():
+	return getImageVersionString()
 
-class About(Screen):
-	def __init__(self, session):
-		Screen.__init__(self, session)
+#def getImageVersionString():
+#	try:
+#		if os.path.isfile('/var/lib/opkg/status'):
+#			st = os.stat('/var/lib/opkg/status')
+#		else:
+#			st = os.stat('/usr/lib/ipkg/status')
+#		tm = time.localtime(st.st_mtime)
+#		if tm.tm_year >= 2011:
+#			return time.strftime("%Y-%m-%d %H:%M:%S", tm)
+#	except:
+#		pass
+#	return _("unavailable")
 
-
-		AboutText = _("Hardware: ") + about.getHardwareTypeString() + "\n"
-		AboutText += _("Image: ") + about.getImageTypeString() + "\n"
-		AboutText += _("Kernel version: ") + about.getKernelVersionString() + "\n"
-
-		EnigmaVersion = "Enigma: " + about.getEnigmaVersionString()
-		self["EnigmaVersion"] = StaticText(EnigmaVersion)
-		AboutText += EnigmaVersion + "\n"
-
-		ImageVersion = _("Last upgrade: ") + about.getImageVersionString()
-		self["ImageVersion"] = StaticText(ImageVersion)
-		AboutText += ImageVersion + "\n"
-
-		fp_version = getFPVersion()
-		if fp_version is None:
-			fp_version = ""
-		else:
-			fp_version = _("Frontprocessor version: %d") % fp_version
-			AboutText += fp_version + "\n"
-
-		self["FPVersion"] = StaticText(fp_version)
-
-		self["TunerHeader"] = StaticText(_("Detected NIMs:"))
-		AboutText += "\n" + _("Detected NIMs:") + "\n"
-
-		nims = nimmanager.nimList()
-		for count in range(len(nims)):
-			if count < 4:
-				self["Tuner" + str(count)] = StaticText(nims[count])
-			else:
-				self["Tuner" + str(count)] = StaticText("")
-			AboutText += nims[count] + "\n"
-
-		self["HDDHeader"] = StaticText(_("Detected HDD:"))
-		AboutText += "\n" + _("Detected HDD:") + "\n"
-
-		hddlist = harddiskmanager.HDDList()
-		hddinfo = ""
-		if hddlist:
-			for count in range(len(hddlist)):
-				if hddinfo:
-					hddinfo += "\n"
-				hdd = hddlist[count][1]
-				if int(hdd.free()) > 1024:
-					hddinfo += "%s\n(%s, %d GB %s)" % (hdd.model(), hdd.capacity(), hdd.free()/1024, _("free"))
-				else:
-					hddinfo += "%s\n(%s, %d MB %s)" % (hdd.model(), hdd.capacity(), hdd.free(), _("free"))
-		else:
-			hddinfo = _("none")
-		self["hddA"] = StaticText(hddinfo)
-		AboutText += hddinfo
-		self["AboutScrollLabel"] = ScrollLabel(AboutText)
-		self["key_green"] = Button(_("Translations"))
-		self["key_red"] = Button(_("Latest Commits"))
-
-		self["actions"] = ActionMap(["ColorActions", "SetupActions", "DirectionActions"],
-			{
-				"cancel": self.close,
-				"ok": self.close,
-				"red": self.showCommits,
-				"green": self.showTranslationInfo,
-				"up": self["AboutScrollLabel"].pageUp,
-				"down": self["AboutScrollLabel"].pageDown
-			})
-
-	def showTranslationInfo(self):
-		self.session.open(TranslationInfo)
-
-	def showCommits(self):
-		self.session.open(CommitInfo)
-
-class TranslationInfo(Screen):
-	def __init__(self, session):
-		Screen.__init__(self, session)
-		# don't remove the string out of the _(), or it can't be "translated" anymore.
-
-		# TRANSLATORS: Add here whatever should be shown in the "translator" about screen, up to 6 lines (use \n for newline)
-		info = _("TRANSLATOR_INFO")
-
-		if info == "TRANSLATOR_INFO":
-			info = "(N/A)"
-
-		infolines = _("").split("\n")
-		infomap = {}
-		for x in infolines:
-			l = x.split(': ')
-			if len(l) != 2:
-				continue
-			(type, value) = l
-			infomap[type] = value
-		print infomap
-
-		self["TranslationInfo"] = StaticText(info)
-
-		translator_name = infomap.get("Language-Team", "none")
-		if translator_name == "none":
-			translator_name = infomap.get("Last-Translator", "")
-
-		self["TranslatorName"] = StaticText(translator_name)
-
-		self["actions"] = ActionMap(["SetupActions"],
-			{
-				"cancel": self.close,
-				"ok": self.close,
-			})
-
-class CommitInfo(Screen):
-	def __init__(self, session):
-		Screen.__init__(self, session)
-		self.skinName = ["CommitInfo", "About"]
-		self["AboutScrollLabel"] = ScrollLabel(_("Please wait"))
-
-		self["actions"] = ActionMap(["SetupActions", "DirectionActions"],
-			{
-				"cancel": self.close,
-				"ok": self.close,
-				"up": self["AboutScrollLabel"].pageUp,
-				"down": self["AboutScrollLabel"].pageDown
-			})
-
-		self.Timer = eTimer()
-		self.Timer.callback.append(self.readCommitLogs)
-		self.Timer.start(50, True)
-
-	def readCommitLogs(self):
-		urls = [ 'http://sourceforge.net/p/openpli/enigma2/feed',
-			'http://sourceforge.net/p/openpli/openpli-oe-core/feed']
-		commitlog = ""
-		from urllib2 import urlopen
+def getImageVersionString():
 		try:
-			for url in urls:
-				commitlog += 80 * '-' + '\n'
-				commitlog += url.split('/')[-2] + '\n'
-				commitlog += 80 * '-' + '\n'
-				for x in  urlopen(url, timeout=5).read().split('<title>')[2:]:
-					for y in x.split("><"):
-						if '</title' in y:
-							title = y[:-7]
-						if '</dc:creator' in y:
-							creator = y.split('>')[1].split('<')[0]
-						if '</pubDate' in y:
-							date = y.split('>')[1].split('<')[0][:-6]
-					commitlog += date + ' ' + creator + '\n' + title + 2 * '\n'
-		except:
-			commitlog = _("Currently the commit log cannot be retreived - please try later again")
-		self["AboutScrollLabel"].setText(commitlog)
+			file = open(resolveFilename(SCOPE_SYSETC, 'image-version'), 'r')
+			lines = file.readlines()
+			for x in lines:
+				splitted = x.split('=')
+				if splitted[0] == "version":
+					#     YYYY MM DD hh mm
+					#0120 2005 11 29 01 16
+					#0123 4567 89 01 23 45
+					version = splitted[1]
+					image_type = version[0] # 0 = release, 1 = experimental
+					major = version[1]
+					minor = version[2]
+					revision = version[3]
+					year = version[4:8]
+					month = version[8:10]
+					day = version[10:12]
+					date = '-'.join((year, month, day))
+					if image_type == '0':
+						image_type = "Release"
+						version = '.'.join((major, minor, revision))
+						return ' '.join((image_type, version, date))
+					else:
+						image_type = "Experimental"
+						return ' '.join((image_type, date))
+			file.close()
+		except IOError:
+			pass
+
+		return _("unavailable")
+
+
+def getEnigmaVersionString():
+	import enigma
+	enigma_version = enigma.getEnigmaVersionString()
+	if '-(no branch)' in enigma_version:
+		enigma_version = enigma_version [:-12]
+	return enigma_version
+
+def getKernelVersionString():
+	try:
+		return open("/proc/version","r").read().split(' ', 4)[2].split('-',2)[0]
+	except:
+		return _("unknown")
+
+def getHardwareTypeString():
+	try:
+		if os.path.isfile("/proc/stb/info/boxtype"):
+			return open("/proc/stb/info/boxtype").read().strip().upper() + " (" + open("/proc/stb/info/board_revision").read().strip() + "-" + open("/proc/stb/info/version").read().strip() + ")"
+		if os.path.isfile("/proc/stb/info/vumodel"):
+			return "VU+" + open("/proc/stb/info/vumodel").read().strip().upper() + "(" + open("/proc/stb/info/version").read().strip().upper() + ")" 
+		if os.path.isfile("/proc/stb/info/model"):
+			return open("/proc/stb/info/model").read().strip().upper()
+	except:
+		pass
+	return _("unavailable")
+
+def getImageTypeString():
+	try:
+		return open("/etc/issue").readlines()[-2].capitalize().strip()[:-6]
+	except:
+		pass
+	return _("undefined")
+
+# For modules that do "from About import about"
+about = sys.modules[__name__]

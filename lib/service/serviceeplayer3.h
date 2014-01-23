@@ -1,14 +1,12 @@
-#ifndef __servicemp3_h
-#define __servicemp3_h
+#ifndef __serviceeplayer3_h
+#define __serviceeplayer3_h
 
 #include <lib/base/message.h>
 #include <lib/service/iservice.h>
 #include <lib/dvb/pmt.h>
 #include <lib/dvb/subtitle.h>
 #include <lib/dvb/teletext.h>
-#ifdef ENABLE_MEDIAFWGSTREAMER
-#include <gst/gst.h>
-#else
+
 #include <../../misc/tools/libeplayer3/include/common.h>
 #include <../../misc/tools/libeplayer3/include/subtitle.h>
 #define gint int
@@ -17,19 +15,19 @@ extern OutputHandler_t		OutputHandler;
 extern PlaybackHandler_t	PlaybackHandler;
 extern ContainerHandler_t	ContainerHandler;
 extern ManagerHandler_t	ManagerHandler;
-#endif
+
 /* for subtitles */
 #include <lib/gui/esubtitle.h>
 
-class eStaticServiceMP3Info;
+class eStaticServiceEPlayer3Info;
 
-class eServiceFactoryMP3: public iServiceHandler
+class eServiceFactoryEPlayer3: public iServiceHandler
 {
-	DECLARE_REF(eServiceFactoryMP3);
+	DECLARE_REF(eServiceFactoryEPlayer3);
 public:
-	eServiceFactoryMP3();
-	virtual ~eServiceFactoryMP3();
-	enum { id = 0x1001 };
+	eServiceFactoryEPlayer3();
+	virtual ~eServiceFactoryEPlayer3();
+	enum { id = 0x1003 };
 
 		// iServiceHandler
 	RESULT play(const eServiceReference &, ePtr<iPlayableService> &ptr);
@@ -38,26 +36,25 @@ public:
 	RESULT info(const eServiceReference &, ePtr<iStaticServiceInformation> &ptr);
 	RESULT offlineOperations(const eServiceReference &, ePtr<iServiceOfflineOperations> &ptr);
 private:
-	ePtr<eStaticServiceMP3Info> m_service_info;
+	ePtr<eStaticServiceEPlayer3Info> m_service_info;
 };
 
-class eStaticServiceMP3Info: public iStaticServiceInformation
+class eStaticServiceEPlayer3Info: public iStaticServiceInformation
 {
-	DECLARE_REF(eStaticServiceMP3Info);
-	friend class eServiceFactoryMP3;
-	eStaticServiceMP3Info();
+	DECLARE_REF(eStaticServiceEPlayer3Info);
+	friend class eServiceFactoryEPlayer3;
+	eStaticServiceEPlayer3Info();
 public:
 	RESULT getName(const eServiceReference &ref, std::string &name);
 	int getLength(const eServiceReference &ref);
 	int getInfo(const eServiceReference &ref, int w);
 	int isPlayable(const eServiceReference &ref, const eServiceReference &ignore, bool simulate) { return 1; }
 	long long getFileSize(const eServiceReference &ref);
-	RESULT getEvent(const eServiceReference &ref, ePtr<eServiceEvent> &ptr, time_t start_time);
 };
 
-class eStreamBufferInfo: public iStreamBufferInfo
+class eStreamBufferEPlayer3Info: public iStreamBufferInfo
 {
-	DECLARE_REF(eStreamBufferInfo);
+	DECLARE_REF(eStreamBufferEPlayer3Info);
 	int bufferPercentage;
 	int inputRate;
 	int outputRate;
@@ -65,7 +62,7 @@ class eStreamBufferInfo: public iStreamBufferInfo
 	int bufferSize;
 
 public:
-	eStreamBufferInfo(int percentage, int inputrate, int outputrate, int space, int size);
+	eStreamBufferEPlayer3Info(int percentage, int inputrate, int outputrate, int space, int size);
 
 	int getBufferPercentage() const;
 	int getAverageInputRate() const;
@@ -74,49 +71,37 @@ public:
 	int getBufferSize() const;
 };
 
-class eServiceMP3InfoContainer: public iServiceInfoContainer
+class eServiceEPlayer3InfoContainer: public iServiceInfoContainer
 {
-	DECLARE_REF(eServiceMP3InfoContainer);
+	DECLARE_REF(eServiceEPlayer3InfoContainer);
 
 	double doubleValue;
-#ifdef ENABLE_MEDIAFWGSTREAMER
-	GstBuffer *bufferValue;
-#endif
+
 
 	unsigned char *bufferData;
 	unsigned int bufferSize;
-#if GST_VERSION_MAJOR >= 1
-	GstMapInfo map;
-#endif
 
 public:
-	eServiceMP3InfoContainer();
-	~eServiceMP3InfoContainer();
+	eServiceEPlayer3InfoContainer();
+	~eServiceEPlayer3InfoContainer();
 
 	double getDouble(unsigned int index) const;
 	unsigned char *getBuffer(unsigned int &size) const;
 
 	void setDouble(double value);
-#ifdef ENABLE_MEDIAFWGSTREAMER
-	void setBuffer(GstBuffer *buffer);
-#endif
 };
-
-#ifdef ENABLE_MEDIAFWGSTREAMER
-typedef struct _GstElement GstElement;
-#endif
 
 typedef enum { atUnknown, atMPEG, atMP3, atAC3, atDTS, atAAC, atPCM, atOGG, atFLAC, atWMA } audiotype_t;
 typedef enum { stUnknown, stPlainText, stSSA, stASS, stSRT, stVOB, stPGS } subtype_t;
 typedef enum { ctNone, ctMPEGTS, ctMPEGPS, ctMKV, ctAVI, ctMP4, ctVCD, ctCDA, ctASF, ctOGG } containertype_t;
 
-class eServiceMP3: public iPlayableService, public iPauseableService,
+class eServiceEPlayer3: public iPlayableService, public iPauseableService,
 	public iServiceInformation, public iSeekableService, public iAudioTrackSelection, public iAudioChannelSelection, 
 	public iSubtitleOutput, public iStreamedService, public iAudioDelay, public Object
 {
-	DECLARE_REF(eServiceMP3);
+	DECLARE_REF(eServiceEPlayer3);
 public:
-	virtual ~eServiceMP3();
+	virtual ~eServiceEPlayer3();
 
 		// iPlayableService
 	RESULT connectEvent(const Slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection);
@@ -160,12 +145,8 @@ public:
 
 		// iServiceInformation
 	RESULT getName(std::string &name);
-	RESULT getEvent(ePtr<eServiceEvent> &evt, int nownext);
 	int getInfo(int w);
 	std::string getInfoString(int w);
-#ifdef ENABLE_MEDIAFWGSTREAMER
-	ePtr<iServiceInfoContainer> getInfoObject(int w);
-#endif
 
 		// iAudioTrackSelection	
 	int getNumberOfTracks();
@@ -194,40 +175,6 @@ public:
 	void setAC3Delay(int);
 	void setPCMDelay(int);
 
-#ifdef ENABLE_MEDIAFWGSTREAMER
-	struct audioStream
-	{
-		GstPad* pad;
-		audiotype_t type;
-		std::string language_code; /* iso-639, if available. */
-		std::string codec; /* clear text codec description */
-		audioStream()
-			:pad(0), type(atUnknown)
-		{
-		}
-	};
-	struct subtitleStream
-	{
-		GstPad* pad;
-		subtype_t type;
-		std::string language_code; /* iso-639, if available. */
-		subtitleStream()
-			:pad(0)
-		{
-		}
-	};
-	struct sourceStream
-	{
-		audiotype_t audiotype;
-		containertype_t containertype;
-		bool is_video;
-		bool is_streaming;
-		sourceStream()
-			:audiotype(atUnknown), containertype(ctNone), is_video(FALSE), is_streaming(FALSE)
-		{
-		}
-	};
-#else
 	struct audioStream
 	{
 		audiotype_t type;
@@ -258,7 +205,7 @@ public:
 		{
 		}
 	};
-#endif
+
 	struct bufferInfo
 	{
 		gint bufferPercent;
@@ -276,11 +223,6 @@ public:
 		std::string missing_codec;
 	};
 
-protected:
-	ePtr<eTimer> m_nownext_timer;
-	ePtr<eServiceEvent> m_event_now, m_event_next;	
-	void updateEpgCacheNowNext();
-
 private:
 	static int pcm_delay;
 	static int ac3_delay;
@@ -291,75 +233,24 @@ private:
 	std::vector<audioStream> m_audioStreams;
 	std::vector<subtitleStream> m_subtitleStreams;
 	iSubtitleUser *m_subtitle_widget;
-#ifdef ENABLE_MEDIAFWGSTREAMER
-	gdouble m_currentTrickRatio;
-#else
+
 	int m_currentTrickRatio;
-#endif
-	friend class eServiceFactoryMP3;
+
+	friend class eServiceFactoryEPlayer3;
 	eServiceReference m_ref;
 	int m_buffer_size;
-#ifdef ENABLE_MEDIAFWGSTREAMER
-	int m_ignore_buffering_messages;
-	bool m_is_live;
-	bool m_use_prefillbuffer;
-#endif
+
 	bufferInfo m_bufferInfo;
 	errorInfo m_errorInfo;
 	std::string m_download_buffer_path;
-	eServiceMP3(eServiceReference ref);
+	eServiceEPlayer3(eServiceReference ref);
 	Signal2<void,iPlayableService*,int> m_event;
 	enum
 	{
 		stIdle, stRunning, stStopped,
 	};
 	int m_state;
-#ifdef ENABLE_MEDIAFWGSTREAMER
-	GstElement *m_gst_playbin, *audioSink, *videoSink;
-	GstTagList *m_stream_tags;
 
-	class GstMessageContainer: public iObject
-	{
-		DECLARE_REF(GstMessageContainer);
-		GstMessage *messagePointer;
-		GstPad *messagePad;
-		GstBuffer *messageBuffer;
-		int messageType;
-
-	public:
-		GstMessageContainer(int type, GstMessage *msg, GstPad *pad, GstBuffer *buffer)
-		{
-			messagePointer = msg;
-			messagePad = pad;
-			messageBuffer = buffer;
-			messageType = type;
-		}
-		~GstMessageContainer()
-		{
-			if (messagePointer) gst_message_unref(messagePointer);
-			if (messagePad) gst_object_unref(messagePad);
-			if (messageBuffer) gst_buffer_unref(messageBuffer);
-		}
-		int getType() { return messageType; }
-		operator GstMessage *() { return messagePointer; }
-		operator GstPad *() { return messagePad; }
-		operator GstBuffer *() { return messageBuffer; }
-	};
-	eFixedMessagePump<ePtr<GstMessageContainer> > m_pump;
-
-	audiotype_t gstCheckAudioPad(GstStructure* structure);
-	void gstBusCall(GstMessage *msg);
-	void handleMessage(GstMessage *msg);
-	static GstBusSyncReply gstBusSyncHandler(GstBus *bus, GstMessage *message, gpointer user_data);
-	static void gstTextpadHasCAPS(GstPad *pad, GParamSpec * unused, gpointer user_data);
-	void gstTextpadHasCAPS_synced(GstPad *pad);
-	static void gstCBsubtitleAvail(GstElement *element, GstBuffer *buffer, gpointer user_data);
-	GstPad* gstCreateSubtitleSink(eServiceMP3* _this, subtype_t type);
-	void gstPoll(ePtr<GstMessageContainer> const &);
-	static void playbinNotifySource(GObject *object, GParamSpec *unused, gpointer user_data);
-	static gint match_sinktype(GstElement *element, gpointer type);
-	static void handleElementAdded(GstBin *bin, GstElement *element, gpointer user_data);
-#else
 	Context_t * player;
 
 	struct Message
@@ -374,7 +265,6 @@ private:
 	};
 	eFixedMessagePump<Message> m_pump;
 	static void eplayerCBsubtitleAvail(long int duration_ns, size_t len, char * buffer, void* user_data);
-#endif
 
 	struct subtitle_page_t
 	{
@@ -382,7 +272,7 @@ private:
 		uint32_t end_ms;
 		std::string text;
 
-		subtitle_page_t(uint32_t start_ms_in, uint32_t end_ms_in, const std::string& text_in)
+		subtitle_page_t(uint32_t start_ms_in, uint32_t end_ms_in, std::string text_in)
 			: start_ms(start_ms_in), end_ms(end_ms_in), text(text_in)
 		{
 		}
@@ -398,23 +288,14 @@ private:
 	int m_decoder_time_valid_state;
 
 	void pushSubtitles();
-#ifdef ENABLE_MEDIAFWGSTREAMER
-	void pullSubtitle(GstBuffer *buffer);
-#endif
+
 	void sourceTimeout();
 	sourceStream m_sourceinfo;
-#ifdef ENABLE_MEDIAFWGSTREAMER
-	gulong m_subs_to_pull_handler_id;
-#endif
 
 	RESULT seekToImpl(pts_t to);
 
 	gint m_aspect, m_width, m_height, m_framerate, m_progressive;
 	std::string m_useragent;
-#ifdef ENABLE_MEDIAFWGSTREAMER
-	std::string m_extra_headers;
-	RESULT trickSeek(gdouble ratio);
-#endif
 };
 
 #endif

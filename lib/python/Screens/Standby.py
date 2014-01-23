@@ -3,10 +3,8 @@ from Components.ActionMap import ActionMap
 from Components.config import config
 from Components.AVSwitch import AVSwitch
 from Components.SystemInfo import SystemInfo
-from Tools import Notifications
 from GlobalActions import globalActionMap
-import RecordTimer
-from enigma import eDVBVolumecontrol, eTimer
+from enigma import eDVBVolumecontrol
 
 inStandby = None
 
@@ -33,7 +31,7 @@ class Standby(Screen):
 		if self.wasMuted == 0:
 			eDVBVolumecontrol.getInstance().volumeToggleMute()
 
-	def __init__(self, session, StandbyCounterIncrease=True):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.avswitch = AVSwitch()
 
@@ -46,8 +44,6 @@ class Standby(Screen):
 		}, -1)
 
 		globalActionMap.setEnabled(False)
-
-		self.StandbyCounterIncrease = StandbyCounterIncrease
 
 		#mute adc
 		self.setMute()
@@ -69,13 +65,6 @@ class Standby(Screen):
 			self.avswitch.setInput("SCART")
 		else:
 			self.avswitch.setInput("AUX")
-
-		gotoShutdownTime = int(config.usage.standby_to_shutdown_timer.value)
-		if gotoShutdownTime:
-			self.standbyTimeoutTimer = eTimer()
-			self.standbyTimeoutTimer.callback.append(self.standbyTimeout)
-			self.standbyTimeoutTimer.startLongTimer(gotoShutdownTime)
-
 		self.onFirstExecBegin.append(self.__onFirstExecBegin)
 		self.onClose.append(self.__onClose)
 
@@ -88,22 +77,15 @@ class Standby(Screen):
 			self.paused_service.unPauseService()
 		self.session.screen["Standby"].boolean = False
 		globalActionMap.setEnabled(True)
-		if RecordTimer.RecordTimerEntry.receiveRecordEvents:
-			RecordTimer.RecordTimerEntry.stopTryQuitMainloop()
 
 	def __onFirstExecBegin(self):
 		global inStandby
 		inStandby = self
 		self.session.screen["Standby"].boolean = True
-		if self.StandbyCounterIncrease:
-			config.misc.standbyCounter.value += 1
+		config.misc.standbyCounter.value += 1
 
 	def createSummary(self):
 		return StandbySummary
-
-	def standbyTimeout(self):
-		from RecordTimer import RecordTimerEntry
-		RecordTimerEntry.TryQuitMainloop()
 
 class StandbySummary(Screen):
 	skin = """

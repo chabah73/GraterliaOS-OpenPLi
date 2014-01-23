@@ -29,10 +29,15 @@
 #include <lib/python/python.h>
 #include <lib/python/pythonconfig.h>
 
+#if defined(__sh__) // vfd class
+#include <lib/driver/vfd.h>
+#endif
 #include "bsod.h"
 #include "version_info.h"
 
+#ifdef ENABLE_MEDIAFWGSTREAMER
 #include <gst/gst.h>
+#endif
 
 #ifdef OBJECT_DEBUG
 int object_total_remaining;
@@ -135,7 +140,9 @@ int main(int argc, char **argv)
 	atexit(object_dump);
 #endif
 
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	gst_init(&argc, &argv);
+#endif
 
 	// set pythonpath if unset
 	setenv("PYTHONPATH", eEnv::resolve("${libdir}/enigma2/python").c_str(), 0);
@@ -168,7 +175,11 @@ int main(int argc, char **argv)
 	eWidgetDesktop dsk_lcd(my_lcd_dc->size());
 
 	dsk.setStyleID(0);
+#ifdef HAVE_GRAPHLCD
+	dsk_lcd.setStyleID(my_lcd_dc->size().width() == 320 ? 1 : 2);
+#else
 	dsk_lcd.setStyleID(my_lcd_dc->size().width() == 96 ? 2 : 1);
+#endif
 
 /*	if (double_buffer)
 	{
@@ -222,6 +233,12 @@ int main(int argc, char **argv)
 	gRC::getInstance()->setSpinnerDC(my_dc);
 
 	eRCInput::getInstance()->keyEvent.connect(slot(keyEvent));
+
+#if defined(__sh__) // initialise the vfd class
+	evfd * vfd = new evfd;
+	vfd->init();
+	delete vfd;
+#endif
 	
 	printf("executing main\n");
 	

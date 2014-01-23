@@ -9,7 +9,7 @@ from enigma import iRecordableService
 class FanControl:
 	# ATM there's only support for one fan
 	def __init__(self):
-		if os.path.exists("/proc/stb/fp/fan_vlt") or os.path.exists("/proc/stb/fp/fan_pwm") or os.path.exists("/proc/stb/fp/fan_speed"):
+		if os.path.exists("/proc/stb/fp/fan_vlt") or os.path.exists("/proc/stb/fan/fan_ctrl") or os.path.exists("/proc/stb/fp/fan_speed"):
 			self.fancount = 1
 		else:
 			self.fancount = 0
@@ -62,10 +62,11 @@ class FanControl:
 		config.fans = ConfigSubList()
 		for fanid in range(self.getFanCount()):
 			fan = ConfigSubsection()
-			fan.vlt = ConfigSlider(default = 15, increment = 5, limits = (0, 255))
-			fan.pwm = ConfigSlider(default = 0, increment = 5, limits = (0, 255))
-			fan.vlt_standby = ConfigSlider(default = 5, increment = 5, limits = (0, 255))
-			fan.pwm_standby = ConfigSlider(default = 0, increment = 5, limits = (0, 255))
+			fan.vlt = ConfigSlider(default = 0, increment = 5, limits = (0, 0))
+			fan.pwm = ConfigSlider(default = 170, increment = 5, limits = (50, 255))
+			fan.vlt_standby = ConfigSlider(default = 0, increment = 5, limits = (0, 0))
+#			fan.pwm_standby = ConfigSlider(default = 70, increment = 5, limits = (50, 255))
+			fan.pwm_standby = ConfigSlider(default = 70, increment = 5, limits = (0, 255))
 			fan.vlt.addNotifier(boundFunction(setVlt, self, fanid))
 			fan.pwm.addNotifier(boundFunction(setPWM, self, fanid))
 			config.fans.append(fan)
@@ -80,7 +81,7 @@ class FanControl:
 		return os.path.exists("/proc/stb/fp/fan_speed")
 	
 	def hasFanControl(self, fanid):
-		return os.path.exists("/proc/stb/fp/fan_vlt") or os.path.exists("/proc/stb/fp/fan_pwm")
+		return os.path.exists("/proc/stb/fp/fan_vlt") or os.path.exists("/proc/stb/fan/fan_ctrl")
 	
 	def getFanSpeed(self, fanid):
 		f = open("/proc/stb/fp/fan_speed", "r")
@@ -89,20 +90,21 @@ class FanControl:
 		return value
 	
 	def getVoltage(self, fanid):
-		f = open("/proc/stb/fp/fan_vlt", "r")
-		value = int(f.readline().strip(), 16)
-		f.close()
+#		f = open("/proc/stb/fp/fan_vlt", "r")
+#		value = int(f.readline().strip(), 16)
+#		f.close()
+		value = 0
 		return value
 	
 	def setVoltage(self, fanid, value):
 		if value > 255:
 			return
-		f = open("/proc/stb/fp/fan_vlt", "w")
-		f.write("%x" % value)
-		f.close()
+#		f = open("/proc/stb/fp/fan_vlt", "w")
+#		f.write("%x" % value)
+#		f.close()
 		
 	def getPWM(self, fanid):
-		f = open("/proc/stb/fp/fan_pwm", "r")
+		f = open("/proc/stb/fan/fan_ctrl", "r")
 		value = int(f.readline().strip(), 16)
 		f.close()
 		return value
@@ -110,8 +112,8 @@ class FanControl:
 	def setPWM(self, fanid, value):
 		if value > 255:
 			return
-		f = open("/proc/stb/fp/fan_pwm", "w")
-		f.write("%x" % value)
+		f = open("/proc/stb/fan/fan_ctrl", "w")
+		f.write("%d" % value)
 		f.close()
 	
 fancontrol = FanControl()
