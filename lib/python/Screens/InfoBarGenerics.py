@@ -636,6 +636,46 @@ class InfoBarMenu:
 	def mainMenuClosed(self, *val):
 		self.session.infobar = None
 
+class InfoBarSimpleEventView:
+	""" Opens the Eventview for now/next """
+	def __init__(self):
+		self["EPGActions"] = HelpableActionMap(self, "InfobarEPGActions",
+			{
+				"showEventInfo": (self.openEventView, _("Show event details")),
+				"showEventInfoSingleEPG": (self.openEventView, _("Show event details")),
+				"showInfobarOrEpgWhenInfobarAlreadyVisible": self.showEventInfoWhenNotVisible,
+			})
+
+	def showEventInfoWhenNotVisible(self):
+		if self.shown:
+			self.openEventView()
+		else:
+			self.toggleShow()
+			return 1
+
+	def openEventView(self):
+		epglist = [ ]
+		self.epglist = epglist
+		service = self.session.nav.getCurrentService()
+		ref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
+		info = service.info()
+		ptr=info.getEvent(0)
+		if ptr:
+			epglist.append(ptr)
+		ptr=info.getEvent(1)
+		if ptr:
+			epglist.append(ptr)
+		if epglist:
+			self.session.open(EventViewSimple, epglist[0], ServiceReference(ref), self.eventViewCallback)
+
+	def eventViewCallback(self, setEvent, setService, val): #used for now/next displaying
+		epglist = self.epglist
+		if len(epglist) > 1:
+			tmp = epglist[0]
+			epglist[0] = epglist[1]
+			epglist[1] = tmp
+			setEvent(epglist[0])
+
 class SimpleServicelist:
 	def __init__(self, services):
 		self.services = services
@@ -700,10 +740,12 @@ class InfoBarEPG:
 				"showInfobarOrEpgWhenInfobarAlreadyVisible": self.showEventInfoWhenNotVisible,
 			})
 
-	def getEPGPluginList(self):
+	def getEPGPluginList(self, getAll=False):
 		pluginlist = [(p.name, boundFunction(self.runPlugin, p)) for p in plugins.getPlugins(where = PluginDescriptor.WHERE_EVENTINFO)]
 		if pluginlist:
-			pluginlist.append((_("Show EPG for current channel..."), self.openSingleServiceEPG))
+			from Components.ServiceEventTracker import InfoBarCount
+			if getAll or InfoBarCount == 1:
+				pluginlist.append((_("Show EPG for current channel..."), self.openSingleServiceEPG))
 			pluginlist.append((_("Multi EPG"), self.openMultiServiceEPG))
 			pluginlist.append((_("Current event EPG"), self.openEventView))
 		return pluginlist
@@ -876,7 +918,7 @@ class InfoBarEPG:
 			answer[1]()
 
 	def SelectDefaultInfoPlugin(self):
-		self.session.openWithCallback(self.DefaultInfoPluginChosen, ChoiceBox, title=_("Please select a default EPG type..."), list = self.getEPGPluginList(), skin_name = "EPGExtensionsList")
+		self.session.openWithCallback(self.DefaultInfoPluginChosen, ChoiceBox, title=_("Please select a default EPG type..."), list = self.getEPGPluginList(True), skin_name = "EPGExtensionsList")
 
 	def DefaultInfoPluginChosen(self, answer):
 		if answer is not None:
@@ -897,7 +939,7 @@ class InfoBarEPG:
 			answer[1]()
 
 	def SelectDefaultGuidePlugin(self):
-		self.session.openWithCallback(self.DefaultGuidePluginChosen, ChoiceBox, title=_("Please select a default EPG type..."), list = self.getEPGPluginList(), skin_name = "EPGExtensionsList")
+		self.session.openWithCallback(self.DefaultGuidePluginChosen, ChoiceBox, title=_("Please select a default EPG type..."), list = self.getEPGPluginList(True), skin_name = "EPGExtensionsList")
 
 	def DefaultGuidePluginChosen(self, answer):
 		if answer is not None:
