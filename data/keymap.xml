@@ -75,7 +75,6 @@
 		<!--key id="KEY_HELP" mapto="showEventInfo" flags="m" /-->
 		<key id="KEY_YELLOW" mapto="showEventGuidePlugin" flags="m" />
 		<key id="KEY_EPG" mapto="showEventInfoSingleEPG" flags="m" />
-		<!--key id="KEY_HELP" mapto="showInfobarOrEpgWhenInfobarAlreadyVisible" flags="m" /-->
 	</map>
 
 	<map context="InfobarInstantRecord">
@@ -170,13 +169,22 @@
 		<key id="KEY_PLAY" mapto="showMovies" flags="m" />
 		<key id="KEY_GOTO" mapto="showMovies" flags="m" />
 		<key id="KEY_PVR" mapto="toogleTvRadio" flags="m" />
-		<key id="KEY_MODE" mapto="videomode" flags="m" />
-		<key id="KEY_MEDIA" mapto="freeplayer" flags="m" />
+		<key id="KEY_MODE" mapto="ScartHdmi" flags="m" />
+		<!--key id="KEY_MODE" mapto="aspect" flags="m" /-->
+		<!--key id="KEY_MODE" mapto="resolution" flags="m" /-->
+		<key id="KEY_MEDIA" mapto="FreePlayer" flags="m" />
 		<!--<key id="KEY_SUBTITLE" mapto="restart_softcam" flags="m" /-->
 		<!--<key id="KEY_LIST" mapto="restart_softcam" flags="m" /-->
 		<key id="KEY_BLUE" mapto="showTv" flags="m" />
+		<!--key id="KEY_LIST" mapto="showPlugins" flags="m" /-->
+		<!--key id="KEY_LEFT" mapto="volumeDown" flags="m" /-->
+		<!--key id="KEY_RIGHT" mapto="volumeUp" flags="m" /-->
 	</map>
 
+	<!--map context="InfobarVmodeButtonActions">
+		<key id="KEY_MODE" mapto="vmodeSelection" flags="m" />
+	</map-->
+	
 	<map context="InfobarAudioSelectionActions">
 		<key id="KEY_OPTION" mapto="audioSelection" flags="m" />
 		<key id="KEY_SUBTITLE" mapto="audioSelection" flags="m" />
@@ -244,9 +252,9 @@
 		<key id="KEY_FASTFORWARD" mapto="seekFwd" flags="m" />
 		
 		<key id="KEY_PAUSE" mapto="pauseService" flags="m" />
-		<key id="KEY_DOWN" mapto="pauseService" flags="m" />
+		<key id="KEY_DOWN" mapto="playpauseService" flags="m" />
 		<key id="KEY_PLAY" mapto="unPauseService" flags="m" />
-		<key id="KEY_UP" mapto="unPauseService" flags="m" />
+		<key id="KEY_UP" mapto="playpauseService" flags="m" />
 		<key id="KEY_LEFT" mapto="seekBack" flags="m" />
 		<key id="KEY_RIGHT" mapto="seekFwd" flags="m" />
 
@@ -375,7 +383,7 @@
 		<key id="KEY_RED" mapto="red" flags="m" />
 		<key id="KEY_EPG" mapto="info" flags="m" />
 		<key id="KEY_HELP" mapto="info" flags="m" />
-		<key id="KEY_MENU" mapto="input_date_time" flags="m" />
+		<key id="KEY_MENU" mapto="menu" flags="m" />
 		<key id="KEY_OPTION" mapto="input_date_time" flags="m" />
 		<key id="KEY_3" mapto="nextDay" flags="m" />
 		<key id="KEY_1" mapto="prevDay" flags="m" />
