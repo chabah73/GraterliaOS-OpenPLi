@@ -73,15 +73,17 @@
 	<map context="InfobarEPGActions">
 		<!--key id="KEY_YELLOW" mapto="showEventInfoPlugin" flags="m" /-->
 		<!--key id="KEY_HELP" mapto="showEventInfo" flags="m" /-->
-		<key id="KEY_YELLOW" mapto="showEventGuidePlugin" flags="m" />
+		<key id="KEY_MODE" mapto="showEventGuidePlugin" flags="m" />
 		<key id="KEY_EPG" mapto="showEventInfoSingleEPG" flags="m" />
+		<key id="KEY_GREEN" mapto="showEventInfoMultiEPG" flags="m" />
+		<key id="KEY_RED" mapto="showEventInfo" flags="m" />
 		<!--key id="KEY_HELP" mapto="showInfobarOrEpgWhenInfobarAlreadyVisible" flags="m" /-->
 	</map>
 
 	<map context="InfobarInstantRecord">
 		<key id="KEY_RECORD" mapto="instantRecord" flags="m" />
 		<!-- Nagrywanie z klawisza czerwonego na pilocie -->
-		<key id="KEY_RED" mapto="instantRecord" flags="m" />
+		<!--key id="KEY_RED" mapto="instantRecord" flags="m" /-->
 	</map>
 
 	<map context="InfobarExtensions">
@@ -89,12 +91,12 @@
 	</map>
 
 	<map context="InfobarChannelSelection">
-		<key id="KEY_LEFT" mapto="zapUp" flags="mr" />
-		<key id="KEY_RIGHT" mapto="zapDown" flags="mr" />
+		<!--key id="KEY_LEFT" mapto="zapUp" flags="mr" /-->
+		<!--key id="KEY_RIGHT" mapto="zapDown" flags="mr" /-->
 		<key id="KEY_PAGEUP" mapto="zapDown" flags="m" />
 		<key id="KEY_PAGEDOWN" mapto="zapUp" flags="m" />
-		<key id="KEY_UP" mapto="switchChannelUp" flags="mr" />
-		<key id="KEY_DOWN" mapto="switchChannelDown" flags="mr" />
+		<key id="KEY_UP" mapto="zapDown" flags="mr" />
+		<key id="KEY_DOWN" mapto="zapUp" flags="mr" />
 		<key id="KEY_REWIND" mapto="historyBack" flags="mr" />
 		<key id="KEY_FASTFORWARD" mapto="historyNext" flags="mr" />
 		<key id="KEY_OK" mapto="openServiceList" flags="m" />
@@ -183,7 +185,7 @@
 	</map>
 
 	<map context="InfobarAspectSelectionActions">
-		<key id="KEY_GREEN" mapto="aspectSelection" flags="m" />
+		<!--key id="KEY_GREEN" mapto="aspectSelection" flags="m" /-->
 	</map>
 
 	<map context="InfobarSubserviceSelectionActions">
@@ -192,8 +194,8 @@
 
 	<map context="InfobarTimerButtonActions">
 			<!--<key id="KEY_PROGRAM" mapto="timerSelection" flags="m" /-->
-			<!--<key id="KEY_YELLOW" mapto="timerSelection" flags="m" /-->
-			<key id="KEY_LIST" mapto="timerSelection" flags="m" />
+			<key id="KEY_YELLOW" mapto="timerSelection" flags="m" />
+			<!--key id="KEY_LIST" mapto="timerSelection" flags="m" /-->
 	</map>
 
 	<map context="InfobarSubserviceQuickzapActions">
@@ -208,6 +210,8 @@
 	<map context="GlobalActions">
 		<key id="KEY_VOLUMEUP" mapto="volumeUp" flags="mr" />
 		<key id="KEY_VOLUMEDOWN" mapto="volumeDown" flags="mr" />
+		<key id="KEY_RIGHT" mapto="volumeUp" flags="mr" />
+		<key id="KEY_LEFT" mapto="volumeDown" flags="mr" />
 		<key id="KEY_MUTE" mapto="volumeMute" flags="mr" />
 		<key id="KEY_POWER" mapto="power_long" flags="m" />
 		<!--key id="KEY_POWER" mapto="power_long" flags="l" /--> 
