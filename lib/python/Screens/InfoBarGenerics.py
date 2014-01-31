@@ -223,6 +223,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 	STATE_HIDING = 1
 	STATE_SHOWING = 2
 	STATE_SHOWN = 3
+	STATE_EPG = 4
 
 	def __init__(self):
 		self["ShowHideActions"] = ActionMap( ["InfobarShowHideActions"] ,
@@ -317,6 +318,12 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		self.hideTimer.stop()
 		if self.__state == self.STATE_SHOWN:
 			self.hide()
+			
+	def epg(self):
+		self.__state = self.STATE_EPG
+		self.hide()
+		self.hideTimer.stop()
+		self.openEventView()
 
 	def toggleShow(self):
 		if self.__state == self.STATE_HIDDEN:
@@ -328,7 +335,9 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		elif self.secondInfoBarScreen and config.usage.show_second_infobar.value and not self.secondInfoBarScreen.shown:
 			self.secondInfoBarScreen.show()
 			self.startHideTimer()
-		else:
+		elif self.__state == self.STATE_SHOWN:
+			self.epg()
+		elif self.__state == self.STATE_EPG:
 			self.hide()
 			self.hideTimer.stop()
 
