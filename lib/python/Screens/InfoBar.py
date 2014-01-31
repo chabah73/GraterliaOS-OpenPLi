@@ -56,6 +56,9 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				"volumeDown": (self._volDown, _("...")),
 				"resolution": (self.resolution, _("...")),
 				"aspect": (self.aspect, _("...")),
+				"showPlugins": (self.showPlugins, _("...")),
+				"FreePlayer": (self.FreePlayer, _("...")),
+				"ScartHdmi": (self.ScartHdmi, _("...")),
 			}, prio=2)
 		
 		self.allowPiP = True
@@ -250,6 +253,54 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		else:
 			self.session.open(MoviePlayer, service, slist=self.servicelist, lastservice=ref, infobar=self)
 
+	def showPlugins(self):
+		from Screens.PluginBrowser import PluginBrowser
+		self.session.open(PluginBrowser)
+
+	def FreePlayer(self):
+		def FreePlayerPlugin():
+			try:
+				from Plugins.Extensions.FreePlayer.plugin import FreePlayer
+			except ImportError:
+				return False
+			else:
+				return True
+				
+		if FreePlayerPlugin():
+			from Plugins.Extensions.FreePlayer.plugin import FreePlayer
+			self.session.open(FreePlayer.FreePlayerStart)
+		else:
+			print "FreePlayer plugin not found!"
+					
+	def startTeletext(self):
+		self.teletext_plugin(session=self.session, service=self.session.nav.getCurrentService())
+		
+	def ScartHdmi(self):
+		if isinstance(self, InfoBar):
+			#print '****** videomode ******'
+			port = config.av.videoport.value
+			#print 'actual port = ', port
+			from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
+			if port == 'HDMI':
+				port = 'Scart'
+				mode = 'PAL'
+				rate = '50Hz'
+				config.av.videoport.value = port
+				config.av.videomode[port].value = mode
+				config.av.videorate[mode].value = rate
+				config.av.save()
+				video_hw.setMode(port, mode, rate)
+			else:
+				port = 'HDMI'
+				mode = '720p'
+				rate = '50Hz'
+				config.av.videoport.value = port
+				config.av.videomode[port].value = mode
+				config.av.videorate[mode].value = rate
+				config.av.save()
+				video_hw.setMode(port, mode, rate)
+			self.session.open(MessageBox, 'Videomode changed to ' + mode + ' at ' + rate + ' on ' + port, MessageBox.TYPE_INFO, timeout=10)
+						
 class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBarShowMovies, InfoBarInstantRecord,
 		InfoBarAudioSelection, HelpableScreen, InfoBarNotifications, InfoBarServiceNotifications, InfoBarPVRState,
 		InfoBarCueSheetSupport, InfoBarMoviePlayerSummarySupport, InfoBarSubtitleSupport, Screen, InfoBarTeletextPlugin,

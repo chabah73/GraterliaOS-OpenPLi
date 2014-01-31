@@ -747,6 +747,8 @@ class InfoBarEPG:
 				"showEventInfoPlugin": (self.showEventInfoPlugins, _("List EPG functions...")),
 				"showEventGuidePlugin": (self.showEventGuidePlugins, _("List EPG functions...")),
 				"showInfobarOrEpgWhenInfobarAlreadyVisible": self.showEventInfoWhenNotVisible,
+				"showSingleEPG": self.openSingleServiceEPG,
+				"showMultiEPG": self.openMultiServiceEPG,
 			})
 
 	def getEPGPluginList(self, getAll=False):
