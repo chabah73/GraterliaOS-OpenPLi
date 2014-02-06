@@ -1,0 +1,4 @@
+#!/bin/sh
+
+msgfmt -o pl.mo pl.po
+msgfmt -o en.mo en.po
