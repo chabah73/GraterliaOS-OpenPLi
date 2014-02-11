@@ -156,7 +156,7 @@ KEY_TIMEOUT = 9
 KEY_NUMBERS = range(12, 12+10)
 KEY_0 = 12
 KEY_9 = 12+9
-KEY_FILE = 22
+KEY_LIST = 22
 
 def getKeyNumber(key):
 	assert key in KEY_NUMBERS
@@ -338,7 +338,7 @@ class ConfigSelection(ConfigElement):
 				self.value = self.choices[0]
 			elif key == KEY_END:
 				self.value = self.choices[nchoices - 1]
-			elif key == KEY_FILE and session:
+			elif key == KEY_LIST and session:
 				from Screens.ChoiceBox import ChoiceBox
 				session.openWithCallback(self.KeyOKCallback, ChoiceBox, description, list=zip(self.description, self.choices), selection=i, keys=[])
 

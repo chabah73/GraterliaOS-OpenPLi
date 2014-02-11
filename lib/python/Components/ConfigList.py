@@ -1,6 +1,6 @@
 from HTMLComponent import HTMLComponent
 from GUIComponent import GUIComponent
-from config import KEY_LEFT, KEY_RIGHT, KEY_HOME, KEY_END, KEY_0, KEY_DELETE, KEY_BACKSPACE, KEY_OK, KEY_TOGGLEOW, KEY_ASCII, KEY_TIMEOUT, KEY_NUMBERS, KEY_FILE, ConfigElement, ConfigText, ConfigPassword
+from config import KEY_LEFT, KEY_RIGHT, KEY_HOME, KEY_END, KEY_0, KEY_DELETE, KEY_BACKSPACE, KEY_OK, KEY_TOGGLEOW, KEY_ASCII, KEY_TIMEOUT, KEY_NUMBERS, KEY_LIST, ConfigElement, ConfigText, ConfigPassword
 from Components.ActionMap import NumberActionMap, ActionMap
 from enigma import eListbox, eListboxPythonConfigContent, eRCInput, eTimer
 from Screens.MessageBox import MessageBox
@@ -236,7 +236,7 @@ class ConfigListScreen:
 		self["config"].pageUp()
 
 	def keyFile(self):
-		self["config"].handleKey(KEY_FILE, self.session)
+		self["config"].handleKey(KEY_LIST, self.session)
 
 	def saveAll(self):
 		for x in self["config"].list:
