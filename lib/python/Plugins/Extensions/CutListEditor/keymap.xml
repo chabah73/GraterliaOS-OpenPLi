@@ -25,8 +25,8 @@
 		<!--key id="KEY_0" mapto="setMark" flags="m" /-->
 		<key id="KEY_2" mapto="addMark" flags="m" />
 		<key id="KEY_8" mapto="removeMark" flags="m" />
-		<key id="KEY_CHANNELUP" mapto="setIn" flags="m" />
-		<key id="KEY_CHANNELDOWN" mapto="setOut" flags="m" />
+		<key id="KEY_PAGEUP" mapto="setIn" flags="m" />
+		<key id="KEY_PAGEDOWN" mapto="setOut" flags="m" />
 		<key id="KEY_HOME" mapto="leave" flags="m" />
 		<key id="KEY_ESC" mapto="leave" flags="m" />
 		<key id="KEY_OK" mapto="showMenu" flags="m" />
