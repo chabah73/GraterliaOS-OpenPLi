@@ -881,7 +881,7 @@ class ChannelSelectionBase(Screen):
 		self["title"] = StaticText()
 #+++<
 
-		self.numericalTextInput = NumericalTextInput()
+		self.numericalTextInput = NumericalTextInput(handleTimeout=False)
 		self.numericalTextInput.setUseableChars(u'1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
 		self.servicePathTV = [ ]
