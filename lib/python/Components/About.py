@@ -1,8 +1,7 @@
 import sys
 import os
 import time
-from Tools.Directories import resolveFilename, SCOPE_SYSETC
-from os import popen
+from Tools.HardwareInfo import HardwareInfo
 
 def getVersionString():
 	return getImageVersionString()
@@ -21,36 +20,18 @@ def getVersionString():
 #	return _("unavailable")
 
 def getImageVersionString():
-		try:
-			file = open(resolveFilename(SCOPE_SYSETC, 'image-version'), 'r')
-			lines = file.readlines()
-			for x in lines:
-				splitted = x.split('=')
-				if splitted[0] == "version":
-					#     YYYY MM DD hh mm
-					#0120 2005 11 29 01 16
-					#0123 4567 89 01 23 45
-					version = splitted[1]
-					image_type = version[0] # 0 = release, 1 = experimental
-					major = version[1]
-					minor = version[2]
-					revision = version[3]
-					year = version[4:8]
-					month = version[8:10]
-					day = version[10:12]
-					date = '-'.join((year, month, day))
-					if image_type == '0':
-						image_type = "Release"
-						version = '.'.join((major, minor, revision))
-						return ' '.join((image_type, version, date))
-					else:
-						image_type = "Experimental"
-						return ' '.join((image_type, date))
-			file.close()
-		except IOError:
-			pass
+	try:
+		if os.path.isfile('/var/lib/opkg/status'):
+			st = os.stat('/var/lib/opkg/status')
+		else:
+			st = os.stat('/usr/lib/ipkg/status')
+		tm = time.localtime(st.st_mtime)
+		if tm.tm_year >= 2011:
+			return time.strftime("%Y-%m-%d %H:%M:%S", tm)
+	except:
+		pass
 
-		return _("unavailable")
+	return _("unavailable")
 
 
 def getEnigmaVersionString():
@@ -67,16 +48,7 @@ def getKernelVersionString():
 		return _("unknown")
 
 def getHardwareTypeString():
-	try:
-		if os.path.isfile("/proc/stb/info/boxtype"):
-			return open("/proc/stb/info/boxtype").read().strip().upper() + " (" + open("/proc/stb/info/board_revision").read().strip() + "-" + open("/proc/stb/info/version").read().strip() + ")"
-		if os.path.isfile("/proc/stb/info/vumodel"):
-			return "VU+" + open("/proc/stb/info/vumodel").read().strip().upper() + "(" + open("/proc/stb/info/version").read().strip().upper() + ")" 
-		if os.path.isfile("/proc/stb/info/model"):
-			return open("/proc/stb/info/model").read().strip().upper()
-	except:
-		pass
-	return _("unavailable")
+	return HardwareInfo().get_device_string()
 
 def getImageTypeString():
 	try:
