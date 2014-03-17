@@ -48,6 +48,19 @@
 		<panel name="RecordIconPanel"/>
 	</screen>
 
+<!-- GraphMultiEPG -->
+	<screen name="GraphMultiEPG_summary" position="fill">
+		<widget source="parent.Service" render="Label" position="top" size="*,20" font="Bigger" noWrap="1">
+			<convert type="ServiceName">Name</convert>
+		</widget>
+		<panel position="fill" name="SummaryClockPanel">
+			<widget source="parent.Event" render="Label" position="fill" font="Medium" noWrap="1">
+				<convert type="EventName">Name</convert>
+			</widget>
+		</panel>
+		<panel name="RecordIconPanel"/>
+	</screen>
+
 <!-- channelselection-->
 	<screen name="ChannelSelection_summary" position="fill">
 		<widget source="parent.ServiceEvent" render="Label" position="top" size="*,20" font="Bigger" noWrap="1" >
@@ -72,11 +85,11 @@
 <!-- numberzap -->
 	<screen name="NumberZap_summary" position="fill">
 		<panel position="top" size="*,20">
-			<widget source="parent.channel" render="Label" position="left" size="80,*" font="Bigger" noWrap="1"/>
-			<widget source="parent.number" render="Label" position="fill" font="Bigger" halign="right"/>
+			<widget source="parent.channel_summary" render="Label" position="left" size="80,*" font="Bigger" noWrap="1"/>
+			<widget source="parent.number_summary" render="Label" position="fill" font="Bigger" halign="right"/>
 		</panel>
 		<panel position="fill" name="SummaryClockPanel">
-			<widget source="parent.servicename" render="Label" position="fill" font="Medium" noWrap="1"/>
+			<widget source="parent.servicename_summary" render="Label" position="fill" font="Medium" noWrap="1"/>
 		</panel>
 	</screen>
 
