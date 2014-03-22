@@ -3,16 +3,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPLi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-06 12:09+0200\n"
-"PO-Revision-Date: 2014-02-04 01:52+0100\n"
-"Last-Translator: herpoi <herpo2006@gmail.com>\n"
-"Language-Team: Graterlia\n"
+"POT-Creation-Date: 2013-12-12 21:53+0100\n"
+"PO-Revision-Date: 2013-12-14 13:28+0100\n"
+"Last-Translator: blzr <blzr@o2.pl>\n"
+"Language-Team: \n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Poedit 1.6.3\n"
 
 msgid ""
@@ -635,9 +634,6 @@ msgstr "Ustawienia adaptera"
 msgid "Add"
 msgstr "Dodaj"
 
-msgid "Add Bookmark"
-msgstr "Dodaj zakładkę"
-
 #
 msgid "Add a mark"
 msgstr "Dodaj znacznik"
@@ -819,6 +815,9 @@ msgstr "Priorytet tunera dla serwisów alternatywnych."
 msgid "Always ask"
 msgstr "Zawsze pytaj"
 
+msgid "Always hide infobar"
+msgstr "Zawsze ukrywaj infobar"
+
 #
 msgid "An empty filename is illegal."
 msgstr "Pusta nazwa pliku jest niedozwolona"
@@ -846,6 +845,10 @@ msgstr "Kwiecień"
 
 msgid "Arabic"
 msgstr "Arabski"
+
+#
+msgid "Are you sure to remove this entry?"
+msgstr "Jesteś pewien, że chcesz usunąć?"
 
 #
 msgid ""
@@ -918,7 +921,8 @@ msgstr "Przypisane CAIDy:"
 
 #
 msgid "Assigned services/provider:"
-msgstr "Przypisane usługi/operator:"
+msgstr "Przypisane kanały/operatorzy:"
+
 
 #
 msgid "At beginning"
@@ -1181,6 +1185,10 @@ msgstr "C"
 #
 msgid "C-Band"
 msgstr "Pasmo C"
+
+#
+msgid "CH"
+msgstr ""
 
 #
 msgid "CI assignment"
@@ -2024,6 +2032,9 @@ msgstr "Aktualna wersja:"
 msgid "Currently installed image"
 msgstr "Aktualnie zainstalowane image"
 
+msgid "Currently the commit log cannot be retreived - please try later again"
+msgstr "Commit log nie może zostać teraz pobrany - spróbuj ponownie później"
+
 #
 msgid "Custom skip time for '1'/'3' buttons"
 msgstr "Czas przeskoku dla przycisków 1 i 3"
@@ -2038,6 +2049,9 @@ msgstr "Czas przeskoku dla przycisków 7 i 9"
 #
 msgid "Customize"
 msgstr "Inne"
+
+msgid "Customize channel list cursor behavior"
+msgstr "Zachowanie kursora w liście kanałów"
 
 #
 msgid "Cut"
@@ -3582,6 +3596,10 @@ msgid "Invalid location"
 msgstr "Nieprawidłowa lokalizacja"
 
 #
+msgid "Invalid transponder data"
+msgstr "Błędne dane transpondera"
+
+#
 msgid "Inversion"
 msgstr "Inwersja"
 
@@ -3640,6 +3658,9 @@ msgstr "Czerwiec"
 msgid "Just scale"
 msgstr "Skaluj"
 
+msgid "Keep service"
+msgstr "Zostaw na aktualnym"
+
 msgid "Kernel version: "
 msgstr "Wersja jądra: "
 
@@ -3684,6 +3705,9 @@ msgstr "Ostatnia prędkość"
 
 msgid "Last upgrade: "
 msgstr "Ostatnia aktualizacja:"
+
+msgid "Latest Commits"
+msgstr "Ostatnie commit'y"
 
 #
 msgid "Latitude"
@@ -4352,7 +4376,7 @@ msgstr "Brak kanału"
 
 #
 msgid "No services/providers selected"
-msgstr "Brak wybranych kanałów/providerów"
+msgstr "Brak wybranych kanałów/nadawców"
 
 #
 msgid "No standby"
@@ -4979,6 +5003,10 @@ msgstr ""
 "W celu wyboru języka użyj klawiszy GÓRA i DÓŁ. Nastepnie nacisnij przycisk OK"
 
 #
+msgid "Please wait"
+msgstr "Czekaj..."
+
+#
 msgid "Please wait (downloading channel list)"
 msgstr "Czekaj (pobieranie listy kanałów)"
 
@@ -5245,11 +5273,11 @@ msgstr "Operator"
 
 #
 msgid "Provider to scan"
-msgstr "Provider do skanowania"
+msgstr "Nadawca do skanowania"
 
 #
 msgid "Providers"
-msgstr "Operator"
+msgstr "Operatorzy"
 
 #
 msgid "Put TV in standby"
@@ -5622,6 +5650,9 @@ msgstr "Powrót do listy nagrań"
 #
 msgid "Return to previous service"
 msgstr "Powrót do poprzedniego kanału"
+
+msgid "Reverse bouquet buttons"
+msgstr "Zamień przyciski bukietów"
 
 #
 msgid "Rewind speeds"
@@ -6288,6 +6319,9 @@ msgstr "Pokaż pasek info przy zmianie audycji"
 #
 msgid "Show infobar on skip forward/backward"
 msgstr "Pokaż pasek info przy przewijaniu w przód/tył"
+
+msgid "Show latest commits on sourceforge"
+msgstr "Pokaż ostatnie commit'y na sourceforge"
 
 #
 msgid "Show message when recording starts"
@@ -7730,6 +7764,9 @@ msgstr "Szybki skan nazw kanałów"
 msgid "Use fastscan channel numbering"
 msgstr "Szybki skan numerów kanałów"
 
+msgid "Use frequency or channel"
+msgstr "Użyj częstotliwości lub kanału"
+
 msgid "Use individual settings for each directory"
 msgstr "Indywidualna konfiguracja dla każdego katalogu"
 
@@ -8829,11 +8866,11 @@ msgstr "Tryb przenoszenia"
 
 #
 msgid "a gui to assign services/providers to common interface modules"
-msgstr "Menu do przyporządkowywania kanałów/providerów dla modułów CI"
+msgstr "Menu do przyporządkowywania kanałów/nadawców dla modułów CI"
 
 #
 msgid "a gui to assign services/providers/caids to common interface modules"
-msgstr "Menu do przyporządkowywania kanałów/providerów/CAIDów dla modułów CI"
+msgstr "Menu do przyporządkowywania kanałów/nadawców/CAIDów dla modułów CI"
 
 #
 msgid "abort alternatives edit"
@@ -9191,9 +9228,6 @@ msgstr "Jeździectwo"
 #
 msgid "exit DVD player or return to file browser"
 msgstr "Zamknij odtwarzacz DVD lub wróć do przeglądarki plików"
-
-msgid "exit movielist"
-msgstr "wyjdź z odtwarzacza"
 
 #
 msgid "exit network adapter configuration"
