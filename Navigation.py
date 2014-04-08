@@ -1,6 +1,6 @@
 from enigma import eServiceCenter, eServiceReference, eTimer, pNavigation, getBestPlayableServiceReference, iPlayableService, eActionMap
 from Components.ParentalControl import parentalControl
-from Components.config import config
+from Components.config import config, configfile
 from Tools.BoundFunction import boundFunction
 from Tools.StbHardware import setFPWakeuptime, getFPWakeuptime, getFPWasTimerWakeup
 from Tools import Notifications
@@ -39,7 +39,8 @@ class Navigation:
 		if config.misc.RestartUI.value:
 			config.misc.RestartUI.value = False
 			config.misc.RestartUI.save()
-		elif config.usage.startup_to_standby.value:
+			configfile.save()
+		elif config.usage.startup_to_standby.value or self.__wasTimerWakeup:
 			Notifications.AddNotification(Screens.Standby.Standby)
 
 	def wasTimerWakeup(self):
