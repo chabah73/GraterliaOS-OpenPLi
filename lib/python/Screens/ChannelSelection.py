@@ -6,9 +6,9 @@ import Components.ParentalControl
 from Components.Button import Button
 from Components.ServiceList import ServiceList, refreshServiceList
 #+++>
-from Components.Sources.StaticText import StaticText
-from Components.Label import Label
-from os import path as os_path, system, unlink
+#from Components.Sources.StaticText import StaticText
+#from Components.Label import Label
+#from os import path as os_path, system, unlink
 #+++<
 from Components.ActionMap import NumberActionMap, ActionMap, HelpableActionMap
 from Components.MenuList import MenuList
@@ -489,7 +489,7 @@ class ChannelSelectionEdit:
 		self.saved_root = None
 		self.current_ref = None
 #+++>
-		self["title"] = StaticText()
+#		self["title"] = StaticText()
 #+++<
 		class ChannelSelectionEditActionMap(ActionMap):
 			def __init__(self, csel, contexts = [ ], actions = { }, prio=0):
@@ -720,7 +720,7 @@ class ChannelSelectionEdit:
 				new_title += ' ' + _("[favourite edit]")
 		self.setTitle(new_title)
 #+++>
-		self["title"].setText(new_title)
+#		self["title"].setText(new_title)
 #+++<
 		self.__marked = self.servicelist.getRootServices()
 		for x in self.__marked:
@@ -750,7 +750,7 @@ class ChannelSelectionEdit:
 		self.mutableList = None
 		self.setTitle(self.saved_title)
 #+++>
-		self["title"].setText(self.saved_title)
+#		self["title"].setText(self.saved_title)
 #+++<
 		self.saved_title = None
 		# self.servicePath is just a reference to servicePathTv or Radio...
@@ -811,7 +811,7 @@ class ChannelSelectionEdit:
 			self.mutableList = None
 			self.setTitle(self.saved_title)
 #+++>
-			self["title"].setText(self.saved_title)
+#			self["title"].setText(self.saved_title)
 #+++<
 			self.saved_title = None
 			self.servicelist.resetRoot()
@@ -823,7 +823,7 @@ class ChannelSelectionEdit:
 			pos = self.saved_title.find(')')
 			self.setTitle(self.saved_title[:pos+1] + ' ' + _("[move mode]") + self.saved_title[pos+1:]);
 #+++>
-			self["title"].setText(self.saved_title[:pos+1] + ' ' + _("[move mode]") + self.saved_title[pos+1:])
+#			self["title"].setText(self.saved_title[:pos+1] + ' ' + _("[move mode]") + self.saved_title[pos+1:])
 #+++<
 		self["Service"].editmode = True
 
@@ -877,8 +877,8 @@ class ChannelSelectionBase(Screen):
 		self.servicelist = self["list"]
 
 #+++>
-		self["boquet"] = Label(_("Channel Selection"))
-		self["title"] = StaticText()
+#		self["boquet"] = Label(_("Channel Selection"))
+#		self["title"] = StaticText()
 #+++<
 
 		self.numericalTextInput = NumericalTextInput(handleTimeout=False)
@@ -966,7 +966,7 @@ class ChannelSelectionBase(Screen):
 		title += _(" (TV)")
 		self.setTitle(title)
 #+++>
-		self["title"].setText(title)
+#		self["title"].setText(title)
 #+++<
 
 	def setRadioMode(self):
@@ -980,7 +980,7 @@ class ChannelSelectionBase(Screen):
 		title += _(" (Radio)")
 		self.setTitle(title)
 #+++>
-		self["title"].setText(title)
+#		self["title"].setText(title)
 #+++<
 
 	def setRoot(self, root, justSet=False):
@@ -1037,7 +1037,7 @@ class ChannelSelectionBase(Screen):
 				nameStr = self.getServiceName(base_ref)
 				titleStr += ' - ' + nameStr
 #+++>
-				self["boquet"].setText("Channel Selection")
+#				self["boquet"].setText("Channel Selection")
 #+++<
 				if end_ref is not None:
 					if Len > 2:
@@ -1047,11 +1047,11 @@ class ChannelSelectionBase(Screen):
 					nameStr = self.getServiceName(end_ref)
 					titleStr += nameStr
 #+++>
-					self["boquet"].setText(nameStr)
+#					self["boquet"].setText(nameStr)
 #+++<
 				self.setTitle(titleStr)
 #+++>
-				self["title"].setText(titleStr)
+#				self["title"].setText(titleStr)
 #+++<
 
 	def moveUp(self):
@@ -2002,7 +2002,7 @@ class SimpleChannelSelection(ChannelSelectionBase):
 	def layoutFinished(self):
 		self.setModeTv()
 #+++>
-		self["title"].setText(self.title)
+#		self["title"].setText(self.title)
 #+++<
 
 	def BouquetNumberActions(self, number):
