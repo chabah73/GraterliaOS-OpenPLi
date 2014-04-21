@@ -54,7 +54,7 @@ public:
 	 * the actual type it returns. */
 	static unsigned int getPtrString() const
 	{
-		return (static unsigned int)ptr;
+		return (unsigned int)ptr;
 	}
 #ifndef SWIG
 	T* grabRef() { if (!ptr) return 0; ptr->AddRef(); return ptr; }
