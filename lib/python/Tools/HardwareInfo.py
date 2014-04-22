@@ -46,21 +46,7 @@ class HardwareInfo:
 			except:
 				pass
 
-		# Model
-		for line in open((resolveFilename(SCOPE_SKIN, 'hw_info/hw_info.cfg')), 'r'):
-			if not line.startswith('#') and not line.isspace():
-				l = line.strip().replace('\t', ' ')
-				if l.find(' ') != -1:
-					infoFname, prefix = l.split()
-				else:
-					infoFname = l
-					prefix = ""
-				if os.path.exists("/proc/stb/info/" + infoFname):
-					self.device_model = prefix + open("/proc/stb/info/" + infoFname).read().strip()
-					break
-
-		if self.device_model is None:
-			self.device_model = self.device_name
+		self.device_model = self.device_name
 
 		# HDMI capbility
 		self.device_hdmi = (	self.device_name == 'dm7020hd' or
