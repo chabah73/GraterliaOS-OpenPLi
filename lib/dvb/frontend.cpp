@@ -549,14 +549,14 @@ int eDVBFrontend::openFrontend()
 				case FE_QPSK:
 				{
 					m_delsys[SYS_DVBS] = true;
-#ifdef FE_CAN_2G_MODULATION
+#if DVB_API_VERSION >= 5
 					if (fe_info.caps & FE_CAN_2G_MODULATION) m_delsys[SYS_DVBS2] = true;
 #endif
 					break;
 				}
 				case FE_QAM:
 				{
-#ifdef SYS_DVBC_ANNEX_A
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 6
 					m_delsys[SYS_DVBC_ANNEX_A] = true;
 #else
 					m_delsys[SYS_DVBC_ANNEX_AC] = true;
@@ -566,7 +566,7 @@ int eDVBFrontend::openFrontend()
 				case FE_OFDM:
 				{
 					m_delsys[SYS_DVBT] = true;
-#ifdef FE_CAN_2G_MODULATION
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 3
 					if (fe_info.caps & FE_CAN_2G_MODULATION) m_delsys[SYS_DVBT2] = true;
 #endif
 					break;
@@ -1770,7 +1770,7 @@ void eDVBFrontend::setFrontend(bool recvEvents)
 			cmdseq.num++;
 
 			p[cmdseq.num].cmd = DTV_DELIVERY_SYSTEM;
-#ifdef SYS_DVBC_ANNEX_C
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 6
 			switch (parm.system)
 			{
 				default:
@@ -1821,7 +1821,7 @@ void eDVBFrontend::setFrontend(bool recvEvents)
 			{
 				default:
 				case eDVBFrontendParametersTerrestrial::System_DVB_T: system = SYS_DVBT; break;
-				//case eDVBFrontendParametersTerrestrial::System_DVB_T2: system = SYS_DVBT2; break;
+				case eDVBFrontendParametersTerrestrial::System_DVB_T2: system = SYS_DVBT2; break;
 			}
 
 			p[cmdseq.num].cmd = DTV_DELIVERY_SYSTEM, p[cmdseq.num].u.data = system, cmdseq.num++;
@@ -1885,6 +1885,11 @@ void eDVBFrontend::setFrontend(bool recvEvents)
 				case eDVBFrontendParametersTerrestrial::TransmissionMode_2k: p[cmdseq.num].u.data = TRANSMISSION_MODE_2K; break;
 				case eDVBFrontendParametersTerrestrial::TransmissionMode_4k: p[cmdseq.num].u.data = TRANSMISSION_MODE_4K; break;
 				case eDVBFrontendParametersTerrestrial::TransmissionMode_8k: p[cmdseq.num].u.data = TRANSMISSION_MODE_8K; break;
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 3
+				case eDVBFrontendParametersTerrestrial::TransmissionMode_1k: p[cmdseq.num].u.data = TRANSMISSION_MODE_1K; break;
+				case eDVBFrontendParametersTerrestrial::TransmissionMode_16k: p[cmdseq.num].u.data = TRANSMISSION_MODE_16K; break;
+				case eDVBFrontendParametersTerrestrial::TransmissionMode_32k: p[cmdseq.num].u.data = TRANSMISSION_MODE_32K; break;
+#endif
 				default:
 				case eDVBFrontendParametersTerrestrial::TransmissionMode_Auto: p[cmdseq.num].u.data = TRANSMISSION_MODE_AUTO; break;
 			}
@@ -1897,6 +1902,11 @@ void eDVBFrontend::setFrontend(bool recvEvents)
 				case eDVBFrontendParametersTerrestrial::GuardInterval_1_16: p[cmdseq.num].u.data = GUARD_INTERVAL_1_16; break;
 				case eDVBFrontendParametersTerrestrial::GuardInterval_1_8: p[cmdseq.num].u.data = GUARD_INTERVAL_1_8; break;
 				case eDVBFrontendParametersTerrestrial::GuardInterval_1_4: p[cmdseq.num].u.data = GUARD_INTERVAL_1_4; break;
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 3
+				case eDVBFrontendParametersTerrestrial::GuardInterval_1_128: p[cmdseq.num].u.data = GUARD_INTERVAL_1_128; break;
+				case eDVBFrontendParametersTerrestrial::GuardInterval_19_128: p[cmdseq.num].u.data = GUARD_INTERVAL_19_128; break;
+				case eDVBFrontendParametersTerrestrial::GuardInterval_19_256: p[cmdseq.num].u.data = GUARD_INTERVAL_19_256; break;
+#endif
 				default:
 				case eDVBFrontendParametersTerrestrial::GuardInterval_Auto: p[cmdseq.num].u.data = GUARD_INTERVAL_AUTO; break;
 			}
@@ -1915,12 +1925,12 @@ void eDVBFrontend::setFrontend(bool recvEvents)
 			cmdseq.num++;
 
 			p[cmdseq.num].cmd = DTV_BANDWIDTH_HZ, p[cmdseq.num].u.data = parm.bandwidth, cmdseq.num++;
-			/*if (system == SYS_DVBT2)
+			if (system == SYS_DVBT2)
 			{
-#ifdef DTV_DVBT2_PLP_ID
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 3
 				p[cmdseq.num].cmd = DTV_DVBT2_PLP_ID, p[cmdseq.num].u.data = parm.plpid, cmdseq.num++;
 #endif
-			}*/
+			}
 		}
 		else if (type == iDVBFrontend::feATSC)
 		{
@@ -2341,7 +2351,7 @@ int eDVBFrontend::isCompatibleWith(ePtr<iDVBFrontendParameters> &feparm)
 		{
 			return 0;
 		}
-#ifdef SYS_DVBC_ANNEX_A
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 6
 		can_handle_dvbc_annex_a = supportsDeliverySystem(SYS_DVBC_ANNEX_A, true);
 		can_handle_dvbc_annex_c = supportsDeliverySystem(SYS_DVBC_ANNEX_C, true);
 #else
@@ -2362,7 +2372,7 @@ int eDVBFrontend::isCompatibleWith(ePtr<iDVBFrontendParameters> &feparm)
 		eDVBFrontendParametersTerrestrial parm;
 		bool can_handle_dvbt, can_handle_dvbt2;
 		can_handle_dvbt = supportsDeliverySystem(SYS_DVBT, true);
-		//can_handle_dvbt2 = supportsDeliverySystem(SYS_DVBT2, true);
+		can_handle_dvbt2 = supportsDeliverySystem(SYS_DVBT2, true);
 		if (feparm->getDVBT(parm) < 0)
 		{
 			return 0;
@@ -2371,10 +2381,10 @@ int eDVBFrontend::isCompatibleWith(ePtr<iDVBFrontendParameters> &feparm)
 		{
 			return 0;
 		}
-		/*if (parm.system == eDVBFrontendParametersTerrestrial::System_DVB_T2 && !can_handle_dvbt2)
+		if (parm.system == eDVBFrontendParametersTerrestrial::System_DVB_T2 && !can_handle_dvbt2)
 		{
 			return 0;
-		}*/
+		}
 		score = 2;
 		if (parm.system == eDVBFrontendParametersTerrestrial::System_DVB_T && can_handle_dvbt2)
 		{
