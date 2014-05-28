@@ -1907,7 +1907,7 @@ class InfoBarPiP:
 			self.session.pipshown
 		except:
 			self.session.pipshown = False
-		if SystemInfo.get("NumVideoDecoders", 1) > 1 and HardwareInfo().get_device_name() != "spark7162" and HardwareInfo().get_device_name() != "sagemcom88":
+		if SystemInfo.get("NumVideoDecoders", 1) > 1:
 			self["PiPActions"] = HelpableActionMap(self, "InfobarPiPActions",
 				{
 					"activatePiP": (self.activePiP, _("Activate PiP")),
