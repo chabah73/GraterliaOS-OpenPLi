@@ -6,9 +6,9 @@ import Components.ParentalControl
 from Components.Button import Button
 from Components.ServiceList import ServiceList, refreshServiceList
 #+++>
-from Components.Sources.StaticText import StaticText
-from Components.Label import Label
-from os import path as os_path, system, unlink
+#from Components.Sources.StaticText import StaticText
+#from Components.Label import Label
+#from os import path as os_path, system, unlink
 #+++<
 from Components.ActionMap import NumberActionMap, ActionMap, HelpableActionMap
 from Components.MenuList import MenuList
@@ -190,7 +190,7 @@ class ChannelContextMenu(Screen):
 				if not csel.movemode:
 					append_when_current_valid(current, menu, (_("enable move mode"), self.toggleMoveMode), level = 1)
 					if not inBouquetRootList and current_root and not (current_root.flags & eServiceReference.isGroup):
-						if not current.toString().startswith("-1"):
+						if current.type != -1:
 							menu.append(ChoiceEntryComponent(text = (_("add marker"), self.showMarkerInputBox)))
 						if haveBouquets:
 							append_when_current_valid(current, menu, (_("enable bouquet edit"), self.bouquetMarkStart), level = 0)
@@ -489,7 +489,7 @@ class ChannelSelectionEdit:
 		self.saved_root = None
 		self.current_ref = None
 #+++>
-		self["title"] = StaticText()
+#		self["title"] = StaticText()
 #+++<
 		class ChannelSelectionEditActionMap(ActionMap):
 			def __init__(self, csel, contexts = [ ], actions = { }, prio=0):
@@ -720,7 +720,7 @@ class ChannelSelectionEdit:
 				new_title += ' ' + _("[favourite edit]")
 		self.setTitle(new_title)
 #+++>
-		self["title"].setText(new_title)
+#		self["title"].setText(new_title)
 #+++<
 		self.__marked = self.servicelist.getRootServices()
 		for x in self.__marked:
@@ -750,7 +750,7 @@ class ChannelSelectionEdit:
 		self.mutableList = None
 		self.setTitle(self.saved_title)
 #+++>
-		self["title"].setText(self.saved_title)
+#		self["title"].setText(self.saved_title)
 #+++<
 		self.saved_title = None
 		# self.servicePath is just a reference to servicePathTv or Radio...
@@ -811,7 +811,7 @@ class ChannelSelectionEdit:
 			self.mutableList = None
 			self.setTitle(self.saved_title)
 #+++>
-			self["title"].setText(self.saved_title)
+#			self["title"].setText(self.saved_title)
 #+++<
 			self.saved_title = None
 			self.servicelist.resetRoot()
@@ -823,7 +823,7 @@ class ChannelSelectionEdit:
 			pos = self.saved_title.find(')')
 			self.setTitle(self.saved_title[:pos+1] + ' ' + _("[move mode]") + self.saved_title[pos+1:]);
 #+++>
-			self["title"].setText(self.saved_title[:pos+1] + ' ' + _("[move mode]") + self.saved_title[pos+1:])
+#			self["title"].setText(self.saved_title[:pos+1] + ' ' + _("[move mode]") + self.saved_title[pos+1:])
 #+++<
 		self["Service"].editmode = True
 
@@ -877,11 +877,11 @@ class ChannelSelectionBase(Screen):
 		self.servicelist = self["list"]
 
 #+++>
-		self["boquet"] = Label(_("Channel Selection"))
-		self["title"] = StaticText()
+#		self["boquet"] = Label(_("Channel Selection"))
+#		self["title"] = StaticText()
 #+++<
 
-		self.numericalTextInput = NumericalTextInput()
+		self.numericalTextInput = NumericalTextInput(handleTimeout=False)
 		self.numericalTextInput.setUseableChars(u'1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
 		self.servicePathTV = [ ]
@@ -966,7 +966,7 @@ class ChannelSelectionBase(Screen):
 		title += _(" (TV)")
 		self.setTitle(title)
 #+++>
-		self["title"].setText(title)
+#		self["title"].setText(title)
 #+++<
 
 	def setRadioMode(self):
@@ -980,7 +980,7 @@ class ChannelSelectionBase(Screen):
 		title += _(" (Radio)")
 		self.setTitle(title)
 #+++>
-		self["title"].setText(title)
+#		self["title"].setText(title)
 #+++<
 
 	def setRoot(self, root, justSet=False):
@@ -1037,7 +1037,7 @@ class ChannelSelectionBase(Screen):
 				nameStr = self.getServiceName(base_ref)
 				titleStr += ' - ' + nameStr
 #+++>
-				self["boquet"].setText("Channel Selection")
+#				self["boquet"].setText("Channel Selection")
 #+++<
 				if end_ref is not None:
 					if Len > 2:
@@ -1047,11 +1047,11 @@ class ChannelSelectionBase(Screen):
 					nameStr = self.getServiceName(end_ref)
 					titleStr += nameStr
 #+++>
-					self["boquet"].setText(nameStr)
+#					self["boquet"].setText(nameStr)
 #+++<
 				self.setTitle(titleStr)
 #+++>
-				self["title"].setText(titleStr)
+#				self["title"].setText(titleStr)
 #+++<
 
 	def moveUp(self):
@@ -1456,8 +1456,8 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		self.recallBouquetMode()
 
 	def __evServiceStart(self):
-		if self.dopipzap and self.session.pip.pipservice:
-			self.servicelist.setPlayableIgnoreService(self.session.pip.getCurrentServiceReference())
+		if self.dopipzap and hasattr(self.session, 'pip'):
+			self.servicelist.setPlayableIgnoreService(self.session.pip.getCurrentServiceReference() or eServiceReference())
 		else:
 			service = self.session.nav.getCurrentService()
 			if service:
@@ -1533,7 +1533,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		elif self.bouquet_mark_edit != OFF:
 			if not (self.bouquet_mark_edit == EDIT_ALTERNATIVES and ref.flags & eServiceReference.isGroup):
 				self.doMark()
-		elif not (ref.flags & eServiceReference.isMarker or ref.toString().startswith("-1")):
+		elif not (ref.flags & eServiceReference.isMarker or ref.type == -1):
 			root = self.getRoot()
 			if not root or not (root.flags & eServiceReference.isGroup):
 				self.zap(enable_pipzap = doClose, preview_zap = not doClose)
@@ -1590,8 +1590,8 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 			if ref is None or ref != nref:
 				nref = self.session.pip.resolveAlternatePipService(nref)
 				if nref and (not checkParentalControl or Components.ParentalControl.parentalControl.isServicePlayable(nref, boundFunction(self.zap, enable_pipzap=True, checkParentalControl=False))):
-					if self.session.pip.playService(nref):
-						self.__evServiceStart()
+					self.session.pip.playService(nref)
+					self.__evServiceStart()
 				else:
 					self.setStartRoot(self.curRoot)
 					self.setCurrentSelection(ref)
@@ -2002,7 +2002,7 @@ class SimpleChannelSelection(ChannelSelectionBase):
 	def layoutFinished(self):
 		self.setModeTv()
 #+++>
-		self["title"].setText(self.title)
+#		self["title"].setText(self.title)
 #+++<
 
 	def BouquetNumberActions(self, number):

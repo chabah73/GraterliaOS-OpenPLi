@@ -55,6 +55,10 @@ class ServiceList(HTMLComponent, GUIComponent):
 		if pic:
 			self.l.setPixmap(self.l.picServiceGroup, pic)
 
+		pic = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "skin_default/icons/icon_crypt.png"))
+		if pic:
+			self.l.setPixmap(self.l.picCrypto, pic)
+
 		self.root = None
 		self.mode = self.MODE_NORMAL
 		self.ItemHeight = 28
@@ -127,7 +131,7 @@ class ServiceList(HTMLComponent, GUIComponent):
 		if self.l.setCurrent(ref):
 			return None
 		from Components.ServiceEventTracker import InfoBarCount
-		if adjust and config.usage.multibouquet.value and InfoBarCount == 1:
+		if adjust and config.usage.multibouquet.value and InfoBarCount == 1 and ref and ref.type != 8192:
 			print "[servicelist] search for service in userbouquets"
 			if self.serviceList:
 				revert_mode = config.servicelist.lastmode.value
@@ -319,3 +323,4 @@ class ServiceList(HTMLComponent, GUIComponent):
 			self.l.setElementFont(self.l.celServiceEventProgressbar, self.ServiceInfoFont)
 		self.l.setHideNumberMarker(config.usage.hide_number_markers.value)
 		self.l.setServiceTypeIconMode(int(config.usage.servicetype_icon_mode.value))
+		self.l.setCryptoIconMode(int(config.usage.crypto_icon_mode.value))

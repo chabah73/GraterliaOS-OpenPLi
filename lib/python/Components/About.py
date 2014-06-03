@@ -1,14 +1,30 @@
 import sys
 import os
 import time
+from Tools.HardwareInfo import HardwareInfo
 
 def getVersionString():
 	return getImageVersionString()
+
+#def getImageVersionString():
+#	try:
+#		if os.path.isfile('/var/lib/opkg/status'):
+#			st = os.stat('/var/lib/opkg/status')
+#		else:
+#			st = os.stat('/usr/lib/ipkg/status')
+#		tm = time.localtime(st.st_mtime)
+#		if tm.tm_year >= 2011:
+#			return time.strftime("%Y-%m-%d %H:%M:%S", tm)
+#	except:
+#		pass
+#	return _("unavailable")
 
 def getImageVersionString():
 	try:
 		if os.path.isfile('/var/lib/opkg/status'):
 			st = os.stat('/var/lib/opkg/status')
+		elif os.path.isfile('/var/opkg/status'):
+			st = os.stat('/var/opkg/status')
 		else:
 			st = os.stat('/usr/lib/ipkg/status')
 		tm = time.localtime(st.st_mtime)
@@ -16,7 +32,9 @@ def getImageVersionString():
 			return time.strftime("%Y-%m-%d %H:%M:%S", tm)
 	except:
 		pass
+
 	return _("unavailable")
+
 
 def getEnigmaVersionString():
 	import enigma
@@ -32,16 +50,7 @@ def getKernelVersionString():
 		return _("unknown")
 
 def getHardwareTypeString():
-	try:
-		if os.path.isfile("/proc/stb/info/boxtype"):
-			return open("/proc/stb/info/boxtype").read().strip().upper() + " (" + open("/proc/stb/info/board_revision").read().strip() + "-" + open("/proc/stb/info/version").read().strip() + ")"
-		if os.path.isfile("/proc/stb/info/vumodel"):
-			return "VU+" + open("/proc/stb/info/vumodel").read().strip().upper() + "(" + open("/proc/stb/info/version").read().strip().upper() + ")" 
-		if os.path.isfile("/proc/stb/info/model"):
-			return open("/proc/stb/info/model").read().strip().upper()
-	except:
-		pass
-	return _("unavailable")
+	return HardwareInfo().get_device_string()
 
 def getImageTypeString():
 	try:

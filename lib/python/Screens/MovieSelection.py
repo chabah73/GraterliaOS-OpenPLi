@@ -360,6 +360,7 @@ class MovieContextMenu(Screen):
 
 		menu.append((_("Add bookmark"), csel.do_addbookmark))
 		menu.append((_("create directory"), csel.do_createdir))
+		menu.append((_("Sort by") + "...", csel.selectSortby))
 		menu.append((_("Network") + "...", csel.showNetworkSetup))
 		menu.append((_("Settings") + "...", csel.configure))
 		self["menu"] = MenuList(menu)
@@ -442,11 +443,13 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 		else:
 			self.selected_tags = None
 		self.selected_tags_ele = None
+		self.nextInBackground = None
 
 		self.movemode = False
 		self.bouquet_mark_edit = False
 
 		self.feedbackTimer = None
+		self.pathselectEnabled = False
 
 		self.numericalTextInput = NumericalTextInput.NumericalTextInput(mapping=NumericalTextInput.MAP_SEARCH_UPCASE)
 		self["chosenletter"] = Label("")
@@ -606,9 +609,11 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 				'rename': _("Rename"),
 				'gohome': _("Home"),
 				'sort': _("Sort"),
+				'sortby': _("Sort by"),
 				'listtype': _("List type"),
 				'preview': _("Preview"),
-				'movieoff': _("On end of movie")
+				'movieoff': _("On end of movie"),
+				'movieoff_menu': _("On end of movie (as menu)")
 			}
 			for p in plugins.getPlugins(PluginDescriptor.WHERE_MOVIELIST):
 				userDefinedActions['@' + p.name] = p.description
@@ -903,21 +908,22 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 		if not playInBackground:
 			print "Not playing anything in background"
 			return
-		current = self.getCurrent()
 		self.session.nav.stopService()
 		self.list.playInBackground = None
 		if config.movielist.play_audio_internal.value:
-			if playInBackground == current:
-				self["list"].moveDown()
-				next = self.getCurrent()
-				if not next or (next == current):
-					print "End of list"
-					return # don't loop the last item
-				path = next.getPath()
-				ext = os.path.splitext(path)[1].lower()
-				print "Next up:", path
-				if ext in AUDIO_EXTENSIONS:
-					self.callLater(self.preview)
+			index = self.list.findService(playInBackground)
+			if index is None:
+				return # Not found?
+			next = self.list.getItem(index + 1)
+			if not next:
+				return
+			path = next.getPath()
+			ext = os.path.splitext(path)[1].lower()
+			print "Next up:", path
+			if ext in AUDIO_EXTENSIONS:
+				self.nextInBackground = next
+				self.callLater(self.preview)
+				self["list"].moveToIndex(index+1)
 
 	def preview(self):
 		current = self.getCurrent()
@@ -928,19 +934,26 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 			else:
 				Screens.InfoBar.InfoBar.instance.checkTimeshiftRunning(self.previewCheckTimeshiftCallback)
 
+	def startPreview(self):
+		if self.nextInBackground is not None:
+			current = self.nextInBackground
+			self.nextInBackground = None
+		else:
+			current = self.getCurrent()
+		playInBackground = self.list.playInBackground
+		if playInBackground:
+			self.list.playInBackground = None
+			self.session.nav.stopService()
+			if playInBackground != current:
+				# come back to play the new one
+				self.callLater(self.preview)
+		else:
+			self.list.playInBackground = current
+			self.session.nav.playService(current)
+
 	def previewCheckTimeshiftCallback(self, answer):
 		if answer:
-			current = self.getCurrent()
-			playInBackground = self.list.playInBackground
-			if playInBackground:
-				self.list.playInBackground = None
-				self.session.nav.stopService()
-				if playInBackground != current:
-					# come back to play the new one
-					self.callLater(self.preview)
-			else:
-				self.list.playInBackground = current
-				self.session.nav.playService(current)
+			self.startPreview()
 
 	def seekRelative(self, direction, amount):
 		if self.list.playInBackground:
@@ -1122,6 +1135,29 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 			self._updateButtonTexts()
 			self.reloadList()
 
+	def can_sortby(self, item):
+		return True
+
+	def do_sortby(self):
+		self.selectSortby()
+
+	def selectSortby(self):
+		menu = []
+		index = 0
+		used = 0
+		for x in l_moviesort:
+			if int(x[0]) == int(config.movielist.moviesort.value):
+				used = index
+			menu.append((_(x[1]), x[0], "%d" % index))
+			index += 1
+		self.session.openWithCallback(self.sortbyMenuCallback, ChoiceBox, title=_("Sort list:"), list=menu, selection = used)
+
+	def sortbyMenuCallback(self, choice):
+		if choice is None:
+			return
+		self.sortBy(int(choice[1]))
+		self["movie_sort"].setPixmapNum(int(choice[1])-1)
+
 	def getTagDescription(self, tag):
 		# TODO: access the tag database
 		return tag
@@ -1142,12 +1178,13 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 	def setCurrentRef(self, path):
 		self.current_ref = eServiceReference("2:0:1:0:0:0:0:0:0:0:" + path)
 		# Magic: this sets extra things to show
-		self.current_ref.setName('8192:jpg 8192:png 8192:gif 8192:bmp')
+		self.current_ref.setName('16384:jpg 16384:png 16384:gif 16384:bmp')
 
 	def reloadList(self, sel = None, home = False):
 		self.reload_sel = sel
 		self.reload_home = home
 		self["waitingtext"].visible = True
+		self.pathselectEnabled = False
 		self.callLater(self.reloadWithDelay)
 
 	def reloadWithDelay(self):
@@ -1183,14 +1220,19 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 					self.list.moveUp()
 				self.playGoTo = None
 				self.callLater(self.preview)
+		self.callLater(self.enablePathSelect)
+
+	def enablePathSelect(self):
+		self.pathselectEnabled = True
 
 	def doPathSelect(self):
-		self.session.openWithCallback(
-			self.gotFilename,
-			MovieLocationBox,
-			_("Please select the movie path..."),
-			config.movielist.last_videodir.value
-		)
+		if self.pathselectEnabled:
+			self.session.openWithCallback(
+				self.gotFilename,
+				MovieLocationBox,
+				_("Please select the movie path..."),
+				config.movielist.last_videodir.value
+			)
 
 	def gotFilename(self, res, selItem = None):
 		if not res:
@@ -1808,6 +1850,9 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 		self["movie_sort"].setPixmapNum(int(config.movielist.moviesort.value)-1)
 		self["movie_sort"].show()
 
+	def can_movieoff(self, item):
+		return True
+
 	def do_movieoff(self):
 		self.setNextMovieOffStatus()
 		self.displayMovieOffStatus()
@@ -1821,6 +1866,26 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 		self.settings["movieoff"] = config.usage.on_movie_eof.value
 		if config.movielist.settings_per_directory.value:
 			self.saveLocalSettings()
+
+	def can_movieoff_menu(self, item):
+		return True
+
+	def do_movieoff_menu(self):
+		current_movie_eof = config.usage.on_movie_eof.value
+		menu = []
+		for x in config.usage.on_movie_eof.choices:
+			config.usage.on_movie_eof.value = x
+			menu.append((config.usage.on_movie_eof.getText(), x))
+		config.usage.on_movie_eof.value = current_movie_eof
+		used = config.usage.on_movie_eof.getIndex()
+		self.session.openWithCallback(self.movieoffMenuCallback, ChoiceBox, title = _("On end of movie"), list = menu, selection = used)
+
+	def movieoffMenuCallback(self, choice):
+		if choice is None:
+			return
+		self.settings["movieoff"] = choice[1]
+		self.saveLocalSettings()
+		self.displayMovieOffStatus()
 
 	def createPlaylist(self):
 		global playlist

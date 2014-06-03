@@ -4,6 +4,7 @@ from config import KEY_LEFT, KEY_RIGHT, KEY_HOME, KEY_END, KEY_0, KEY_DELETE, KE
 from Components.ActionMap import NumberActionMap, ActionMap
 from enigma import eListbox, eListboxPythonConfigContent, eRCInput, eTimer
 from Screens.MessageBox import MessageBox
+from Screens.ChoiceBox import ChoiceBox
 
 class ConfigList(HTMLComponent, GUIComponent, object):
 	def __init__(self, list, session = None):
@@ -138,8 +139,11 @@ class ConfigListScreen:
 			"7": self.keyNumberGlobal,
 			"8": self.keyNumberGlobal,
 			"9": self.keyNumberGlobal,
-			"0": self.keyNumberGlobal
+			"0": self.keyNumberGlobal,
+			"file" : self.keyFile
 		}, -1) # to prevent left/right overriding the listbox
+
+		self.onChangedEntry = []
 
 		self["VirtualKB"] = ActionMap(["VirtualKeyboardActions"],
 		{
@@ -156,6 +160,24 @@ class ConfigListScreen:
 		
 		if not self.handleInputHelpers in self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.handleInputHelpers)
+
+	def createSummary(self):
+		self.setup_title = self.getTitle()
+		from Screens.Setup import SetupSummary
+		return SetupSummary
+
+	def getCurrentEntry(self):
+		return self["config"].getCurrent() and self["config"].getCurrent()[0] or ""
+
+	def getCurrentValue(self):
+		return self["config"].getCurrent() and str(self["config"].getCurrent()[1].getText()) or ""
+
+	def getCurrentDescription(self):
+		return self["config"].getCurrent() and len(self["config"].getCurrent()) > 2 and self["config"].getCurrent()[2] or ""
+
+	def changedEntry(self):
+		for x in self.onChangedEntry:
+			x()
 
 	def handleInputHelpers(self):
 		if self["config"].getCurrent() is not None:
@@ -230,6 +252,20 @@ class ConfigListScreen:
 
 	def keyPageUp(self):
 		self["config"].pageUp()
+
+	def keyFile(self):
+		selection = self["config"].getCurrent()
+		if selection and selection[1].enabled and hasattr(selection[1], "description"):
+			self.session.openWithCallback(self.handleKeyFileCallback, ChoiceBox, selection[0],
+				list=zip(selection[1].description, selection[1].choices),
+				selection=selection[1].choices.index(selection[1].value),
+				keys=[])
+
+	def handleKeyFileCallback(self, answer):
+		if answer:
+			self["config"].getCurrent()[1].value = answer[1]
+			self["config"].invalidateCurrent()
+			self.__changed()
 
 	def saveAll(self):
 		for x in self["config"].list:

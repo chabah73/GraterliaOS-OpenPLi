@@ -16,7 +16,6 @@ class Language:
 		# name, iso-639 language, iso-3166 country. Please don't mix language&country!
 		self.addLanguage("Deutsch",     "de", "DE")
 		self.addLanguage("English",     "en", "EN")
-		self.addLanguage("Español",     "es", "ES")
 		self.addLanguage("Polski",      "pl", "PL")
 
 		self.callbacks = []

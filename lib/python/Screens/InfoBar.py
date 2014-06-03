@@ -19,10 +19,11 @@ from Screens.InfoBarGenerics import InfoBarShowHide, \
 	InfoBarEPG, InfoBarSeek, InfoBarInstantRecord, InfoBarRedButton, InfoBarTimerButton, InfoBarVmodeButton, \
 	InfoBarAudioSelection, InfoBarAdditionalInfo, InfoBarNotifications, InfoBarDish, InfoBarUnhandledKey, \
 	InfoBarSubserviceSelection, InfoBarShowMovies, InfoBarTimeshift,  \
-	InfoBarServiceNotifications, InfoBarPVRState, InfoBarCueSheetSupport, InfoBarSimpleEventView, \
+	InfoBarServiceNotifications, InfoBarPVRState, InfoBarCueSheetSupport, \
 	InfoBarSummarySupport, InfoBarMoviePlayerSummarySupport, InfoBarTimeshiftState, InfoBarTeletextPlugin, InfoBarExtensions, \
 	InfoBarSubtitleSupport, InfoBarPiP, InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarPowersaver, \
-	InfoBarAspectSelection, InfoBarSleepTimer, setResumePoint, delResumePoint
+	InfoBarAspectSelection, InfoBarSleepTimer, \
+	InfoBarHDMI, setResumePoint, delResumePoint
 
 profile("LOAD:InitBar_Components")
 from Components.ActionMap import HelpableActionMap
@@ -39,7 +40,8 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 	InfoBarSubserviceSelection, InfoBarTimeshift, InfoBarSeek, InfoBarCueSheetSupport,
 	InfoBarSummarySupport, InfoBarTimeshiftState, InfoBarTeletextPlugin, InfoBarExtensions,
 	InfoBarPiP, InfoBarPlugins, InfoBarSubtitleSupport, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarPowersaver,
-	InfoBarAspectSelection, InfoBarSleepTimer, Screen):
+	InfoBarAspectSelection, InfoBarSleepTimer,
+	InfoBarHDMI, Screen):
 	
 	ALLOW_SUSPEND = True
 	instance = None
@@ -56,6 +58,9 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				"volumeDown": (self._volDown, _("...")),
 				"resolution": (self.resolution, _("...")),
 				"aspect": (self.aspect, _("...")),
+				"showPlugins": (self.showPlugins, _("...")),
+				"FreePlayer": (self.FreePlayer, _("...")),
+				"ScartHdmi": (self.ScartHdmi, _("...")),
 			}, prio=2)
 		
 		self.allowPiP = True
@@ -67,7 +72,8 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				InfoBarAdditionalInfo, InfoBarNotifications, InfoBarDish, InfoBarSubserviceSelection, \
 				InfoBarTimeshift, InfoBarSeek, InfoBarCueSheetSupport, InfoBarSummarySupport, InfoBarTimeshiftState, \
 				InfoBarTeletextPlugin, InfoBarExtensions, InfoBarPiP, InfoBarSubtitleSupport, InfoBarJobman, InfoBarPowersaver, \
-				InfoBarAspectSelection, InfoBarSleepTimer, InfoBarPlugins, InfoBarServiceErrorPopupSupport:
+				InfoBarAspectSelection, InfoBarSleepTimer, \
+				InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarHDMI:
 			x.__init__(self)
 
 		self.helpList.append((self["actions"], "InfobarActions", [("showMovies", _("Watch recordings..."))]))
@@ -250,24 +256,74 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		else:
 			self.session.open(MoviePlayer, service, slist=self.servicelist, lastservice=ref, infobar=self)
 
+	def showPlugins(self):
+		from Screens.PluginBrowser import PluginBrowser
+		self.session.open(PluginBrowser)
+
+	def FreePlayer(self):
+		def FreePlayerPlugin():
+			try:
+				from Plugins.Extensions.FreePlayer.plugin import FreePlayer
+			except ImportError:
+				return False
+			else:
+				return True
+				
+		if FreePlayerPlugin():
+			from Plugins.Extensions.FreePlayer.plugin import FreePlayer
+			self.session.open(FreePlayer.FreePlayerStart)
+		else:
+			print "FreePlayer plugin not found!"
+					
+	def startTeletext(self):
+		self.teletext_plugin(session=self.session, service=self.session.nav.getCurrentService())
+		
+	def ScartHdmi(self):
+		if isinstance(self, InfoBar):
+			#print '****** videomode ******'
+			port = config.av.videoport.value
+			#print 'actual port = ', port
+			from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
+			if port == 'HDMI':
+				port = 'Scart'
+				mode = 'PAL'
+				rate = '50Hz'
+				config.av.videoport.value = port
+				config.av.videomode[port].value = mode
+				config.av.videorate[mode].value = rate
+				config.av.save()
+				video_hw.setMode(port, mode, rate)
+			else:
+				port = 'HDMI'
+				mode = '720p'
+				rate = '50Hz'
+				config.av.videoport.value = port
+				config.av.videomode[port].value = mode
+				config.av.videorate[mode].value = rate
+				config.av.save()
+				video_hw.setMode(port, mode, rate)
+			self.session.open(MessageBox, 'Videomode changed to ' + mode + ' at ' + rate + ' on ' + port, MessageBox.TYPE_INFO, timeout=10)
+						
 class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBarShowMovies, InfoBarInstantRecord,
 		InfoBarAudioSelection, HelpableScreen, InfoBarNotifications, InfoBarServiceNotifications, InfoBarPVRState,
-		InfoBarCueSheetSupport, InfoBarSimpleEventView, InfoBarMoviePlayerSummarySupport, InfoBarSubtitleSupport,
-		InfoBarAspectSelection, InfoBarSubserviceSelection,
-		Screen, InfoBarTeletextPlugin, InfoBarServiceErrorPopupSupport, InfoBarExtensions, InfoBarPlugins, InfoBarPiP):
+		InfoBarCueSheetSupport, InfoBarMoviePlayerSummarySupport, InfoBarSubtitleSupport, Screen, InfoBarTeletextPlugin,
+		InfoBarAspectSelection,
+		InfoBarServiceErrorPopupSupport, InfoBarExtensions, InfoBarPlugins, InfoBarPiP, InfoBarHDMI):
 
 	ENABLE_RESUME_SUPPORT = True
 	ALLOW_SUSPEND = True
 		
 	def __init__(self, session, service, slist=None, lastservice=None, infobar=None):
 		Screen.__init__(self, session)
-		
+
 		InfoBarAspectSelection.__init__(self)
 
 		self["actions"] = HelpableActionMap(self, "MoviePlayerActions",
 			{
-				"InfoButtonPressed": (self.showDefaultInfo, _("open Info...")),
+				"InfoButtonPressed": (self.openEventView, _("open Info...")),
 				"EPGButtonPressed": (self.showDefaultEPG,  _("open EPG...")),
+				"InfoButtonPressedLong": (self.showEventInfoPlugins, _("select Info...")),
+				"EPGButtonPressedLong": (self.showEventGuidePlugins,  _("select EPG...")),
 				"leavePlayer": (self.leavePlayer, _("leave movie player...")),
 				"leavePlayerOnExit": (self.leavePlayerOnExit, _("leave movie player..."))
 			})
@@ -282,11 +338,11 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 		
 		for x in HelpableScreen, InfoBarShowHide, InfoBarMenu, \
 				InfoBarBase, InfoBarSeek, InfoBarShowMovies, InfoBarInstantRecord, \
-				InfoBarAudioSelection, InfoBarNotifications, InfoBarSimpleEventView, \
+				InfoBarAudioSelection, InfoBarNotifications, \
 				InfoBarServiceNotifications, InfoBarPVRState, InfoBarCueSheetSupport, \
 				InfoBarMoviePlayerSummarySupport, InfoBarSubtitleSupport, \
 				InfoBarTeletextPlugin, InfoBarServiceErrorPopupSupport, InfoBarExtensions, \
-				InfoBarPlugins, InfoBarPiP:
+				InfoBarPlugins, InfoBarPiP, InfoBarHDMI:
 			x.__init__(self)
 
 		self.servicelist = slist
@@ -530,9 +586,17 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 		if self.infobar:
 			self.infobar.showMultiEPG()
 
-	def showDefaultInfo(self):
+	def openEventView(self):
 		if self.infobar:
 			self.infobar.showDefaultEPG()
+
+	def showEventInfoPlugins(self):
+		if self.infobar:
+			self.infobar.showEventInfoPlugins()
+
+	def showEventGuidePlugins(self):
+		if self.infobar:
+			self.infobar.showEventGuidePlugins()
 
 	def showMovies(self):
 		ref = self.session.nav.getCurrentlyPlayingServiceOrGroup()

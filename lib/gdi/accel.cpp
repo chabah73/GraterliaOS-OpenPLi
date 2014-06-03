@@ -361,7 +361,7 @@ int gAccel::accelAlloc(gUnmanagedSurface* surface)
 		}
 	}
 
-	eDebug("accel alloc failed\n");
+//	eDebug("accel alloc failed\n");
 	return -3;
 }
 
