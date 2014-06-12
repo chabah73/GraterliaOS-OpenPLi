@@ -160,7 +160,7 @@ int fbClass::SetMode(int nxRes, int nyRes, int nbpp)
 	{
 		// try single buffering
 		screeninfo.yres_virtual=screeninfo.yres=nyRes;
-		
+
 		if (ioctl(fbFd, FBIOPUT_VSCREENINFO, &screeninfo)<0)
 		{
 			perror("FBIOPUT_VSCREENINFO");

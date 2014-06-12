@@ -58,7 +58,7 @@ class FanControl:
 			fancontrol.setVoltage(fanid, configElement.value)
 		def setPWM(fancontrol, fanid, configElement):
 			fancontrol.setPWM(fanid, configElement.value)
-		
+
 		config.fans = ConfigSubList()
 		for fanid in range(self.getFanCount()):
 			fan = ConfigSubsection()
@@ -70,16 +70,16 @@ class FanControl:
 			fan.vlt.addNotifier(boundFunction(setVlt, self, fanid))
 			fan.pwm.addNotifier(boundFunction(setPWM, self, fanid))
 			config.fans.append(fan)
-	
+
 	def getConfig(self, fanid):
 		return config.fans[fanid]
-	
+
 	def getFanCount(self):
 		return self.fancount
-	
+
 	def hasRPMSensor(self, fanid):
 		return os.path.exists("/proc/stb/fp/fan_speed")
-	
+
 	def hasFanControl(self, fanid):
 		return os.path.exists("/proc/stb/fp/fan_vlt") or os.path.exists("/proc/stb/fan/fan_ctrl")
 	
@@ -88,14 +88,14 @@ class FanControl:
 		value = int(f.readline().strip()[:-4])
 		f.close()
 		return value
-	
+
 	def getVoltage(self, fanid):
 #		f = open("/proc/stb/fp/fan_vlt", "r")
 #		value = int(f.readline().strip(), 16)
 #		f.close()
 		value = 0
 		return value
-	
+
 	def setVoltage(self, fanid, value):
 		if value > 255:
 			return
@@ -108,12 +108,12 @@ class FanControl:
 		value = int(f.readline().strip(), 16)
 		f.close()
 		return value
-	
+
 	def setPWM(self, fanid, value):
 		if value > 255:
 			return
 		f = open("/proc/stb/fan/fan_ctrl", "w")
 		f.write("%d" % value)
 		f.close()
-	
+
 fancontrol = FanControl()
