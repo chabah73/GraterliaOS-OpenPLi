@@ -535,6 +535,8 @@ class InfoBarChannelSelection:
 
 		self["ChannelSelectActions"] = HelpableActionMap(self, "InfobarChannelSelection",
 			{
+				"zapUp": (self.zapUp, self.getZapUpHelptext),
+				"zapDown": (self.zapDown, self.getZapDownHelpText),
 				"keyUp": (self.keyUpCheck, self.getKeyUpHelptext),
 				"keyDown": (self.keyDownCheck, self.getKeyDownHelpText),
 				"keyLeft": (self.keyLeftCheck, self.getKeyLeftHelptext),
@@ -597,6 +599,12 @@ class InfoBarChannelSelection:
 			self.switchChannelDown()
 		else:
 			self.zapDown()
+
+	def getZapUpHelptext(self):
+			value = _("Switch to next channel")
+
+	def getZapDownHelptext(self):
+			value = _("Switch to previous channel")
 
 	def getKeyUpHelptext(self):
 		if config.usage.oldstyle_zap_controls.value:
