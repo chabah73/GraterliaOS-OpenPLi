@@ -528,16 +528,17 @@ class InfoBarChannelSelection:
 	def __init__(self):
 		#instantiate forever
 		self.servicelist = self.session.instantiateDialog(ChannelSelection)
+		self.oldStyleControls = False
 
 		if config.misc.initialchannelselection.value:
 			self.onShown.append(self.firstRun)
 
 		self["ChannelSelectActions"] = HelpableActionMap(self, "InfobarChannelSelection",
 			{
-				"switchChannelUp": (self.switchChannelUpCheck, _("Open service list and select previous channel")),
-				"switchChannelDown": (self.switchChannelDownCheck, _("Open service list and select next channel")),
-				"zapUp": (self.zapUpCheck, _("Switch to previous channel")),
-				"zapDown": (self.zapDownCheck, _("Switch next channel")),
+				"keyUp": (self.keyUpCheck, self.getKeyUpHelptext),
+				"keyDown": (self.keyDownCheck, self.getKeyDownHelpText),
+				"keyLeft": (self.keyLeftCheck, self.getKeyLeftHelptext),
+				"keyRight": (self.keyRightCheck, self.getKeyRightHelptext),
 				"historyBack": (self.historyBack, _("Switch to previous channel in history")),
 				"historyNext": (self.historyNext, _("Switch to next channel in history")),
 				"openServiceList": (self.openServiceList, _("Open service list")),
@@ -573,29 +574,65 @@ class InfoBarChannelSelection:
 		if answer:
 			self.servicelist.historyNext()
 
-	def switchChannelUpCheck(self):
+	def keyUpCheck(self):
 		if config.usage.oldstyle_zap_controls.value:
 			self.zapDown()
 		else:
 			self.switchChannelUp()
 
-	def switchChannelDownCheck(self):
+	def keyDownCheck(self):
 		if config.usage.oldstyle_zap_controls.value:
 			self.zapUp()
 		else:
 			self.switchChannelDown()
 
-	def zapUpCheck(self):
+	def keyLeftCheck(self):
 		if config.usage.oldstyle_zap_controls.value:
 			self.switchChannelUp()
 		else:
 			self.zapUp()
 
-	def zapDownCheck(self):
+	def keyRightCheck(self):
 		if config.usage.oldstyle_zap_controls.value:
 			self.switchChannelDown()
 		else:
 			self.zapDown()
+
+	def getKeyUpHelptext(self):
+		if config.usage.oldstyle_zap_controls.value:
+			value = _("Switch to next channel")
+		else:
+			value = _("Open service list")
+			if not "keep" in config.usage.servicelist_cursor_behavior.value:
+				value += " " + _("and select previous channel")
+		return value
+
+	def getKeyDownHelpText(self):
+		if config.usage.oldstyle_zap_controls.value:
+			value = _("Switch to previous channel")
+		else:
+			value = _("Open service list")
+			if not "keep" in config.usage.servicelist_cursor_behavior.value:
+				value += " " + _("and select next channel")
+		return value
+
+	def getKeyLeftHelptext(self):
+		if config.usage.oldstyle_zap_controls.value:
+			value = _("Open service list")
+			if not "keep" in config.usage.servicelist_cursor_behavior.value:
+				value += " " + _("and select previous channel")
+		else:
+			value = _("Switch to previous channel")
+		return value
+
+	def getKeyRightHelptext(self):
+		if config.usage.oldstyle_zap_controls.value:
+			value = _("Open service list")
+			if not "keep" in config.usage.servicelist_cursor_behavior.value:
+				value += " " + _("and select next channel")
+		else:
+			value = _("Switch to next channel")
+		return value
 
 	def switchChannelUp(self):
 		if "keep" not in config.usage.servicelist_cursor_behavior.value:
@@ -1937,7 +1974,7 @@ class InfoBarPiP:
 		if SystemInfo["PIPAvailable"]:
 			self["PiPActions"] = HelpableActionMap(self, "InfobarPiPActions",
 				{
-					"activatePiP": (self.activePiP, _("Activate PiP")),
+					"activatePiP": (self.activePiP, self.activePiPName),
 				})
 			if (self.allowPiP):
 				self.addExtension((self.getShowHideName, self.showPiP, lambda: True), "blue")
@@ -2010,10 +2047,18 @@ class InfoBarPiP:
 					del self.session.pip
 
 	def activePiP(self):
-		if self.session.pipshown:
-			self.togglePipzap()
-		else:
+		if self.servicelist and self.servicelist.dopipzap or not self.session.pipshown:
 			self.showPiP()
+		else:
+			self.togglePipzap()
+
+	def activePiPName(self):
+		if self.servicelist and self.servicelist.dopipzap:
+			return _("Disable Picture in Picture")
+		if self.session.pipshown:
+			return _("Zap focus to Picture in Picture")
+		else:
+			return _("Activate Picture in Picture")
 
 	def swapPiP(self):
 		swapservice = self.session.nav.getCurrentlyPlayingServiceOrGroup()
