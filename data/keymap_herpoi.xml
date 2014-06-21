@@ -90,11 +90,18 @@
 		<key id="KEY_BLUE" mapto="extensions" flags="m" />
 	</map>
 
+	<map context="SatlistShortcutAction">
+		<key id="KEY_YELLOW" mapto="changetype" flags="b"/>
+		<key id="KEY_BLUE" mapto="nothingconnected" flags="b" />
+	</map>
+
 	<map context="InfobarChannelSelection">
-		<key id="KEY_PAGEUP" mapto="zapDown" flags="m" />
-		<key id="KEY_PAGEDOWN" mapto="zapUp" flags="m" />
+		<key id="KEY_PAGEUP" mapto="keyChannelUp" flags="m" />
+		<key id="KEY_PAGEDOWN" mapto="keyChannelDown" flags="m" />
 		<key id="KEY_UP" mapto="zapDown" flags="mr" />
 		<key id="KEY_DOWN" mapto="zapUp" flags="mr" />
+		<key id="KEY_LEFT" mapto="keyLeft" flags="mr" />
+		<key id="KEY_RIGHT" mapto="keyRight" flags="mr" />
 		<key id="KEY_REWIND" mapto="historyBack" flags="mr" />
 		<key id="KEY_FASTFORWARD" mapto="historyNext" flags="mr" />
 		<key id="KEY_OK" mapto="openServiceList" flags="m" />
