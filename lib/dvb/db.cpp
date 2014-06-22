@@ -746,18 +746,18 @@ void eDVBDB::saveServicelist(const char *file)
 				s.getServiceType(),
 				0);
 		myLine = encryptDecrypt(myLinetmp);
-//		eDebug("ENCRYPTED: '%s' ", myLine.c_str());
+		eDebug("ENCRYPTED: '%s' ", myLine.c_str());
 		fprintf(f, "GOS:%s\n", myLine.c_str() );
 		myLine = encryptDecrypt(myLine);
-//		eDebug("DECRYPTED: '%s'\n", myLine.c_str());
+		eDebug("DECRYPTED: '%s'\n", myLine.c_str());
 
 		// ### Service name ###
 		sprintf(myLinetmp, "%s", i->second->m_service_name.c_str());
 		myLine = encryptDecrypt(myLinetmp);
-//		eDebug("ENCRYPTED: '%s' ", myLine.c_str());
+		eDebug("ENCRYPTED: '%s' ", myLine.c_str());
 		fprintf(f, "GOS:%s\n", myLine.c_str() );
 		myLine = encryptDecrypt(myLine);
-//		eDebug("DECRYPTED: '%s'\n", myLine.c_str());
+		eDebug("DECRYPTED: '%s'\n", myLine.c_str());
 
 		fprintf(f, "p:%s", i->second->m_provider_name.c_str());
 
