@@ -175,14 +175,14 @@
 
 	<map context="InfobarActions">
 		<key id="KEY_PLAY" mapto="showMovies" flags="m" />
-		<key id="KEY_GOTO" mapto="showMovies" flags="m" />
+		<key id="KEY_GOTO" mapto="FreePlayer" flags="m" />
 		<key id="KEY_PVR" mapto="toogleTvRadio" flags="m" />
-		<key id="KEY_MEDIA" mapto="FreePlayer" flags="m" />
+		<key id="KEY_MEDIA" mapto="toogleTvRadio" flags="m" />
 		<!--key id="KEY_MODE" mapto="ScartHdmi" flags="m" /-->
 		<!--key id="KEY_MODE" mapto="aspect" flags="m" /-->
 		<!--key id="KEY_MODE" mapto="resolution" flags="m" /-->
 		<!--<key id="KEY_SUBTITLE" mapto="restart_softcam" flags="m" /-->
-		<!--<key id="KEY_LIST" mapto="restart_softcam" flags="m" /-->
+		<key id="KEY_MODE" mapto="restart_softcam" flags="m" />
 		<key id="KEY_BLUE" mapto="showTv" flags="m" />
 		<key id="KEY_LIST" mapto="showPlugins" flags="m" />
 		<key id="KEY_LEFT" mapto="volumeDown" flags="m" />
