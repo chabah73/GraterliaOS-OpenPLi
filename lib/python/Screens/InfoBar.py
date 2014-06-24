@@ -61,6 +61,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				"showPlugins": (self.showPlugins, _("...")),
 				"FreePlayer": (self.FreePlayer, _("...")),
 				"ScartHdmi": (self.ScartHdmi, _("...")),
+				"restart_softcam": (self.restartSoftcam, _("...")),
 			}, prio=2)
 
 		self.allowPiP = True
@@ -277,7 +278,14 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 					
 	def startTeletext(self):
 		self.teletext_plugin(session=self.session, service=self.session.nav.getCurrentService())
-		
+
+	def restartSoftcam(self):
+		from Screens.Console import Console
+		if fileExists('/etc/init.d/softcam'):
+			self.session.open(Console, 'Restart Softcam', ['/etc/init.d/softcam restart'])
+		else:
+			print "Softcam startup screen not found!"
+
 	def ScartHdmi(self):
 		if isinstance(self, InfoBar):
 			#print '****** videomode ******'
