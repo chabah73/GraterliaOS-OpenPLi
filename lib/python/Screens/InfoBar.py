@@ -281,6 +281,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 
 	def restartSoftcam(self):
 		from Screens.Console import Console
+		from Tools.Directories import fileExists
 		if fileExists('/etc/init.d/softcam'):
 			self.session.open(Console, 'Restart Softcam', ['/etc/init.d/softcam restart'])
 		else:
