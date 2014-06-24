@@ -229,7 +229,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 	def __init__(self):
 		self["ShowHideActions"] = ActionMap( ["InfobarShowHideActions"] ,
 			{
-				"toggleShow": self.okButtonCheck,
+				"toggleShow": self.toggleShow,
 				"hide": self.keyHide,
 			}, 1) # lower prio to make it possible to override ok and cancel..
 
@@ -325,12 +325,6 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		self.hide()
 		self.hideTimer.stop()
 		self.openEventView()
-
-	def okButtonCheck(self):
-		if config.usage.ok_is_channelselection.value and hasattr(self, "openServiceList"):
-			self.openServiceList()
-		else:
-			self.toggleShow()
 
 	def toggleShow(self):
 		if self.__state == self.STATE_HIDDEN:
@@ -607,15 +601,15 @@ class InfoBarChannelSelection:
 
 	def keyChannelUpCheck(self):
 		if config.usage.zap_with_ch_buttons.value:
-			self.openServiceList()
-		else:
 			self.zapDown()
+		else:
+			self.openServiceList()
 
 	def keyChannelDownCheck(self):
 		if config.usage.zap_with_ch_buttons.value:
-			self.openServiceList()
-		else:
 			self.zapUp()
+		else:
+			self.openServiceList()
 
 	def getKeyUpHelptext(self):
 		if config.usage.oldstyle_zap_controls.value:
