@@ -78,7 +78,7 @@ void eFilePushThread::thread()
 	{
 		if (m_sg && !current_span_remaining)
 		{
-#if defined (__sh__) // tells the player to play in reverse
+#if defined(__sh__) // tells the player to play in reverse
 #define VIDEO_DISCONTINUITY                   _IO('o', 84)
 #define DVB_DISCONTINUITY_SKIP                0x01
 #define DVB_DISCONTINUITY_CONTINUOUS_REVERSE  0x02

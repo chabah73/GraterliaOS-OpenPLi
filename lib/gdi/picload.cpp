@@ -4,7 +4,6 @@
 
 #include <lib/gdi/picload.h>
 #include <lib/gdi/picexif.h>
-#include "../../../misc/tools/libmmeimage/libmmeimage.h"
 
 extern "C" {
 #include <jpeglib.h>
@@ -538,9 +537,8 @@ static void gif_load(Cfilepara* filepara)
 	ColorMapObject *cmap;
 	int cmaps;
 	int extcode;
-	int GifLastError;
-	
-	gft = DGifOpenFileName(filepara->file, &GifLastError);
+
+	gft = DGifOpenFileName(filepara->file);
 	if (gft == NULL)
 		return;
 	do

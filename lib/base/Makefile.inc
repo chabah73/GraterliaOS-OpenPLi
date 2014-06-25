@@ -43,7 +43,7 @@ baseinclude_HEADERS = \
 	base/estring.h \
 	base/etpm.h \
 	base/filepush.h \
-	base/freesatv2.cpp \
+	base/freesatv2.h \
 	base/i18n.h \
 	base/itssource.h \
 	base/init.h \
