@@ -913,10 +913,6 @@ DEFINE_REF(eServiceMP3::GstMessageContainer);
 RESULT eServiceMP3::connectEvent(const Slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection)
 {
 	connection = new eConnection((iPlayableService*)this, m_event.connect(event));
-#ifdef ENABLE_MEDIAFWGSTREAMER
-#else
-	m_event(this, evSeekableStatusChanged);
-#endif
 	return 0;
 }
 

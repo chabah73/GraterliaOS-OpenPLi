@@ -13,7 +13,7 @@
 #include <lib/driver/vfd.h>
 
 #ifdef PLATFORM_TF7700
-#include "../../tools/tffpctl/frontpanel.h"
+#include "../../misc/tools/tffpctl/frontpanel.h"
 #endif
 
 #define VFD_DEVICE "/dev/vfd"

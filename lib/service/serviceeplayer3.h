@@ -7,8 +7,8 @@
 #include <lib/dvb/subtitle.h>
 #include <lib/dvb/teletext.h>
 
-#include <common.h>
-#include <subtitle.h>
+#include <../../misc/tools/libeplayer3/include/common.h>
+#include <../../misc/tools/libeplayer3/include/subtitle.h>
 #define gint int
 #define gint64 int64_t
 extern OutputHandler_t		OutputHandler;

@@ -152,13 +152,11 @@ gSurface::~gSurface()
 	if (data)
 	{
 		delete [] (unsigned char*)data;
-		data = 0;
 		removed_pixmap(y * stride);
 	}
 	if (clut.data)
 	{
 		delete [] clut.data;
-		clut.data = 0;
 	}
 }
 

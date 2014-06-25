@@ -618,7 +618,6 @@ void eDVBScan::channelDone()
 
 				eOriginalNetworkID onid = (*tsinfo)->getOriginalNetworkId();
 				eTransportStreamID tsid = (*tsinfo)->getTransportStreamId();
-				eDVBNamespace ns(0);
 
 				for (DescriptorConstIterator desc = (*tsinfo)->getDescriptors()->begin();
 						desc != (*tsinfo)->getDescriptors()->end(); ++desc)
@@ -656,7 +655,7 @@ void eDVBScan::channelDone()
 
 						unsigned long hash=0;
 						feparm->getHash(hash);
-						ns = buildNamespace(onid, tsid, hash);
+						eDVBNamespace ns = buildNamespace(onid, tsid, hash);
 
 						addChannelToScan(
 							eDVBChannelID(ns, tsid, onid),
