@@ -468,22 +468,6 @@ static eServiceReferenceDVB parseServiceRefData(const char *line)
 				service_type);
 }
 
-int GOSlameDB = 0;
-
-using namespace std;
-string encryptDecrypt(string toEncrypt) {
-    char key[12] = {1, 7, 3, 2, 6, 9, 4, 6, 9, 0, 8, 5}; //Spacja (pierwszy drukowany znak ma 20, aby byc pewnym ze nie wygenerujemy \n korzystamy tylko z 0-9
-    string output = toEncrypt;
-    
-    for (int i = 0; i < toEncrypt.size(); i++)
-	if (toEncrypt[i] < 0x20) //wszystko mniejsze od spacji zostawiamy w spokoju
-	    output[i] = toEncrypt[i];
-	else
-	    output[i] = toEncrypt[i] ^ key[i % (sizeof(key) / sizeof(char))]; //XOR jest odwracalny ;)
-
-    return output;
-}
-
 void eDVBDB::loadServicelist(const char *file)
 {
 	eDebug("---- opening lame channel db");
@@ -495,18 +479,10 @@ void eDVBDB::loadServicelist(const char *file)
 
 	char line[256];
 	int version;
-	if ((!fgets(line, sizeof(line), f)) || (sscanf(line, "eDVB services /%d/", &version) != 1 && sscanf(line, "GOS:eDVB services /%d/", &version) != 1))
+	if ((!fgets(line, sizeof(line), f)) || sscanf(line, "eDVB services /%d/", &version) != 1)
 	{
 		eDebug("not a valid servicefile");
 		return;
-	}
-	if (strstr(line, "GOS:eDVB") != NULL)
-	{
-		eDebug("Loading Grateria lameDB... :)");
-		fgets(line, sizeof(line), f);
-		GOSlameDB = 1;
-	} else {
-		eDebug("Loading standard lameDB...");
 	}
 	eDebug("reading services (version %d)", version);
 
@@ -519,23 +495,8 @@ void eDVBDB::loadServicelist(const char *file)
 	int tcount = 0;
 	while (!feof(f))
 	{
-		if (!fgets(line, sizeof(line), f) || !strcmp(line, "end\n") )
+		if (!fgets(line, sizeof(line), f) || !strcmp(line, "end\n"))
 			break;
-
-		if (strstr(line, "GOS:") != NULL)
-		{
-			//eDebug("Transponder GOS...");
-			for (int i = 4; i < 255; i++) //nie jest niezbedne, ale dla spokoju ducha...
-			      line[i - 4] = line[i];
-			strncpy(line, encryptDecrypt(line).c_str(), sizeof(line) - 1);
-		}
-		for (int i = 0; i < 255; i++){
-		    if (line[i] != 0x3b)
-		      line[i] = line[i];
-		    else
-		      line[i] = 0x3a;
-		}
-		//eDebug("%s", line);
 
 		eDVBChannelID channelid = parseChannelData(line);
 		if (!channelid)
@@ -543,22 +504,6 @@ void eDVBDB::loadServicelist(const char *file)
 
 		if (!fgets(line, sizeof(line), f))
 			break;
-
-		if (strstr(line, "GOS:") != NULL)
-		{
-			//eDebug("Transponder GOS2...");
-			for (int i = 4; i < 255; i++) //nie jest niezbedne, ale dla spokoju ducha...
-			      line[i - 4] = line[i];
-			strncpy(line, encryptDecrypt(line).c_str(), sizeof(line) - 1);
-		}
-		for (int i = 0; i < 255; i++){
-		    if (line[i] != 0x3b)
-		      line[i] = line[i];
-		    else
-		      line[i] = 0x3a;
-		}
-		//eDebug("%s", line);
-
 		ePtr<eDVBFrontendParameters> feparm = parseFrontendData(line + 1, version);
 		if (feparm) {
 			addChannelToList(channelid, feparm);
@@ -566,13 +511,6 @@ void eDVBDB::loadServicelist(const char *file)
 		}
 		if (!fgets(line, sizeof(line), f) || strcmp(line, "/\n"))
 			break;
-	}
-
-	if (GOSlameDB == 1){
-		if ((!fgets(line, sizeof(line), f)) || strcmp(line, "\t\n"))
-		{
-			eDebug("GOS marker found ;)");
-		}
 	}
 
 	if ((!fgets(line, sizeof(line), f)) || strcmp(line, "services\n"))
@@ -588,44 +526,11 @@ void eDVBDB::loadServicelist(const char *file)
 		if (!fgets(line, sizeof(line), f) || !strcmp(line, "end\n"))
 			break;
 
-		if (strstr(line, "GOS:") != NULL)
-		{
-			//eDebug("services GOS s1... :)");
-			for (int i = 4; i < 255; i++) //nie jest niezbedne, ale dla spokoju ducha...
-			      line[i - 4] = line[i];
-			strncpy(line, encryptDecrypt(line).c_str(), sizeof(line) - 1);
-			//eDebug("%s", line);
-		}
-		for (int i = 0; i < 255; i++){
-		    if (line[i] != 0x3b)
-		      line[i] = line[i];
-		    else
-		      line[i] = 0x3a;
-		}
-		//eDebug("%s", line);
-
 		eServiceReferenceDVB ref = parseServiceRefData(line);
 		if (!ref)
 			continue;
 		if (!fgets(line, sizeof(line), f))
 			break;
-
-		if (strstr(line, "GOS:") != NULL)
-		{
-			//eDebug("Nazwa GOS>");
-			for (int i = 4; i < 255; i++) //nie jest niezbedne, ale dla spokoju ducha...
-			      line[i - 4] = line[i];
-			strncpy(line, encryptDecrypt(line).c_str(), sizeof(line) - 1);
-			//eDebug("%s", line);
-		}
-		for (int i = 0; i < 255; i++){
-		    if (line[i] != 0x3b)
-		      line[i] = line[i];
-		    else
-		      line[i] = 0x3a;
-		}
-		//eDebug("%s", line);
-
 		len = strlen(line); /* strip newline */
 		if (len > 0 && line[len - 1 ] == '\n')
 			line[len - 1] = '\0';
@@ -653,19 +558,12 @@ void eDVBDB::saveServicelist(const char *file)
 {
 	eDebug("---- saving lame channel db");
 	std::string filename = file;
-	//std::string encodefilename = encodedfile;
-	std::string myLine;
-	char myLinetmp[255];
-	if (access("/tmp/oscam.encode", F_OK) == 0)
-		GOSlameDB = 1;
 	{
 	CFile f((filename + ".writing").c_str(), "w");
 	int channels=0, services=0;
 	if (!f)
 		eFatal("couldn't save lame channel db!");
-
-	GOSlameDB ? fprintf(f, "GOS:eDVB services /4/\nPo siódme: Nie kradnij!!!\n") : fprintf(f, "eDVB services /4/\n");
-
+	fprintf(f, "eDVB services /4/\n");
 	fprintf(f, "transponders\n");
 	for (std::map<eDVBChannelID, channel>::const_iterator i(m_channels.begin());
 			i != m_channels.end(); ++i)
@@ -684,7 +582,7 @@ void eDVBDB::saveServicelist(const char *file)
 		{
 			if (sat.system == eDVBFrontendParametersSatellite::System_DVB_S2)
 			{
-				sprintf(myLinetmp, "\ts %d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d",
+				fprintf(f, "\ts %d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d\n",
 					sat.frequency, sat.symbol_rate,
 					sat.polarisation, sat.fec,
 					sat.orbital_position > 1800 ? sat.orbital_position - 3600 : sat.orbital_position,
@@ -694,19 +592,6 @@ void eDVBDB::saveServicelist(const char *file)
 					sat.modulation,
 					sat.rolloff,
 					sat.pilot);
-				if (GOSlameDB)
-				{
-					myLine = encryptDecrypt(myLinetmp);
-					//eDebug("EECRYPTED: '%s' ", myLine.c_str());
-					fprintf(f, "GOS:%s\n", myLine.c_str() );
-					//myLine = encryptDecrypt(myLine);
-					//eDebug("DECRYPTED: '%s'\n", myLine.c_str());
-				}
-				else
-				{
-					myLine = myLinetmp;
-					fprintf(f, "%s\n", myLine.c_str() );
-				}
 			}
 			else
 			{
@@ -744,46 +629,19 @@ void eDVBDB::saveServicelist(const char *file)
 		fprintf(f, "/\n");
 		channels++;
 	}
-	GOSlameDB ? fprintf(f, "end\n\t\nservices\n") : fprintf(f, "end\nservices\n") ;
+	fprintf(f, "end\nservices\n");
 
 	for (std::map<eServiceReferenceDVB, ePtr<eDVBService> >::iterator i(m_services.begin());
 		i != m_services.end(); ++i)
 	{
 		const eServiceReferenceDVB &s = i->first;
-		sprintf(myLinetmp, "%04x;%08x;%04x;%04x;%d;%d",
-				 s.getServiceID().get(), s.getDVBNamespace().get(),
+		fprintf(f, "%04x:%08x:%04x:%04x:%d:%d\n",
+				s.getServiceID().get(), s.getDVBNamespace().get(),
 				s.getTransportStreamID().get(),s.getOriginalNetworkID().get(),
 				s.getServiceType(),
 				0);
-		if (GOSlameDB)
-		{
-			myLine = encryptDecrypt(myLinetmp);
-			//eDebug("ENCRYPTED: '%s' ", myLine.c_str());
-			fprintf(f, "GOS:%s\n", myLine.c_str() );
-			//myLine = encryptDecrypt(myLine);
-			//eDebug("DECRYPTED: '%s'\n", myLine.c_str());
-		}
-		else
-		{
-			myLine = myLinetmp;
-			fprintf(f, "%s\n", myLine.c_str() );
-		}
 
-		// ### Service name ###
-		sprintf(myLinetmp, "%s", i->second->m_service_name.c_str());
-		if (GOSlameDB)
-		{
-			myLine = encryptDecrypt(myLinetmp);
-			//eDebug("ENCRYPTED: '%s' ", myLine.c_str());
-			fprintf(f, "GOS:%s\n", myLine.c_str() );
-			//myLine = encryptDecrypt(myLine);
-			//eDebug("DECRYPTED: '%s'\n", myLine.c_str());
-		}
-		else
-		{
-			myLine = myLinetmp;
-			fprintf(f, "%s\n", myLine.c_str() );
-		}
+		fprintf(f, "%s\n", i->second->m_service_name.c_str());
 
 		fprintf(f, "p:%s", i->second->m_provider_name.c_str());
 
@@ -806,7 +664,7 @@ void eDVBDB::saveServicelist(const char *file)
 		fprintf(f, "\n");
 		services++;
 	}
-	GOSlameDB ? fprintf(f, "end\nHave a lot of bugs!\n\nZlodziejom mowimy NIE!!!\n") : fprintf(f, "end\nHave a lot of bugs!\n") ;
+	fprintf(f, "end\nHave a lot of bugs!\n");
 	eDebug("saved %d channels and %d services!", channels, services);
 	f.sync();
 	}
