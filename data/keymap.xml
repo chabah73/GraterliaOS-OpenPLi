@@ -197,9 +197,9 @@
 		<key id="KEY_SUBTITLE" mapto="audioSelection" flags="m" />
 	</map>
 
-	<!--map context="InfobarAspectSelectionActions">
+	<map context="InfobarAspectSelectionActions">
 		<key id="KEY_GREEN" mapto="aspectSelection" flags="m" />
-	</map-->
+	</map>
 
 	<map context="InfobarSubserviceSelectionActions">
 		<!--key id="KEY_GREEN" mapto="subserviceSelection" flags="b" /-->
@@ -212,7 +212,7 @@
 	</map>
 	
 	<map context="InfobarVmodeButtonActions">
-			<key id="KEY_GREEN" mapto="vmodeSelection" flags="m" />
+			<!--key id="KEY_GREEN" mapto="vmodeSelection" flags="m" /-->
 	</map>
 	
 	<map context="InfobarSubserviceQuickzapActions">
@@ -269,7 +269,7 @@
 		<key id="KEY_LEFT" mapto="seekBack" flags="m" />
 		<key id="KEY_RIGHT" mapto="seekFwd" flags="m" />
 
-		<key id="KEY_OK" mapto="playpauseService" flags="m" />
+		<key id="KEY_OK" mapto="okButton" flags="m" />
 		
 		<key id="KEY_1" mapto="seekdef:1" flags="m" />
 		<key id="KEY_3" mapto="seekdef:3" flags="m" />
@@ -395,6 +395,8 @@
 		<key id="KEY_FASTFORWARD" mapto="nextBouquet" flags="m" />
 		<key id="KEY_PAGEDOWN" mapto="nextMarker" flags="m" />
 		<key id="KEY_PAGEUP" mapto="prevMarker" flags="m" />
+		<key id="KEY_LEFT" mapto="keyLeft" flags="m" />
+		<key id="KEY_RIGHT" mapto="keyRight" flags="m" />
 	</map>
 
 	<map context="ChannelSelectEPGActions">
@@ -489,6 +491,9 @@
 		<key id="KEY_OPTION" mapto="yellow" flags="m" />
 		<key id="KEY_SUBTITLE" mapto="yellow" flags="m" />
 		<key id="KEY_BLUE" mapto="blue" flags="m" />
+		<key id="KEY_PAGEUP" mapto="volumeUp" flags="m" />
+		<key id="KEY_PAGEDOWN" mapto="volumeDown" flags="m" />
+		<key id="KEY_MUTE" mapto="volumeMute" flags="m" />
 	</map>
 	<map context="ColorActions">
 		<key id="KEY_RED" mapto="red" flags="m" />

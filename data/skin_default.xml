@@ -54,6 +54,7 @@
 		<color name="transpWhite" value="#80ffffff" />
 		<color name="background" value="#25062748" />
 		<color name="foreground" value="#ffffff" />
+		<color name="secondBG" value="#18101214"/>
 	</colors>
 	<!-- Screwed Stone II skin (skin_default.xml) /Nemesis -->
 	<!-- About screen -->
@@ -1185,6 +1186,9 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y() + (or
 		<widget source="session.CurrentService" render="Label" position="0,30" size="150,30" font="Regular;25" halign="center" foregroundColor="white" backgroundColor="transpBlack">
 			<convert type="ServicePosition">Remaining</convert>
 		</widget>
+	</screen>
+	<screen name="TimeshiftLive" position="70,70" zPosition="2" size="150,30" backgroundColor="transpBlack" flags="wfNoBorder">
+		<eLabel position="0,0" size="150,30" font="Regular;23" text="Timeshift Live" backgroundColor="transpBlack"/>
 	</screen>
 	<!-- Translator Info -->
 	<screen name="TranslationInfo" position="center,center" size="420,350" title="Translation">
