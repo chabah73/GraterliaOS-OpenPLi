@@ -833,12 +833,9 @@ msgstr "Wystąpił nieznany błąd!"
 msgid "And will put your receiver in standby over "
 msgstr "Odbiornik przejdzie w stan czuwania za "
 
-<<<<<<< HEAD
 msgid "And will shutdown your receiver over "
 msgstr "Odbiornik wyłączy sie za "
 
-=======
->>>>>>> OpenPLi/master
 #
 msgid "Any activity"
 msgstr "Każda aktywność"
@@ -994,11 +991,7 @@ msgstr "Auto"
 
 #
 msgid "Auto chapter split every ? minutes (0=never)"
-<<<<<<< HEAD
 msgstr "Auto podział rozdziałów co ? minuty (0=nigdy)"
-=======
-msgstr "Automatyczny podział rozdziałów co ? minuty (0=nigdy)"
->>>>>>> OpenPLi/master
 
 #
 msgid "Auto flesh"
@@ -1465,13 +1458,10 @@ msgid "Command order"
 msgstr "Kolejność komend"
 
 #
-<<<<<<< HEAD
 msgid "Committed DiSEqC command"
 msgstr "Wykonywana komenda DiSEqC"
 
 #
-=======
->>>>>>> OpenPLi/master
 msgid "Common Interface"
 msgstr "Moduł dostępu CI"
 
@@ -1510,15 +1500,10 @@ msgstr "Tryb konfiguracji: %s"
 msgid "Configuration..."
 msgstr "Konfiguracja"
 
-<<<<<<< HEAD
 msgid ""
 "Configure an additional delay to improve external subtitle synchronisation."
 msgstr ""
 "Ustaw dodatkowe opóźnienie, aby polepszyć synchronizacje napisów zewnętrznych"
-=======
-msgid "Configure an additional delay to improve external subtitle synchronisation."
-msgstr "Ustaw dodatkowe opóźnienie, aby polepszyć synchronizację napisów zewnętrznych"
->>>>>>> OpenPLi/master
 
 msgid "Configure an additional delay to improve subtitle synchronisation."
 msgstr "Ustaw dodatkowe opóźnienie, aby polepszyć synchronizacje napisów"
@@ -1570,17 +1555,12 @@ msgstr "Ustaw adres IP"
 msgid "Configure the aspect ratio of the screen."
 msgstr "Skonfiguruj proporcje ekranu"
 
-<<<<<<< HEAD
 msgid ""
 "Configure the behavior of the 'pause' key when movie playback is already "
 "paused."
 msgstr ""
 "Skonfiguruj zachowanie klawisza PAUZA gdy odtwarzanie nagrania jest już "
 "wstrzymane"
-=======
-msgid "Configure the behavior of the 'pause and ok' key when movie playback is already paused."
-msgstr ""
->>>>>>> OpenPLi/master
 
 #
 msgid "Configure the behavior when movie playback is manually stopped."
@@ -1622,7 +1602,6 @@ msgstr "Skonfiguruj kolor napisów teletekstu"
 msgid "Configure the contrast level of the front panel display."
 msgstr "Skonfiguruj kontrast wyświetlacza na przednim panelu"
 
-<<<<<<< HEAD
 msgid ""
 "Configure the duration in hours and action, which could be shut down or "
 "standby, when the receiver is not controlled."
@@ -1641,19 +1620,6 @@ msgstr ""
 
 msgid "Configure the duration in minutes for the screensaver."
 msgstr "Ustaw w minutach czas po jakim pojawi się wygaszacz ekranu"
-=======
-msgid "Configure the cursor behaviour in the channel selection list. When opening the channel selection list you can keep on the current service or already select up/down and you are able to revert the B+/B- buttons."
-msgstr "Skonfiguruj zachowanie kursora w liście wyboru kanałów. Można skonfigurować aby kursor był zawsze na aktualnie włączonym kanale przy wejściu w listę kanałów strzałkami góra/dół; można także odwrócić przełączanie bukietów klawiszami B+/B- w liście."
-
-msgid "Configure the duration in hours the receiver should go to standby when the receiver is not controlled."
-msgstr "Ustaw czas (w godzinach) po jakim odbiornik przełączy się w tryb czuwania, gdy pozostaje nieaktywny."
-
-msgid "Configure the duration in minutes for the screensaver."
-msgstr "Ustaw w minutach czas po jakim pojawi się wygaszacz ekranu."
-
-msgid "Configure the duration in minutes for the sleeptimer. Select this entry and click OK or green to start/stop the sleeptimer"
-msgstr "Ustaw czas (w minutach) dla wyłącznika czasowego. Wybierz opcję i wciśnij OK lub zielony aby uruchomić/zatrzymać sleeptimer. "
->>>>>>> OpenPLi/master
 
 msgid ""
 "Configure the duration when the receiver should go to shut down in case the "
@@ -1801,23 +1767,12 @@ msgstr "Skonfiguruj czas przeskoku dla klawiszy      7 i 9"
 msgid "Configure the slow motion speeds."
 msgstr "Dostępne prędkości w zwolnionym tempie"
 
-<<<<<<< HEAD
 msgid ""
 "Configure the speed of the background deletion process. Lower speed will "
 "consume less hard disk drive performance."
 msgstr ""
 "Skonfiguruj prędkość usuwania plików w tle. Niższa prędkość będzie w "
 "mniejszym stopniu ograniczać wydajność dysku"
-=======
-msgid "Configure the source of the frontend data as shown on the infobars. 'Settings' is as stored on the settings. 'Tuner' is as reported by the tuner."
-msgstr "Skonfiguruj źródło danych frontend pokazywanych na pasku info: 'Ustawienia'- tak jak zapisane w liście kanałów, 'Tuner' - tak jak zgłaszane przez tuner."
-
-msgid "Configure the speed of the background deletion process. Lower speed will consume less hard disk drive performance."
-msgstr "Skonfiguruj prędkość usuwania plików w tle. Niższa prędkość będzie w mniejszym stopniu ograniczać wydajność dysku."
->>>>>>> OpenPLi/master
-
-msgid "Configure the speed of the fan"
-msgstr "Skonfiguruj prędkość pracy wentylatora"
 
 msgid "Configure the subtitle delay when timing information is not available."
 msgstr "Skonfiguruj opóźnienie napisów, gdy brak informacji o synchronizacji "
@@ -1843,15 +1798,10 @@ msgstr "Skonfiguruj tryb tunera"
 msgid "Configure the type of status indication icons shown in the movielist."
 msgstr "Skonfiguruj rodzaj ikon statusu pokazywanych na liście nagrań"
 
-<<<<<<< HEAD
 msgid ""
 "Configure the vertical position of the subtitles, measured from the bottom "
 "of the screen."
 msgstr "Skonfiguruj pionową pozycję napisów, mierzoną od dołu ekranu"
-=======
-msgid "Configure the vertical position of the subtitles, measured from the bottom of the screen."
-msgstr "Skonfiguruj pionowe położenie napisów, mierzone od dołu ekranu."
->>>>>>> OpenPLi/master
 
 msgid "Configure the video output mode (or resolution)."
 msgstr "Skonfiguruj tryb wyjścia wideo (lub rozdzielczość)"
@@ -1889,20 +1839,12 @@ msgstr ""
 msgid "Configure which color format should be used on the SCART output."
 msgstr "Skonfiguruj jaki format koloru ma być użyty na wyjściu SCART"
 
-<<<<<<< HEAD
 msgid ""
 "Configure which tuner type will be preferred, when the same service is "
 "available on different types of tuners."
 msgstr ""
 "Skonfiguruj który tuner ma być preferowany, jeżeli kanał jest dostępny z "
 "różnych typów tunerów"
-=======
-msgid "Configure which tuner for recordings will be preferred, when more than one tuner is available."
-msgstr "Skonfiguruj, który tuner ma być preferowany dla nagrywania, jeżeli więcej niż jeden tuner jest dostępny."
-
-msgid "Configure which tuner type will be preferred, when the same service is available on different types of tuners."
-msgstr "Skonfiguruj który tuner ma być preferowany, jeżeli kanał jest dostępny z różnych typów tunerów."
->>>>>>> OpenPLi/master
 
 msgid ""
 "Configure which tuner will be preferred, when more than one tuner is "
@@ -2354,11 +2296,7 @@ msgstr "Przeglądarka katalogów"
 
 #, python-format
 msgid "Directory contains %d file(s) and %d sub-directories.\n"
-<<<<<<< HEAD
 msgstr "Katalog zawiera %d plik(ów) i %d podkatalogów.\n"
-=======
-msgstr "Katalog zawiera %d plików i %d podkatalogów.\n"
->>>>>>> OpenPLi/master
 
 #, python-format
 msgid "Directory contains %s and %s."
@@ -2381,14 +2319,6 @@ msgstr "Wyłącz szukanie zmian na transponderze w tle"
 msgid "Disable timer"
 msgstr "Wyłącz planowe zadanie"
 
-<<<<<<< HEAD
-=======
-#
-msgid "Disable timer"
-msgstr "Wyłącz timer"
-
-#
->>>>>>> OpenPLi/master
 msgid "Disabled"
 msgstr "Wyłączony"
 
@@ -2770,13 +2700,6 @@ msgstr "Włącz buforowanie teletekstu"
 msgid "Enable timer"
 msgstr "Włącz planowe zadanie"
 
-<<<<<<< HEAD
-=======
-msgid "Enable zapping with CH+/-, B+/-, P+/-"
-msgstr "Włącz przełączanie kanałów przyciskami CH+/-, B+/-, P+/-"
-
-#
->>>>>>> OpenPLi/master
 msgid "Enabled"
 msgstr "Włączone"
 
@@ -3200,11 +3123,7 @@ msgid "Go down the list"
 msgstr "Przejdź w dół listy"
 
 msgid "Go to first movie or last item"
-<<<<<<< HEAD
 msgstr "Idź do pierwszego nagrania lub ostatniej"
-=======
-msgstr "Idź do pierwszego filmu lub ostatniej pozycji"
->>>>>>> OpenPLi/master
 
 msgid "Go to first movie or top of list"
 msgstr "Idź do pierwszego nagrania lub na początek listy"
@@ -3232,11 +3151,7 @@ msgstr "Idź w górę listy"
 
 #
 msgid "Goto"
-<<<<<<< HEAD
 msgstr "Idź do"
-=======
-msgstr ""
->>>>>>> OpenPLi/master
 
 #
 msgid "Goto 0"
@@ -3382,11 +3297,7 @@ msgid "Horizontal"
 msgstr "Pozioma (H)"
 
 msgid "Horizontal turning speed"
-<<<<<<< HEAD
 msgstr "Prędkość skrętu poziomego"
-=======
-msgstr "Prędkość obrotu w poziomie"
->>>>>>> OpenPLi/master
 
 #
 msgid "How many minutes do you want to record?"
@@ -4171,11 +4082,7 @@ msgid "Movie List Configuration"
 msgstr "Konfiguracja listy nagrań"
 
 msgid "Movie Selection"
-<<<<<<< HEAD
 msgstr "Lista nagrań"
-=======
-msgstr "Filmy / Multimedia"
->>>>>>> OpenPLi/master
 
 msgid "Movie list configuration"
 msgstr "Ustawienia listy kanałów"
@@ -4195,11 +4102,7 @@ msgid "Movielist menu"
 msgstr "Menu listy nagrań"
 
 msgid "Moving"
-<<<<<<< HEAD
 msgstr "Przesuwanie"
-=======
-msgstr "Dojazd"
->>>>>>> OpenPLi/master
 
 msgid "Moving east ..."
 msgstr "Przesuwanie na wschód"
@@ -4366,14 +4269,10 @@ msgid "New version:"
 msgstr "Nowa wersja:"
 
 msgid "News Current Affairs"
-<<<<<<< HEAD
 msgstr "Wiadomości"
 
 msgid "Next:"
 msgstr "Następny:"
-=======
-msgstr "Wiadomości / Aktualności"
->>>>>>> OpenPLi/master
 
 msgctxt "button label, 'next screen'"
 msgid "Next"
@@ -4542,11 +4441,7 @@ msgstr ""
 "Gdy wciśniesz NIE, ochrona ustawień zostanie wyłączona!"
 
 msgid "No wireless networks found! Searching..."
-<<<<<<< HEAD
 msgstr "Nie znaleziono sieci WiFi! Wyszukiwanie"
-=======
-msgstr "Nie znaleziono sieci bezprzewodowych! Wyszukiwanie..."
->>>>>>> OpenPLi/master
 
 #
 msgid ""
@@ -5265,13 +5160,8 @@ msgstr "Przygotuj inny napęd USB do flashowania"
 msgid "Preparing... Please wait"
 msgstr "Przygotowywanie... Proszę czekać"
 
-<<<<<<< HEAD
 msgid "Press '0' to toggle internal/external PiP."
 msgstr "Wciśnij '0 aby przełączyć wewn./zewn. PiP"
-=======
-msgid "Press '0' to toggle PiP mode"
-msgstr "Wciśnij '0' aby przełączać tryby PiP"
->>>>>>> OpenPLi/master
 
 #
 msgid "Press INFO on your remote control for additional information."
@@ -5561,14 +5451,9 @@ msgstr "Przeładowanie bukietów i kanałów"
 msgid "Remember service PIN"
 msgstr "Pamiętaj PIN kanału"
 
-<<<<<<< HEAD
 #
 msgid "Remember these settings for each folder"
 msgstr "Zapamiętaj te ustawienia dla każdego folderu"
-=======
-msgid "Remember these settings for each folder"
-msgstr ""
->>>>>>> OpenPLi/master
 
 msgid "Reminder, you have chosen to save timeshift file."
 msgstr "Pamietaj, wybrałeś zapisywanie pliku timeshift"
@@ -5609,24 +5494,17 @@ msgid "Remove directory from Bookmarks"
 msgstr "Usuń katalog z zakładek"
 
 msgid "Remove items from trash can after (days)"
-<<<<<<< HEAD
 msgstr "Usuń pliki z kosza po (dni)"
-=======
-msgstr "Usuń pliki z 'Kosza' po (dni)"
->>>>>>> OpenPLi/master
 
 #
 msgid "Remove plugins"
 msgstr "Usuń wtyczki"
 
 #
-<<<<<<< HEAD
 msgid "Remove timer"
 msgstr "Usuń planowe"
 
 #
-=======
->>>>>>> OpenPLi/master
 msgid "Remove title"
 msgstr "Usuń tytuł"
 
@@ -6522,15 +6400,12 @@ msgstr "Odtwarzaj losowo"
 msgid "Shutdown"
 msgstr "Wyłącz"
 
-<<<<<<< HEAD
 msgid "Shutdown after current event"
 msgstr "Wyłącz po bieżącej audycji"
 
 msgid "Shutdown in "
 msgstr "Wyłącz za"
 
-=======
->>>>>>> OpenPLi/master
 msgid "Shutdown when in Standby"
 msgstr "Wyłączaj, gdy w trybie czuwania"
 
@@ -7054,14 +6929,6 @@ msgstr "Przejdź do listy plików"
 msgid "switch to filelist"
 msgstr "Przejdź do listy plików"
 
-<<<<<<< HEAD
-=======
-#
-msgid "Switch to next channel"
-msgstr "Przełącz na następny kanał"
-
-#
->>>>>>> OpenPLi/master
 msgid "Switch to next channel in history"
 msgstr "Następny kanał w historii"
 
@@ -7521,11 +7388,7 @@ msgstr "Edytor planowych zadań"
 
 #
 msgid "Timer entry"
-<<<<<<< HEAD
 msgstr "Dodawanie planowego zadania"
-=======
-msgstr "Szczegóły timera"
->>>>>>> OpenPLi/master
 
 #
 msgid "Timer log"
@@ -7540,11 +7403,7 @@ msgstr ""
 "Sprawdź to!"
 
 msgid "Timer overview"
-<<<<<<< HEAD
 msgstr "Przegląd planowych zadań"
-=======
-msgstr "Opis timera"
->>>>>>> OpenPLi/master
 
 #
 msgid "Timer recording location"
@@ -7770,13 +7629,10 @@ msgstr ""
 "Może potrwać to kilka minut"
 
 #
-<<<<<<< HEAD
 msgid "Uncommitted DiSEqC command"
 msgstr "Niewykonywana komenda DiSEqC"
 
 #
-=======
->>>>>>> OpenPLi/master
 msgid "Undo install"
 msgstr "Anuluj instalację"
 
@@ -7903,17 +7759,10 @@ msgid "Use a gateway"
 msgstr "Użyj bramy"
 
 msgid "Use fastscan channel names"
-<<<<<<< HEAD
 msgstr "Szybki skan nazw kanałów"
 
 msgid "Use fastscan channel numbering"
 msgstr "Szybki skan numerów kanałów"
-=======
-msgstr "Użyj nazw kanałów z Fastscan"
-
-msgid "Use fastscan channel numbering"
-msgstr "Użyj numeracji kanałów z Fastscan"
->>>>>>> OpenPLi/master
 
 msgid "Use frequency or channel"
 msgstr "Użyj częstotliwości lub kanału"
@@ -8241,11 +8090,7 @@ msgid "Wakeup signal from TV"
 msgstr "Sygnał wybudzenia z TV"
 
 msgid "Warning: no LNB; using factory defaults."
-<<<<<<< HEAD
 msgstr "Ostrzeżenie: brak konwertera"
-=======
-msgstr "UWAGA: brak LNB; użyto ustawień domyślnych"
->>>>>>> OpenPLi/master
 
 #
 msgid "Watch movies..."
@@ -8339,7 +8184,6 @@ msgstr "Co chcesz skanować?"
 msgid "When enabled the PiP can be closed by the exit button."
 msgstr "Gdy włączone, PiP może być wyłączony klawiszem Exit"
 
-<<<<<<< HEAD
 msgid ""
 "When enabled you can specify a timeframe were the inactivity sleeptimer is "
 "ignored. Not the detection is disabled during this timeframe but the "
@@ -8354,28 +8198,6 @@ msgid ""
 msgstr ""
 "Gdy włączone, dane AIT będą zawarte w streamach http. To pozwala używać "
 "HbbTV na odbiorniku - kliencie"
-=======
-msgid "When enabled the arrow buttons around the OK button will follow the 'neutrino' style zap controls instead of the enigma2 style."
-msgstr ""
-
-msgid "When enabled the left, right, CH+/-, B+/-, P+/- buttons will follow the 'neutrino' style zap controls instead of the enigma2 style."
-msgstr ""
-
-msgid "When enabled you can specify a timeframe to ignore the shutdown timer when the receiver is in standby mode"
-msgstr "Gdy włączone, można określić przedział czasowy, w którym 'timer wyłączania' ma być ignorowany, gdy odbiornik jest w trybie czuwania."
-
-msgid "When enabled you can specify a timeframe were the inactivity sleeptimer is ignored. Not the detection is disabled during this timeframe but the inactivity timeout is disabled"
-msgstr "Gdy włączone, można określić przedział czasowy w któym sleeptimer bezczynności będzie ignorowany."
-
-msgid "When enabled you can zap channels with the  CH+/-, B+/-, P+/- buttons instead of opening the channel selection list."
-msgstr "Gdy włączone, przyciski CH+/-, B+/-, P+/- przełączają kanały, a nie otwierają listę wyboru kanałów."
-
-msgid "When enabled you get the channel selection list via the OK button, the infobar toggle is then transfered to exit button"
-msgstr "Gdy włączone, lista wyboru kanałów jest wywoływana przyciskiem OK, natomiast za wyświetlanie/ukrywanie paska info odpowiada przycisk exit."
-
-msgid "When enabled, AIT data will be included in http streams. This allows a client receiver to use HbbTV."
-msgstr "Gdy włączone, dane AIT będą zawarte w streamach http. To pozwala używać HbbTV na odbiorniku 'kliencie'."
->>>>>>> OpenPLi/master
 
 msgid ""
 "When enabled, ECM data will be included in http streams. This allows a "
@@ -8440,17 +8262,12 @@ msgstr ""
 "Gdy włączone, po dojściu do ostatniego kanału w danym bukiecie podczas "
 "przełączania, automatycznie nastąpi przejście do kolejnego bukietu"
 
-<<<<<<< HEAD
 msgid ""
 "When enabled, deleted recordings are moved to the trash can, instead of "
 "being deleted immediately."
 msgstr ""
 "Gdy włączone, usunięte nagrania zostaną przeniesione do kosza, zamiast "
 "natychmiastowego usunięcia"
-=======
-msgid "When enabled, deleted recordings are moved to the trash can, instead of being deleted immediately."
-msgstr "Gdy włączone, usunięte nagrania zostaną przeniesione do 'Kosza', zamiast natychmiastowego usunięcia."
->>>>>>> OpenPLi/master
 
 msgid ""
 "When enabled, display the EIT now/next eventdata in infobar. When disabled, "
@@ -8614,19 +8431,11 @@ msgid "When enabled, the receiver will select an AC3 track (when available)."
 msgstr ""
 "Gdy włączone, automatycznie zostanie wybrana ścieżka audio AC3 (gdy dostępna)"
 
-<<<<<<< HEAD
 msgid ""
 "When enabled, timeshift starts automatically in background after specified "
 "time."
 msgstr ""
 "Gdy włączone, timeshift zostanie uruchomiony w tle po określonym czasie"
-=======
-msgid "When enabled, the receiver will select an AC3+ track (when available)."
-msgstr "Gdy włączone, automatycznie zostanie wybrana ścieżka audio AC3+ (gdy dostępna)."
-
-msgid "When enabled, timeshift starts automatically in background after specified time."
-msgstr "Gdy włączone, timeshift zostanie uruchomiony w tle po określonym czasie"
->>>>>>> OpenPLi/master
 
 #
 msgid "When enabled, use DHCP for the IP configuration."
@@ -9027,11 +8836,7 @@ msgid "Zap focus to main screen"
 msgstr "Przełączanie w głównym oknie"
 
 msgid "Zap mode"
-<<<<<<< HEAD
 msgstr "Przełączanie"
-=======
-msgstr " Tryb przełączania kanałów"
->>>>>>> OpenPLi/master
 
 msgid "Zap to selected channel"
 msgstr "Przełącz na wybrany kanał"
