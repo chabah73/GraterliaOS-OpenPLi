@@ -6,7 +6,7 @@ from Components.SystemInfo import SystemInfo
 from Tools import Notifications
 from GlobalActions import globalActionMap
 import RecordTimer
-from enigma import eDVBVolumecontrol, eTimer
+from enigma import eDVBVolumecontrol, eTimer, eDVBLocalTimeHandler
 from time import time, localtime
 
 inStandby = None
@@ -50,8 +50,11 @@ class Standby(Screen):
 
 		self.StandbyCounterIncrease = StandbyCounterIncrease
 
-		self.standbyTimeUnknownTimer = eTimer()
 		self.standbyTimeoutTimer = eTimer()
+		self.standbyTimeoutTimer.callback.append(self.standbyTimeout)
+		self.standbyStopServiceTimer = eTimer()
+		self.standbyStopServiceTimer.callback.append(self.stopService)
+		self.timeHandler = None
 
 		#mute adc
 		self.setMute()
@@ -61,12 +64,15 @@ class Standby(Screen):
 
 		if self.session.current_dialog:
 			if self.session.current_dialog.ALLOW_SUSPEND == Screen.SUSPEND_STOPS:
-				if localtime(time()).tm_year > 1970 and self.session.nav.getCurrentlyPlayingServiceOrGroup():
-					self.prev_running_service = self.session.nav.getCurrentlyPlayingServiceOrGroup()
-					self.session.nav.stopService()
+				self.timeHandler =  eDVBLocalTimeHandler.getInstance()
+				if self.timeHandler.ready():
+					if self.session.nav.getCurrentlyPlayingServiceOrGroup():
+						self.stopService()
+					else:
+						self.standbyStopServiceTimer.startLongTimer(5)
+					self.timeHandler = None
 				else:
-					self.standbyTimeUnknownTimer.callback.append(self.stopService)
-					self.standbyTimeUnknownTimer.startLongTimer(60)
+					self.timeHandler.m_timeUpdated.get().append(self.stopService)
 			elif self.session.current_dialog.ALLOW_SUSPEND == Screen.SUSPEND_PAUSES:
 				self.paused_service = self.session.current_dialog
 				self.paused_service.pauseService()
@@ -82,7 +88,6 @@ class Standby(Screen):
 
 		gotoShutdownTime = int(config.usage.standby_to_shutdown_timer.value)
 		if gotoShutdownTime:
-			self.standbyTimeoutTimer.callback.append(self.standbyTimeout)
 			self.standbyTimeoutTimer.startLongTimer(gotoShutdownTime)
 
 		self.onFirstExecBegin.append(self.__onFirstExecBegin)
@@ -91,8 +96,9 @@ class Standby(Screen):
 	def __onClose(self):
 		global inStandby
 		inStandby = None
-		self.standbyTimeUnknownTimer.stop()
 		self.standbyTimeoutTimer.stop()
+		self.standbyStopServiceTimer.stop()
+		self.timeHandler and self.timeHandler.m_timeUpdated.get().remove(self.stopService)
 		if self.prev_running_service:
 			self.session.nav.playService(self.prev_running_service)
 		elif self.paused_service:
@@ -108,6 +114,10 @@ class Standby(Screen):
 		self.session.screen["Standby"].boolean = True
 		if self.StandbyCounterIncrease:
 			config.misc.standbyCounter.value += 1
+
+	def stopService(self):
+		self.prev_running_service = self.session.nav.getCurrentlyPlayingServiceOrGroup()
+		self.session.nav.stopService()
 
 	def createSummary(self):
 		return StandbySummary
@@ -131,10 +141,6 @@ class Standby(Screen):
 		else:
 			from RecordTimer import RecordTimerEntry
 			RecordTimerEntry.TryQuitMainloop()
-
-	def stopService(self):
-		self.prev_running_service = self.session.nav.getCurrentlyPlayingServiceOrGroup()
-		self.session.nav.stopService()
 
 class StandbySummary(Screen):
 	skin = """
