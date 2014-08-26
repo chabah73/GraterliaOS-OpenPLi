@@ -115,12 +115,72 @@ eDVBResourceManager::eDVBResourceManager()
 		m_boxtype = DM800SE;
 	else if (!strncmp(tmp, "dm7020hd\n", rd))
 		m_boxtype = DM7020HD;
-	else {
 #if defined(__sh__)
+	else if (!strncmp(tmp, "adb_box\n", rd))
+		m_boxtype = ADB_BOX;
+	else if (!strncmp(tmp, "ufs910\n", rd))
+		m_boxtype = UFS910;
+	else if (!strncmp(tmp, "ufs912\n", rd))
+		m_boxtype = UFS912;
+	else if (!strncmp(tmp, "ufs913\n", rd))
+		m_boxtype = UFS913;
+	else if (!strncmp(tmp, "ufs922\n", rd))
+		m_boxtype = UFS922;
+	else if (!strncmp(tmp, "ufc960\n", rd))
+		m_boxtype = UFC960;
+	else if (!strncmp(tmp, "tf7700hdpvr\n", rd))
+		m_boxtype = TF7700HDPVR;
+	else if (!strncmp(tmp, "hdbox\n", rd))
+		m_boxtype = HDBOX;
+	else if (!strncmp(tmp, "hl101\n", rd))
+		m_boxtype = HL101;
+	else if (!strncmp(tmp, "spark\n", rd))
+		m_boxtype = SPARK;
+	else if (!strncmp(tmp, "spark7162\n", rd))
+		m_boxtype = SPARK7162;
+	else if (!strncmp(tmp, "vip1-v2\n", rd))
+		m_boxtype = VIP1_V2;
+	else if (!strncmp(tmp, "vip2-v1\n", rd))
+		m_boxtype = VIP2_V1;
+	else if (!strncmp(tmp, "cuberevo\n", rd))
+		m_boxtype = CUBEREVO;
+	else if (!strncmp(tmp, "cuberevo-9500hd\n", rd))
+		m_boxtype = CUBEREVO_9500HD;
+	else if (!strncmp(tmp, "cuberevo-mini\n", rd))
+		m_boxtype = CUBEREVO_MINI;
+	else if (!strncmp(tmp, "cuberevo-mini2\n", rd))
+		m_boxtype = CUBEREVO_MINI2;
+	else if (!strncmp(tmp, "cuberevo-2000hd\n", rd))
+		m_boxtype = CUBEREVO_2000HD;
+	else if (!strncmp(tmp, "cuberevo-250hd\n", rd))
+		m_boxtype = CUBEREVO_250HD;
+	else if (!strncmp(tmp, "cuberevo-mini-fta\n", rd))
+		m_boxtype = CUBEREVO_MINI_FTA;
+	else if (!strncmp(tmp, "ipbox9900\n", rd))
+		m_boxtype = IPBOX9900;
+	else if (!strncmp(tmp, "ipbox99\n", rd))
+		m_boxtype = IPBOX99;
+	else if (!strncmp(tmp, "ipbox55\n", rd))
+		m_boxtype = IPBOX55;
+	else if (!strncmp(tmp, "octagon1008\n", rd))
+		m_boxtype = OCTAGON1008;
+	else if (!strncmp(tmp, "hs7810a\n", rd))
+		m_boxtype = HS7810A;
+	else if (!strncmp(tmp, "hs7110\n", rd))
+		m_boxtype = HS7110;
+	else if (!strncmp(tmp, "whitebox\n", rd))
+		m_boxtype = WHITEBOX;
+	else if (!strncmp(tmp, "atevio7500\n", rd))
+		m_boxtype = ATEVIO7500;
+	else if (!strncmp(tmp, "sagemcom88\n", rd))
+		m_boxtype = SAGEMCOM88;
+	else if (!strncmp(tmp, "arivalink200\n", rd))
+		m_boxtype = ARIVALINK200;
+	else {
 		m_boxtype = BOX_SH4;
-		eDebug("boxtype detection BOX_SH4\n");
+	}
 #else
-
+	else {
 		eDebug("boxtype detection via /proc/stb/info not possible... use fallback via demux count!\n");
 		if (m_demux.size() == 3)
 			m_boxtype = DM800;
@@ -128,9 +188,8 @@ eDVBResourceManager::eDVBResourceManager()
 			m_boxtype = DM7025;
 		else
 			m_boxtype = DM8000;
-	
-#endif
 	}
+#endif
 	eDebug("found %zd adapter, %zd frontends(%zd sim) and %zd demux, boxtype %d",
 		m_adapter.size(), m_frontend.size(), m_simulate_frontend.size(), m_demux.size(), m_boxtype);
 
@@ -167,18 +226,10 @@ void eDVBAdapterLinux::scanDevices()
 		 * In that case, we cannot be sure the devicenodes are available yet.
 		 * So it is safer to scan for sys entries, than for device nodes
 		 */
-#ifdef __sh__
-		struct stat s;
-		char filename[128];
-		snprintf(filename, sizeof(filename), "/dev/dvb/adapter%d/frontend%d", m_nr, num_fe);
-		if (stat(filename, &s))
-			break;
-#else
 		char filename[128];
 		snprintf(filename, sizeof(filename), "/sys/class/dvb/dvb%d.frontend%d", m_nr, num_fe);
 		if (::access(filename, X_OK) < 0) break;
 		snprintf(filename, sizeof(filename), "/dev/dvb/adapter%d/frontend%d", m_nr, num_fe);
-#endif
 		eDVBFrontend *fe;
 		std::string name = filename;
 		std::map<std::string, std::string>::iterator it = mappedFrontendName.find(name);
@@ -280,7 +331,6 @@ eDVBUsbAdapter::eDVBUsbAdapter(int nr)
 {
 	int file;
 	char type[8];
-	struct dmx_pes_filter_params filter;
 	struct dvb_frontend_info fe_info;
 	int frontend = -1;
 	char filename[256];
@@ -392,17 +442,6 @@ eDVBUsbAdapter::eDVBUsbAdapter(int nr)
 
 	eDebug("linking adapter%d/frontend0 to vtuner%d", nr, vtunerid);
 
-	filter.input = DMX_IN_FRONTEND;
-	filter.flags = 0;
-	filter.pid = 0;
-	filter.output = DMX_OUT_TSDEMUX_TAP;
-	filter.pes_type = DMX_PES_OTHER;
-
-#define DEMUX_BUFFER_SIZE (8 * ((188 / 4) * 4096)) /* 1.5MB */
-	ioctl(demuxFd, DMX_SET_BUFFER_SIZE, DEMUX_BUFFER_SIZE);
-	ioctl(demuxFd, DMX_SET_PES_FILTER, &filter);
-	ioctl(demuxFd, DMX_START);
-
 	switch (fe_info.type)
 	{
 	case FE_QPSK:
@@ -490,8 +529,17 @@ void *eDVBUsbAdapter::threadproc(void *arg)
 	return user->vtunerPump();
 }
 
+static bool exist_in_pidlist(unsigned short int* pidlist, unsigned short int value)
+{
+	for (int i=0; i<30; ++i)
+		if (pidlist[i] == value)
+			return true;
+	return false;
+}
+
 void *eDVBUsbAdapter::vtunerPump()
 {
+	int pidcount = 0;
 	if (vtunerFd < 0 || demuxFd < 0 || pipeFd[0] < 0) return NULL;
 
 #define MSG_PIDLIST         14
@@ -501,6 +549,35 @@ void *eDVBUsbAdapter::vtunerPump()
 		unsigned short int pidlist[30];
 		unsigned char pad[64]; /* nobody knows the much data the driver will try to copy into our struct, add some padding to be sure */
 	};
+
+#define DEMUX_BUFFER_SIZE (8 * ((188 / 4) * 4096)) /* 1.5MB */
+	ioctl(demuxFd, DMX_SET_BUFFER_SIZE, DEMUX_BUFFER_SIZE);
+
+#if DVB_API_VERSION < 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR < 5
+	/*
+	 * HACK: several stb's with older DVB API versions do not handle the
+	 * constant starting / stopping of PES filters on their vtuner interface
+	 * very well, eventually they will stop feeding any data.
+	 * In order to work around this problem, we always start a filter, making sure
+	 * 'pidcount' never drops to zero, so the filter is never stopped.
+	 *
+	 * Note that this isn't allowed for recent DVB API versions, because they
+	 * refuse to start filters while the frontend is sleeping (e.g. not tuned).
+	 */
+	{
+		struct dmx_pes_filter_params filter;
+		filter.input = DMX_IN_FRONTEND;
+		filter.flags = 0;
+		filter.pid = 0;
+		filter.output = DMX_OUT_TSDEMUX_TAP;
+		filter.pes_type = DMX_PES_OTHER;
+		if (ioctl(demuxFd, DMX_SET_PES_FILTER, &filter) >= 0
+				&& ioctl(demuxFd, DMX_START) >= 0)
+		{
+			pidcount = 1;
+		}
+	}
+#endif
 
 	while (running)
 	{
@@ -517,7 +594,6 @@ void *eDVBUsbAdapter::vtunerPump()
 		{
 			if (FD_ISSET(vtunerFd, &xset))
 			{
-				int i, j;
 				struct vtuner_message message;
 				memset(message.pidlist, 0xff, sizeof(message.pidlist));
 				::ioctl(vtunerFd, VTUNER_GET_MESSAGE, &message);
@@ -526,48 +602,57 @@ void *eDVBUsbAdapter::vtunerPump()
 				{
 				case MSG_PIDLIST:
 					/* remove old pids */
-					for (i = 0; i < 30; i++)
+					for (int i = 0; i < 30; i++)
 					{
-						bool found = false;
-						if (pidList[i] == 0xffff) continue;
-						for (j = 0; j < 30; j++)
+						if (pidList[i] == 0xffff)
+							continue;
+						if (exist_in_pidlist(message.pidlist, pidList[i]))
+							continue;
+
+						if (pidcount > 1)
 						{
-							if (pidList[i] == message.pidlist[j])
-							{
-								found = true;
-								break;
-							}
+							::ioctl(demuxFd, DMX_REMOVE_PID, &pidList[i]);
+							pidcount--;
 						}
-
-						if (found) continue;
-
-						::ioctl(demuxFd, DMX_REMOVE_PID, &pidList[i]);
+						else if (pidcount == 1)
+						{
+							::ioctl(demuxFd, DMX_STOP);
+							pidcount = 0;
+						}
 					}
 
 					/* add new pids */
-					for (i = 0; i < 30; i++)
+					for (int i = 0; i < 30; i++)
 					{
-						bool found = false;
-						if (message.pidlist[i] == 0xffff) continue;
-						for (j = 0; j < 30; j++)
+						if (message.pidlist[i] == 0xffff)
+							continue;
+						if (exist_in_pidlist(pidList, message.pidlist[i]))
+							continue;
+
+						if (pidcount)
 						{
-							if (message.pidlist[i] == pidList[j])
+							::ioctl(demuxFd, DMX_ADD_PID, &message.pidlist[i]);
+							pidcount++;
+						}
+						else
+						{
+							struct dmx_pes_filter_params filter;
+							filter.input = DMX_IN_FRONTEND;
+							filter.flags = 0;
+							filter.pid = message.pidlist[i];
+							filter.output = DMX_OUT_TSDEMUX_TAP;
+							filter.pes_type = DMX_PES_OTHER;
+							if (ioctl(demuxFd, DMX_SET_PES_FILTER, &filter) >= 0
+									&& ioctl(demuxFd, DMX_START) >= 0)
 							{
-								found = true;
-								break;
+								pidcount = 1;
 							}
 						}
-
-						if (found) continue;
-
-						::ioctl(demuxFd, DMX_ADD_PID, &message.pidlist[i]);
 					}
 
 					/* copy pids */
-					for (i = 0; i < 30; i++)
-					{
-						pidList[i] = message.pidlist[i];
-					}
+					memcpy(pidList, message.pidlist, sizeof(message.pidlist));
+
 					break;
 				}
 			}
@@ -623,8 +708,7 @@ void eDVBResourceManager::addAdapter(iDVBAdapter *adapter, bool front)
 			m_frontend.push_back(new_fe);
 			frontend->setSEC(m_sec);
 			// we must link all dvb-t frontends ( for active antenna voltage )
-			//if (frontend->supportsDeliverySystem(SYS_DVBT, false) || frontend->supportsDeliverySystem(SYS_DVBT2, false))
-			if (frontend->supportsDeliverySystem(SYS_DVBT, false))
+			if (frontend->supportsDeliverySystem(SYS_DVBT, false) || frontend->supportsDeliverySystem(SYS_DVBT2, false))
 			{
 				if (prev_dvbt_frontend)
 				{
@@ -647,8 +731,7 @@ void eDVBResourceManager::addAdapter(iDVBAdapter *adapter, bool front)
 			m_simulate_frontend.push_back(new_fe);
 			frontend->setSEC(m_sec);
 			// we must link all dvb-t frontends ( for active antenna voltage )
-			//if (frontend->supportsDeliverySystem(SYS_DVBT, false) || frontend->supportsDeliverySystem(SYS_DVBT2, false))
-			if (frontend->supportsDeliverySystem(SYS_DVBT, false))
+			if (frontend->supportsDeliverySystem(SYS_DVBT, false) || frontend->supportsDeliverySystem(SYS_DVBT2, false))
 			{
 				if (prev_dvbt_frontend)
 				{
@@ -664,67 +747,6 @@ void eDVBResourceManager::addAdapter(iDVBAdapter *adapter, bool front)
 
 PyObject *eDVBResourceManager::setFrontendSlotInformations(ePyObject list)
 {
-/*#if 1	//freebox
-	char blasel[256];
-
-	if (!PyList_Check(list))
-	{
-		PyErr_SetString(PyExc_StandardError, "eDVBResourceManager::setFrontendSlotInformations argument should be a python list");
-		return NULL;
-	}
-	
-	if ((unsigned int)PyList_Size(list) != m_frontend.size())
-	{
-		sprintf(blasel, "eDVBResourceManager::setFrontendSlotInformations list size incorrect %d frontends avail, but %d entries in slotlist",
-		m_frontend.size(), PyList_Size(list));
-		PyErr_SetString(PyExc_StandardError, blasel);
-		return NULL;
-	}
-	
-	int pos=0;
-	for (eSmartPtrList<eDVBRegisteredFrontend>::iterator i(m_frontend.begin()); i != m_frontend.end(); ++i)
-	{
-		//eDebug("!!! Frontend ID:%d SLOT:%d",i->m_frontend->m_dvbid,i->m_frontend->m_slotid);
-		ePyObject obj = PyList_GET_ITEM(list, pos++);
-		ePyObject Id, Descr, Enabled, IsDVBS2, frontendId;
-		if (!PyTuple_Check(obj) || PyTuple_Size(obj) != 5)
-			continue;
-		Id = PyTuple_GET_ITEM(obj, 0);
-		Descr = PyTuple_GET_ITEM(obj, 1);
-		Enabled = PyTuple_GET_ITEM(obj, 2);
-		IsDVBS2 = PyTuple_GET_ITEM(obj, 3);
-		frontendId = PyTuple_GET_ITEM(obj, 4);
-		if (!PyInt_Check(Id) || !PyString_Check(Descr) || !PyBool_Check(Enabled) || !PyBool_Check(IsDVBS2) || !PyInt_Check(frontendId))
-			continue;
-		if (!i->m_frontend->setSlotInfo(PyInt_AsLong(Id), PyString_AS_STRING(Descr), Enabled == Py_True, IsDVBS2 == Py_True, PyInt_AsLong(frontendId)))
-			{
-			PyErr_SetString(PyExc_StandardError, "eDVBResourceManager::setFrontendSlotInformations error");
-			return NULL;
-			}
-	}
-
-	pos=0;
-	for (eSmartPtrList<eDVBRegisteredFrontend>::iterator i(m_simulate_frontend.begin()); i != m_simulate_frontend.end(); ++i)
-	{
-		ePyObject obj = PyList_GET_ITEM(list, pos++);
-		ePyObject Id, Descr, Enabled, IsDVBS2, frontendId;
-		if (!PyTuple_Check(obj) || PyTuple_Size(obj) != 5)
-			continue;
-		Id = PyTuple_GET_ITEM(obj, 0);
-		Descr = PyTuple_GET_ITEM(obj, 1);
-		Enabled = PyTuple_GET_ITEM(obj, 2);
-		IsDVBS2 = PyTuple_GET_ITEM(obj, 3);
-		frontendId = PyTuple_GET_ITEM(obj, 4);
-		if (!PyInt_Check(Id) || !PyString_Check(Descr) || !PyBool_Check(Enabled) || !PyBool_Check(IsDVBS2) || !PyInt_Check(frontendId))
-			continue;
-		if (!i->m_frontend->setSlotInfo(PyInt_AsLong(Id), PyString_AS_STRING(Descr), Enabled == Py_True, IsDVBS2 == Py_True, PyInt_AsLong(frontendId)))
-			{
-			PyErr_SetString(PyExc_StandardError, "eDVBResourceManager::setFrontendSlotInformations error");
-			return NULL;
-			}
-	}
-#else*/
-	
 	if (!PyList_Check(list))
 	{
 		PyErr_SetString(PyExc_StandardError, "eDVBResourceManager::setFrontendSlotInformations argument should be a python list");
@@ -776,7 +798,6 @@ PyObject *eDVBResourceManager::setFrontendSlotInformations(ePyObject list)
 			break;
 		}
 	}
-//#endif
 	Py_RETURN_NONE;
 }
 
@@ -794,17 +815,17 @@ bool eDVBResourceManager::frontendIsCompatible(int index, const char *type)
 			{
 				return i->m_frontend->supportsDeliverySystem(SYS_DVBS, false);
 			}
-			/*else if (!strcmp(type, "DVB-T2"))
+			else if (!strcmp(type, "DVB-T2"))
 			{
 				return i->m_frontend->supportsDeliverySystem(SYS_DVBT2, false);
-			}*/
+			}
 			else if (!strcmp(type, "DVB-T"))
 			{
 				return i->m_frontend->supportsDeliverySystem(SYS_DVBT, false);
 			}
 			else if (!strcmp(type, "DVB-C"))
 			{
-#ifdef SYS_DVBC_ANNEX_A
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 6
 				return i->m_frontend->supportsDeliverySystem(SYS_DVBC_ANNEX_A, false) || i->m_frontend->supportsDeliverySystem(SYS_DVBC_ANNEX_C, false);
 #else
 				return i->m_frontend->supportsDeliverySystem(SYS_DVBC_ANNEX_AC, false);
@@ -832,15 +853,14 @@ void eDVBResourceManager::setFrontendType(int index, const char *type)
 				whitelist.push_back(SYS_DVBS);
 				whitelist.push_back(SYS_DVBS2);
 			}
-			//else if (!strcmp(type, "DVB-T2") || !strcmp(type, "DVB-T"))
-			else if (!strcmp(type, "DVB-T"))
+			else if (!strcmp(type, "DVB-T2") || !strcmp(type, "DVB-T"))
 			{
 				whitelist.push_back(SYS_DVBT);
-				//whitelist.push_back(SYS_DVBT2);
+				whitelist.push_back(SYS_DVBT2);
 			}
 			else if (!strcmp(type, "DVB-C"))
 			{
-#ifdef SYS_DVBC_ANNEX_A
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 6
 				whitelist.push_back(SYS_DVBC_ANNEX_A);
 				whitelist.push_back(SYS_DVBC_ANNEX_C);
 #else
@@ -997,7 +1017,10 @@ RESULT eDVBResourceManager::allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBA
 		}
 	}
 #if defined(__sh__) // we use our own algo for demux detection
-	else if (m_boxtype == BOX_SH4)
+	else if (m_boxtype == ADB_BOX || m_boxtype == UFS910 || m_boxtype == UFS912 || m_boxtype == UFS913 || m_boxtype == UFS922 || m_boxtype == UFC960 || m_boxtype == SPARK || m_boxtype == SPARK7162 || m_boxtype == TF7700HDPVR || m_boxtype == HDBOX ||
+		m_boxtype == HL101 || m_boxtype == CUBEREVO || m_boxtype == CUBEREVO_MINI || m_boxtype == CUBEREVO_MINI2 || m_boxtype == VIP1_V2 || m_boxtype == VIP2_V1 || m_boxtype == HS7810A || m_boxtype == HS7110 || m_boxtype == WHITEBOX ||	
+		m_boxtype == CUBEREVO_MINI_FTA || m_boxtype == CUBEREVO_250HD || m_boxtype == CUBEREVO_2000HD || m_boxtype == CUBEREVO_9500HD || m_boxtype == OCTAGON1008 || m_boxtype == ATEVIO7500 ||
+		m_boxtype == IPBOX9900 || m_boxtype == IPBOX99 || m_boxtype == IPBOX55 || m_boxtype == SAGEMCOM88 || m_boxtype == ARIVALINK200 || m_boxtype == BOX_SH4)
 	{
 		int n=0;
 		for (; i != m_demux.end(); ++i, ++n)
@@ -1013,8 +1036,7 @@ RESULT eDVBResourceManager::allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBA
 						unused = i;
 					}
 				}
-				else if (i->m_adapter == fe->m_adapter &&
-				    i->m_demux->getSource() == fe->m_frontend->getDVBID())
+				else if (i->m_adapter == fe->m_adapter && i->m_demux->getSource() == fe->m_frontend->getDVBID())
 				{
 					// take the demux allocated to the same
 					// frontend,  just create a new reference
@@ -2302,6 +2324,7 @@ RESULT eDVBChannel::getCurrentPosition(iDVBDemux *decoding_demux, pts_t &pos, in
 		now = pos; /* fixup supplied */
 
 	m_tstools_lock.lock();
+	/* Interesting: the only place where iTSSource->offset() is ever used */
 	r = m_tstools.fixupPTS(m_source ? m_source->offset() : 0, now);
 	m_tstools_lock.unlock();
 	if (r)

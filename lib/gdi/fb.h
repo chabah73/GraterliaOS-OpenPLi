@@ -20,9 +20,6 @@ class fbClass
 	int xResSc, yResSc;
 	int topDiff, leftDiff, rightDiff, bottomDiff;
 #endif
-#ifdef ENABLE_LIBEPLAYER3
-//	unsigned char *lfb_direct;
-#endif
 	int available;
 	struct fb_var_screeninfo screeninfo;
 	fb_cmap cmap;
@@ -65,12 +62,11 @@ public:
 #endif
 	static fbClass *getInstance();
 #ifdef ENABLE_LIBEPLAYER3
-//---> "hack" for libeplayer3 fb access
+//	"hack" for libeplayer3 fb access
 	int getFD() { return fbFd; }
 	unsigned char * getLFB_Direct() { return lfb; }
 	int getScreenResX() { return xRes; }
 	int getScreenResY() { return yRes; }
-//---<
 #endif
 #if defined(__sh__)
 	void clearFBblit();
