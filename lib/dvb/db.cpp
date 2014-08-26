@@ -189,7 +189,7 @@ RESULT eDVBService::getEvent(const eServiceReference &ref, ePtr<eServiceEvent> &
 	return eEPGCache::getInstance()->lookupEventTime(ref, start_time, ptr);
 }
 
-bool eDVBService::isCrypted(const eServiceReference &ref)
+bool eDVBService::isCrypted()
 {
 	return m_ca.size() > 0;
 }
@@ -770,7 +770,7 @@ void eDVBDB::loadBouquet(const char *path)
 	char *line = (char*)malloc(linesize);
 	bool read_descr=false;
 	eServiceReference *e = NULL;
-	while (1)
+	while (fp)
 	{
 		int len;
 		if ((len = getline(&line, &linesize, fp)) < 2) break;
