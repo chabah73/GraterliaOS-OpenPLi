@@ -1,3 +1,4 @@
+import os
 from Screen import Screen
 from Components.ActionMap import ActionMap
 from Components.config import config
@@ -14,6 +15,8 @@ inStandby = None
 class Standby(Screen):
 	def Power(self):
 		print "leave standby"
+		if os.path.exists("/proc/stb/hdmi/output"):
+			open("/proc/stb/hdmi/output", "w").write("on")
 		#set input to encoder
 		self.avswitch.setInput("ENCODER")
 		#restart last played service
@@ -85,6 +88,8 @@ class Standby(Screen):
 			self.avswitch.setInput("SCART")
 		else:
 			self.avswitch.setInput("AUX")
+		if os.path.exists("/proc/stb/hdmi/output"):
+			open("/proc/stb/hdmi/output", "w").write("off")
 
 		gotoShutdownTime = int(config.usage.standby_to_shutdown_timer.value)
 		if gotoShutdownTime:

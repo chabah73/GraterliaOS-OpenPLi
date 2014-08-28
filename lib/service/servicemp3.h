@@ -9,8 +9,8 @@
 #ifdef ENABLE_MEDIAFWGSTREAMER
 #include <gst/gst.h>
 #else
-#include <../../misc/tools/libeplayer3/include/common.h>
-#include <../../misc/tools/libeplayer3/include/subtitle.h>
+#include <common.h>
+#include <subtitle.h>
 #define gint int
 #define gint64 int64_t
 extern OutputHandler_t		OutputHandler;

@@ -25,8 +25,8 @@ gFBDC::gFBDC()
 		|| (xres == 1920 && yres == 1080)))
 	{
 		/* fallback to a decent default */
-		xres = 720;
-		yres = 576;
+		xres = 1280; //j00zek lets make HD our default for openPLI
+		yres = 720;
 	}
 
 	surface.clut.data = 0;
@@ -202,7 +202,6 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 	fb->SetMode(xres, yres, bpp);
 
 #if defined(__sh__)
-
 	for (int y = 0; y<yres; y++) { // make whole screen transparent
 		memset(fb->lfb+y*fb->Stride(), 0x00, fb->Stride());
 	}

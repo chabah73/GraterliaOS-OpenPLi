@@ -7,13 +7,13 @@
 #include <sys/ioctl.h>
 #include <ctype.h>
 #include <sys/stat.h>
-#include  <pthread.h>
+#include <pthread.h>
 
 #include <lib/base/eerror.h>
 #include <lib/driver/vfd.h>
 
 #ifdef PLATFORM_TF7700
-#include "../../misc/tools/tffpctl/frontpanel.h"
+#include "../../tools/tffpctl/frontpanel.h"
 #endif
 
 #define VFD_DEVICE "/dev/vfd"

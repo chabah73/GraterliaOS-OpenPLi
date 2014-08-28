@@ -844,14 +844,19 @@ class InfoBarEPG:
 	def getEPGPluginList(self, getAll=False):
 		pluginlist = [(p.name, boundFunction(self.runPlugin, p), p.path) for p in plugins.getPlugins(where = PluginDescriptor.WHERE_EVENTINFO) \
 				if 'selectedevent' not in p.__call__.func_code.co_varnames] or []
-		pluginlist.reverse()
-		if pluginlist:
-			from Components.ServiceEventTracker import InfoBarCount
-			pluginlist.append((_("Current event EPG"), self.openEventView))
-			pluginlist.append((_("Multi EPG"), self.openMultiServiceEPG))
-			if getAll or InfoBarCount == 1:
-				pluginlist.append((_("Show EPG for current channel..."), self.openSingleServiceEPG, "current_channel"))
-			pluginlist.reverse()
+		from Components.ServiceEventTracker import InfoBarCount
+		if getAll or InfoBarCount == 1:
+			pluginlist.append((_("Show EPG for current channel..."), self.openSingleServiceEPG, "current_channel"))
+		pluginlist.append((_("Multi EPG"), self.openMultiServiceEPG, "multi_epg"))
+		pluginlist.append((_("Current event EPG"), self.openEventView, "event_epg"))
+#		pluginlist.reverse()
+#		if pluginlist:
+#			from Components.ServiceEventTracker import InfoBarCount
+#			pluginlist.append((_("Current event EPG"), self.openEventView, "event_epg"))
+#			pluginlist.append((_("Multi EPG"), self.openMultiServiceEPG, "multi_epg"))
+#			if getAll or InfoBarCount == 1:
+#				pluginlist.append((_("Show EPG for current channel..."), self.openSingleServiceEPG, "current_channel"))
+#			pluginlist.reverse()
 		return pluginlist
 
 	def getDefaultEPGtype(self):

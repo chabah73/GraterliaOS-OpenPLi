@@ -9,7 +9,7 @@ AM_CPPFLAGS = \
 
 if ENABLE_LIBEPLAYER3
 AM_CPPFLAGS += \
-	-I$(top_srcdir)/../misc/tools/libeplayer3/include
+	-I$(top_srcdir)/../tools/libeplayer3/include
 endif
 
 # initialize these, to be filled with targets in the included files
