@@ -2,6 +2,7 @@ from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Screens.Standby import TryQuitMainloop
+from Screens.TextBox import TextBox
 from Screens.About import CommitInfo
 from Components.config import config
 from Components.ActionMap import ActionMap, NumberActionMap
@@ -95,9 +96,7 @@ class UpdatePlugin(Screen):
 
 	def showDisclaimer(self, justShow=False):
 		if config.usage.show_update_disclaimer.value or justShow:
-			message = _("With this disclaimer the openPLi team is informing you that we are working with nightly builds and it might be that after the upgrades your set top box \
-is not anymore working as expected. Therefore it is recommendable to create backups with Autobackup or Backupsuite so when something went wrong you can easily and quickly restore. \
-When you discover 'bugs' please keep them reported on www.openpli.org.\n\nDo you understand this?")
+			message = _("The OpenPLi team would like to point out that upgrading to the latest nightly build comes not only with the latest features, but also with some risks. After the update, it is possible that your device no longer works as expected. We recommend you create backups with Autobackup or Backupsuite. This allows you to quickly and easily restore your device to its previous state, should you experience any problems. If you encounter a 'bug', please report the issue on www.openpli.org.\n\nDo you understand this?")
 			list = not justShow and [(_("no"), False), (_("yes"), True), (_("yes") + " " + _("and never show this message again"), "never")] or []
 			self.session.openWithCallback(boundFunction(self.disclaimerCallback, justShow), MessageBox, message, list=list)
 		else:
@@ -196,12 +195,13 @@ When you discover 'bugs' please keep them reported on www.openpli.org.\n\nDo you
 						(_("Update and ask to reboot"), "hot"),
 						(_("Update channel list only"), "channels"),
 						(_("Show latest commits on sourceforge"), "commits"),
-						(_("Cancel"), "")]
+						(_("Show updated packages"), "showlist")]
 					if not config.usage.show_update_disclaimer.value:
 						choices.append((_("Show disclaimer"), "disclaimer"))
+					choices.append((_("Cancel"), ""))
 					self.session.openWithCallback(self.startActualUpgrade, ChoiceBox, title=message, list=choices)
 				else:
-					self.session.openWithCallback(self.close, MessageBox, _("No updates available"), type=MessageBox.TYPE_INFO, timeout=10, close_on_any_key=True)
+					self.session.openWithCallback(self.close, MessageBox, _("No updates available"), type=MessageBox.TYPE_INFO, timeout=3, close_on_any_key=True)
 			elif self.channellist_only > 0:
 				if self.channellist_only == 1:
 					self.setEndMessage(_("Could not find installed channel list."))
@@ -257,6 +257,11 @@ When you discover 'bugs' please keep them reported on www.openpli.org.\n\nDo you
 			self.session.openWithCallback(boundFunction(self.ipkgCallback, IpkgComponent.EVENT_DONE, None), CommitInfo)
 		elif answer[1] == "disclaimer":
 			self.showDisclaimer(justShow=True)
+		elif answer[1] == "showlist":
+			text = ""
+			for i in [x[0] for x in sorted(self.ipkg.getFetchedList(), key=lambda d: d[0])]:
+				text = text and text + "\n" + i or i
+			self.session.openWithCallback(boundFunction(self.ipkgCallback, IpkgComponent.EVENT_DONE, None), TextBox, text, _("Packages to update"))
 		else:
 			self.ipkg.startCmd(IpkgComponent.CMD_UPGRADE, args = {'test_only': False})
 

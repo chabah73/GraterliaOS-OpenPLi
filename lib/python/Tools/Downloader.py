@@ -1,6 +1,7 @@
 from twisted.web import client
 from twisted.internet import reactor, defer
 from twisted.python import failure
+from urlparse import urlparse
 
 class HTTPProgressDownloader(client.HTTPDownloader):
 	def __init__(self, url, outfile, headers=None):
@@ -37,7 +38,10 @@ class HTTPProgressDownloader(client.HTTPDownloader):
 
 class downloadWithProgress:
 	def __init__(self, url, outputfile, contextFactory=None, *args, **kwargs):
-		scheme, host, port, path = client._parse(url)
+		parsed = urlparse(url)
+		scheme = parsed.scheme
+		host = parsed.hostname
+		port = parsed.port or (443 if scheme == 'https' else 80)
 		self.factory = HTTPProgressDownloader(url, outputfile, *args, **kwargs)
 		self.connection = reactor.connectTCP(host, port, self.factory)
 
