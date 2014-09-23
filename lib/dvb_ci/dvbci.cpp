@@ -1230,7 +1230,7 @@ void eDVBCISlot::data(int what)
 	}
 
 	if (what & eSocketNotifier::Read) {
-		uint8_t data[4096];
+		__u8 data[4096];
 		int r;
 		r = ::read(fd, data, 4096);
 		if(r > 0) {
