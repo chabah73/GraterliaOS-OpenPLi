@@ -39,8 +39,8 @@ static void loadFile(huffTableEntry **table, const char *filename);
 
 
 struct huffTableEntry {
-	__u32 value;
-	__u16 bits;
+	uint32_t value;
+	uint16_t bits;
 	char next;
 	huffTableEntry * nextEntry;
 

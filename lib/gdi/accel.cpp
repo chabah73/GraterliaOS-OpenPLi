@@ -181,9 +181,9 @@ int gAccel::blit(gUnmanagedSurface *dst, gUnmanagedSurface *src, const eRect &p,
 		if (accelAlloc(surfaceTmp))
 			return -1;
 
-		__u8 *srcptr=(__u8*)src->data;
-		__u8 *dstptr=(__u8*)surfaceTmp->data;
-		__u32 pal[256];
+		uint8_t *srcptr=(uint8_t*)src->data;
+		uint8_t *dstptr=(uint8_t*)surfaceTmp->data;
+		uint32_t pal[256];
 
 		for (int i=0; i<256; ++i)
 		{
@@ -201,7 +201,7 @@ int gAccel::blit(gUnmanagedSurface *dst, gUnmanagedSurface *src, const eRect &p,
 		{
 			int width=area.width();
 			unsigned char *psrc=(unsigned char*)srcptr;
-			__u32 *pdst=(__u32*)dstptr;
+			uint32_t *pdst=(uint32_t*)dstptr;
 
 			while (width--)
 				*pdst++=pal[*psrc++];
