@@ -224,14 +224,7 @@ const eit_event_struct* eventData::get() const
 	uint32_t *p = (uint32_t*)(EITdata + 10);
 	while (tmp > 3)
 	{
-#ifndef __sh__
 		descriptorMap::iterator it = descriptors.find(*p++);
-#else
-		uint32_t index = p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
-		// eDebug("index %d %x, %x %x %x %x\n", index, index, p[0], p[1], p[2], p[3]);
-		descriptorMap::iterator it = descriptors.find(index);
-		p += 4;
-#endif
 		if (it != descriptors.end())
 		{
 			unsigned int b = it->second.second[1] + 2;
@@ -260,15 +253,8 @@ eventData::~eventData()
 		ByteSize -= 10;
 		while(ByteSize>3)
 		{
-#ifndef __sh__
 			descriptorMap::iterator it =
 				descriptors.find(*d++);
-#else
-			uint32_t index = d[3] << 24 | d[2] << 16 | d[1] << 8 | d[0];
-			// eDebug("index %d %x, %x %x %x %x\n", index, index, d[0], d[1], d[2], d[3]);
-			descriptorMap::iterator it = descriptors.find(index);
-			d += 4;
-#endif
 			if ( it != descriptors.end() )
 			{
 				descriptorPair &p = it->second;
@@ -1870,45 +1856,6 @@ void eEPGCache::channel_data::readData( const uint8_t *data, int source)
 {
 	int map;
 	iDVBSectionReader *reader = NULL;
-#ifdef __sh__
-/* Dagobert: this is still very hacky, but currently I cant find
- * the origin of the readData call. I think the caller is
- * responsible for the unaligned data pointer in this call.
- * So we malloc our own memory here which _should_ be aligned.
- *
- * TODO: We should search for the origin of this call. As I
- * said before I need an UML Diagram or must try to import
- * e2 and all libs into an IDE for better overview ;)
- *
- */
-	const uint8_t *aligned_data;
-	bool isNotAligned = false;
-
-	if ((unsigned int) data % 4 != 0)
-		isNotAligned = true;
-
-	if (isNotAligned)
-	{
-		/* see HILO macro and eit.h */
-		int len = ((data[1] & 0x0F) << 8 | data[2]) -1;
-
-		/*eDebug("len %d %x, %x %x\n", len, len, data[1], data[2]);*/
-
-		if ( EIT_SIZE >= len )
-			return;
-
-		aligned_data = (const uint8_t *) malloc(len);
-
-		if ((unsigned int)aligned_data % 4 != 0)
-		{
-			eDebug("eEPGCache::channel_data::readData: ERRORERRORERROR: unaligned data pointer %p\n", aligned_data);
-		}
-
-		/*eDebug("%p %p\n", aligned_data, data); */
-		memcpy((void *) aligned_data, (const uint8_t *) data, len);
-		data = aligned_data;
-	}
-#endif
 	switch (source)
 	{
 		case NOWNEXT:
@@ -2033,10 +1980,6 @@ void eEPGCache::channel_data::readData( const uint8_t *data, int source)
 			cache->sectionRead(data, source, this);
 		}
 	}
-#ifdef __sh__
-	if (isNotAligned)
-		free((void *)aligned_data);
-#endif
 }
 
 #if ENABLE_FREESAT
@@ -4165,7 +4108,7 @@ void eEPGCache::channel_data::readMHWData(const uint8_t *data)
 			((summary->program_id_ml)<<8)|(summary->program_id_lo);
 		int len = ((data[1]&0xf)<<8) + data[2];
 
-		// ugly workaround to convert const uint8_t* to char*
+		// ugly workaround to convert const __u8* to char*
 		char *tmp=0;
 		memcpy(&tmp, &data, sizeof(void*));
 		tmp[len+3] = 0;	// Terminate as a string.
@@ -4438,7 +4381,7 @@ void eEPGCache::channel_data::readMHWData2(const uint8_t *data)
 //				eDebug ("summary id %04x\n", summary_id);
 //				eDebug("[%02x %02x] %02x %02x %02x %02x %02x %02x %02x %02x XX\n", data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13] );
 
-				// ugly workaround to convert const uint8_t* to char*
+				// ugly workaround to convert const __u8* to char*
 				char *tmp=0;
 				memcpy(&tmp, &data, sizeof(void*));
 
