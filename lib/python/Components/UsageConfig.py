@@ -13,7 +13,7 @@ def InitUsageConfig():
 	config.usage = ConfigSubsection()
 	config.usage.showdish = ConfigYesNo(default = True)
 	config.usage.multibouquet = ConfigYesNo(default = True)
-
+	config.usage.volumestep = ConfigSelection(default = "2", choices = [("2"), ("5")])
 	config.usage.alternative_number_mode = ConfigYesNo(default = False)
 	def alternativeNumberModeChange(configElement):
 		eDVBDB.getInstance().setNumberingMode(configElement.value)
