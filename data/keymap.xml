@@ -1,8 +1,8 @@
 <keymap>
 	<map context="ListboxActions">
 		<device name="keyboard">
-			<key id="a" mapto="up" flags="mr" />
-			<key id="b" mapto="down" flags="mr" />
+			<key id="a" mapto="up" flags="mr"/>
+			<key id="b" mapto="down" flags="mr"/>
 		</device>
 		<key id="KEY_UP" mapto="moveUp" flags="mr" />
 		<key id="KEY_DOWN" mapto="moveDown" flags="mr" />
@@ -57,18 +57,18 @@
 	</map>
 
 	<map context="InputActions">
-		<key id="KEY_LEFT" mapto="left" flags="mr" />
-		<key id="KEY_RIGHT" mapto="right" flags="mr" />
-		<key id="KEY_1" mapto="1" flags="m" />
-		<key id="KEY_2" mapto="2" flags="m" />
-		<key id="KEY_3" mapto="3" flags="m" />
-		<key id="KEY_4" mapto="4" flags="m" />
-		<key id="KEY_5" mapto="5" flags="m" />
-		<key id="KEY_6" mapto="6" flags="m" />
-		<key id="KEY_7" mapto="7" flags="m" />
-		<key id="KEY_8" mapto="8" flags="m" />
-		<key id="KEY_9" mapto="9" flags="m" />
-		<key id="KEY_0" mapto="0" flags="m" />
+		<key id="KEY_LEFT" mapto="left" flags="mr"/>
+		<key id="KEY_RIGHT" mapto="right" flags="mr"/>
+		<key id="KEY_1" mapto="1" flags="m"/>
+		<key id="KEY_2" mapto="2" flags="m"/>
+		<key id="KEY_3" mapto="3" flags="m"/>
+		<key id="KEY_4" mapto="4" flags="m"/>
+		<key id="KEY_5" mapto="5" flags="m"/>
+		<key id="KEY_6" mapto="6" flags="m"/>
+		<key id="KEY_7" mapto="7" flags="m"/>
+		<key id="KEY_8" mapto="8" flags="m"/>
+		<key id="KEY_9" mapto="9" flags="m"/>
+		<key id="KEY_0" mapto="0" flags="m"/>
 	</map>
 
 	<map context="InfobarEPGActions">
@@ -241,16 +241,16 @@
 	</map>
 
 	<map context="NumberActions">
-		<key id="KEY_1" mapto="1" flags="m" />
-		<key id="KEY_2" mapto="2" flags="m" />
-		<key id="KEY_3" mapto="3" flags="m" />
-		<key id="KEY_4" mapto="4" flags="m" />
-		<key id="KEY_5" mapto="5" flags="m" />
-		<key id="KEY_6" mapto="6" flags="m" />
-		<key id="KEY_7" mapto="7" flags="m" />
-		<key id="KEY_8" mapto="8" flags="m" />
-		<key id="KEY_9" mapto="9" flags="m" />
-		<key id="KEY_0" mapto="0" flags="m" />
+		<key id="KEY_1" mapto="1" flags="m"/>
+		<key id="KEY_2" mapto="2" flags="m"/>
+		<key id="KEY_3" mapto="3" flags="m"/>
+		<key id="KEY_4" mapto="4" flags="m"/>
+		<key id="KEY_5" mapto="5" flags="m"/>
+		<key id="KEY_6" mapto="6" flags="m"/>
+		<key id="KEY_7" mapto="7" flags="m"/>
+		<key id="KEY_8" mapto="8" flags="m"/>
+		<key id="KEY_9" mapto="9" flags="m"/>
+		<key id="KEY_0" mapto="0" flags="m"/>
 	</map>
 
 	<map context="TextEntryActions">
@@ -289,12 +289,12 @@
 		<key id="KEY_REWIND" mapto="seekBack" flags="m" />
 		<key id="KEY_FASTFORWARD" mapto="seekFwd" flags="m" />
 
-		<key id="KEY_1" mapto="seekdef:1" flags="m" />
-		<key id="KEY_3" mapto="seekdef:3" flags="m" />
-		<key id="KEY_4" mapto="seekdef:4" flags="m" />
-		<key id="KEY_6" mapto="seekdef:6" flags="m" />
-		<key id="KEY_7" mapto="seekdef:7" flags="m" />
-		<key id="KEY_9" mapto="seekdef:9" flags="m" />
+		<key id="KEY_1" mapto="seekdef:1" flags="m"/>
+		<key id="KEY_3" mapto="seekdef:3" flags="m"/>
+		<key id="KEY_4" mapto="seekdef:4" flags="m"/>
+		<key id="KEY_6" mapto="seekdef:6" flags="m"/>
+		<key id="KEY_7" mapto="seekdef:7" flags="m"/>
+		<key id="KEY_9" mapto="seekdef:9" flags="m"/>
 	</map>
 
 	<map context="InfobarTimeshiftActions">
@@ -343,11 +343,11 @@
 	</map>
 
 	<map context="VirtualKeyboardActions">
-		<key id="KEY_TEXT" mapto="showVirtualKeyboard" flags="m" />
+		<key id="KEY_TEXT" mapto="showVirtualKeyboard" flags="m"/>
 	</map>
 
 	<map context="InfobarTeletextActions">
-		<key id="KEY_TEXT" mapto="startTeletext" flags="m" />
+		<key id="KEY_TEXT" mapto="startTeletext" flags="m"/>
 	</map>
 
 	<map context="TeletextActions">
@@ -370,11 +370,11 @@
 	</map>
 
 	<map context="InfobarRdsActions">
-		<key id="KEY_TEXT" mapto="startRassInteractive" flags="m" />
+		<key id="KEY_TEXT" mapto="startRassInteractive" flags="m"/>
 	</map>
 
 	<map context="InfobarHDMIActions">
-		<key id="KEY_AUX" mapto="HDMIin" flags="m" />
+		<key id="KEY_AUX" mapto="HDMIin" flags="m"/>
 	</map>
 
 	<map context="RassInteractiveActions">
@@ -451,38 +451,38 @@
 	</map>
 
 	<map context="EventViewEPGActions">
-		<key id="KEY_YELLOW" mapto="openSingleServiceEPG" flags="m" />
-		<key id="KEY_BLUE" mapto="openMultiServiceEPG" flags="m" />
-		<key id="KEY_EPG" mapto="openSingleServiceEPG" flags="m" />
+		<key id="KEY_YELLOW" mapto="openSingleServiceEPG" flags="m"/>
+		<key id="KEY_BLUE" mapto="openMultiServiceEPG" flags="m"/>
+		<key id="KEY_EPG" mapto="openSingleServiceEPG" flags="m"/>
 	</map>
 
 	<map context="OkCancelActions">
-		<key id="\x0a" mapto="ok" flags="m" />
-		<key id="\x1b" mapto="cancel" flags="m" />
+		<key id="\x0a" mapto="ok" flags="m"/>
+		<key id="\x1b" mapto="cancel" flags="m"/>
 
 		<!-- use this on rcu, ok? -->
-		<key id="KEY_OK" mapto="ok" flags="m" />
-		<key id="KEY_EXIT" mapto="cancel" flags="m" />
+		<key id="KEY_OK" mapto="ok" flags="m"/>
+		<key id="KEY_EXIT" mapto="cancel" flags="m"/>
 
 		<key id="KEY_ENTER" mapto="ok" flags="m" />
 		<key id="KEY_HOME" mapto="cancel" flags="m" />
 	</map>
 
 	<map context="DirectionActions">
-		<key id="KEY_UP" mapto="up" flags="m" />
-		<key id="KEY_DOWN" mapto="down" flags="m" />
-		<key id="KEY_LEFT" mapto="left" flags="m" />
-		<key id="KEY_RIGHT" mapto="right" flags="m" />
+		<key id="KEY_UP" mapto="up" flags="m"/>
+		<key id="KEY_DOWN" mapto="down" flags="m"/>
+		<key id="KEY_LEFT" mapto="left" flags="m"/>
+		<key id="KEY_RIGHT" mapto="right" flags="m"/>
 
-		<key id="KEY_UP" mapto="upRepeated" flags="r" />
-		<key id="KEY_DOWN" mapto="downRepeated" flags="r" />
-		<key id="KEY_LEFT" mapto="leftRepeated" flags="r" />
-		<key id="KEY_RIGHT" mapto="rightRepeated" flags="r" />
+		<key id="KEY_UP" mapto="upRepeated" flags="r"/>
+		<key id="KEY_DOWN" mapto="downRepeated" flags="r"/>
+		<key id="KEY_LEFT" mapto="leftRepeated" flags="r"/>
+		<key id="KEY_RIGHT" mapto="rightRepeated" flags="r"/>
 
-		<key id="KEY_LEFT" mapto="leftUp" flags="b" />
-		<key id="KEY_RIGHT" mapto="rightUp" flags="b" />
-		<key id="KEY_UP" mapto="upUp" flags="b" />
-		<key id="KEY_DOWN" mapto="downUp" flags="b" />
+		<key id="KEY_LEFT" mapto="leftUp" flags="b"/>
+		<key id="KEY_RIGHT" mapto="rightUp" flags="b"/>
+		<key id="KEY_UP" mapto="upUp" flags="b"/>
+		<key id="KEY_DOWN" mapto="downUp" flags="b"/>
 	</map>
 
 	<map context="AudioSelectionActions">
@@ -497,10 +497,10 @@
 		<key id="KEY_MUTE" mapto="volumeMute" flags="m" />
 	</map>
 	<map context="ColorActions">
-		<key id="KEY_RED" mapto="red" flags="m" />
-		<key id="KEY_GREEN" mapto="green" flags="m" />
-		<key id="KEY_YELLOW" mapto="yellow" flags="m" />
-		<key id="KEY_BLUE" mapto="blue" flags="m" />
+		<key id="KEY_RED" mapto="red" flags="m"/>
+		<key id="KEY_GREEN" mapto="green" flags="m"/>
+		<key id="KEY_YELLOW" mapto="yellow" flags="m"/>
+		<key id="KEY_BLUE" mapto="blue" flags="m"/>
 	</map>
 
 	<map context="MsgBoxActions">
@@ -521,15 +521,15 @@
 	</map>
 
 	<map context="ShortcutActions">
-		<key id="KEY_F1" mapto="red" flags="mr" />
-		<key id="KEY_F2" mapto="yellow" flags="mr" />
-		<key id="KEY_F3" mapto="green" flags="mr" />
-		<key id="KEY_F4" mapto="blue" flags="mr" />
+		<key id="KEY_F1" mapto="red" flags="mr"/>
+		<key id="KEY_F2" mapto="yellow" flags="mr"/>
+		<key id="KEY_F3" mapto="green" flags="mr"/>
+		<key id="KEY_F4" mapto="blue" flags="mr"/>
 
-		<key id="KEY_RED" mapto="red" flags="mr" />
-		<key id="KEY_YELLOW" mapto="yellow" flags="mr" />
-		<key id="KEY_GREEN" mapto="green" flags="mr" />
-		<key id="KEY_BLUE" mapto="blue" flags="mr" />
+		<key id="KEY_RED" mapto="red" flags="mr"/>
+		<key id="KEY_YELLOW" mapto="yellow" flags="mr"/>
+		<key id="KEY_GREEN" mapto="green" flags="mr"/>
+		<key id="KEY_BLUE" mapto="blue" flags="mr"/>
 	</map>
 	<map context="StandbyActions">
 		<key id="KEY_POWER" mapto="power" flags="m" />
@@ -559,8 +559,8 @@
 	</map>
 
 	<map context="CiSelectionActions">
-		<key id="KEY_LEFT" mapto="left" flags="mr" />
-		<key id="KEY_RIGHT" mapto="right" flags="mr" />
+		<key id="KEY_LEFT" mapto="left" flags="mr"/>
+		<key id="KEY_RIGHT" mapto="right" flags="mr"/>
 	</map>
 
 	<map context="PiPSetupActions">
