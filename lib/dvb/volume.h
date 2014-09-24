@@ -30,9 +30,8 @@ private:
 
 public:
 	static eDVBVolumecontrol* getInstance();
-	int volumestep = eConfigManager::getConfigIntValue("config.usage.volumestep");
-	void volumeUp(int left = volumestep, int right = volumestep); //j00zek
-	void volumeDown(int left = volumestep, int right = volumestep); //j00zek
+	void volumeUp(int left = eConfigManager::getConfigIntValue("config.usage.volumestep"), int right = eConfigManager::getConfigIntValue("config.usage.volumestep")); //j00zek
+	void volumeDown(int left = eConfigManager::getConfigIntValue("config.usage.volumestep"), int right = eConfigManager::getConfigIntValue("config.usage.volumestep")); //j00zek
 
 	void setVolume(int left, int right);
 
