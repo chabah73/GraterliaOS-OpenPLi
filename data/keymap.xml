@@ -592,13 +592,13 @@
 		<key id="KEY_BLUE" mapto="subtitles2" flags="m"/>
 	</map>
 	<map context="HotkeyActions">
-		<key id="KEY_RED" mapto="red" flags="b"/>
+		<key id="KEY_RED" mapto="red" flags="m"/>
 		<key id="KEY_RED" mapto="red_long" flags="l"/>
-		<key id="KEY_GREEN" mapto="green" flags="b"/>
+		<key id="KEY_GREEN" mapto="green" flags="m"/>
 		<key id="KEY_GREEN" mapto="green_long" flags="l"/>
-		<key id="KEY_YELLOW" mapto="yellow" flags="b"/>
+		<key id="KEY_YELLOW" mapto="yellow" flags="m"/>
 		<key id="KEY_YELLOW" mapto="yellow_long" flags="l"/>
-		<key id="KEY_BLUE" mapto="blue" flags="b"/>
+		<key id="KEY_BLUE" mapto="blue" flags="m"/>
 		<key id="KEY_BLUE" mapto="blue_long" flags="l"/>
 		<key id="KEY_RECORD" mapto="pvr" flags="m"/>
 		<key id="KEY_RADIO" mapto="radio" flags="m"/>
@@ -607,12 +607,12 @@
 		<key id="KEY_INFO" mapto="displayHelp" flags="m"/>
 		<key id="KEY_SUBTITLE" mapto="subtitle" flags="m"/>
 		<key id="KEY_MENU" mapto="mainMenu" flags="m"/>
-		<key id="KEY_HELP" mapto="info" flags="b"/>
+		<key id="KEY_HELP" mapto="info" flags="m"/>
 		<key id="KEY_HELP" mapto="info_long" flags="l"/>
 		<key id="KEY_LIST" mapto="list" flags="m"/>
 		<key id="KEY_BACK" mapto="back" flags="m"/>
 		<key id="KEY_END" mapto="end" flags="m"/>
-		<key id="KEY_EPG" mapto="epg" flags="b"/>
+		<key id="KEY_EPG" mapto="epg" flags="m"/>
 		<key id="KEY_EPG" mapto="epg_long" flags="l"/>
 		<key id="KEY_LEFT" mapto="cross_left" flags="m"/>
 		<key id="KEY_RIGHT" mapto="cross_right" flags="m"/>
@@ -639,11 +639,11 @@
 	    <key id="KEY_RESTART" mapto="slow" flags="m"/>
 	    <key id="KEY_BOOKMARKS" mapto="mark" flags="m"/>
 		<key id="KEY_HOME" mapto="home" flags="m"/>
-		<key id="KEY_F1" mapto="f1" flags="b"/>
+		<key id="KEY_F1" mapto="f1" flags="m"/>
 		<key id="KEY_F1" mapto="f1_long" flags="l"/>
-		<key id="KEY_F2" mapto="f2" flags="b"/>
+		<key id="KEY_F2" mapto="f2" flags="m"/>
 		<key id="KEY_F2" mapto="f2_long" flags="l"/>
-		<key id="KEY_F3" mapto="f3" flags="b"/>
+		<key id="KEY_F3" mapto="f3" flags="m"/>
 		<key id="KEY_F3" mapto="f3_long" flags="l"/>
 	</map> 
 </keymap>
