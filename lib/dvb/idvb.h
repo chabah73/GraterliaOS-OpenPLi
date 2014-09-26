@@ -23,7 +23,7 @@ struct eDVBSectionFilterMask
 {
 	int pid;
 		/* mode is 0 for positive, 1 for negative filtering */
-	uint8_t data[DMX_FILTER_SIZE], mask[DMX_FILTER_SIZE], mode[DMX_FILTER_SIZE];
+	__u8 data[DMX_FILTER_SIZE], mask[DMX_FILTER_SIZE], mode[DMX_FILTER_SIZE];
 	enum {
 		rfCRC=1,
 		rfNoAbort=2
@@ -420,7 +420,7 @@ class eDVBDiseqcCommand
 public:
 #endif
 	int len;
-	uint8_t data[MAX_DISEQC_LENGTH];
+	__u8 data[MAX_DISEQC_LENGTH];
 #ifdef SWIG
 public:
 #endif

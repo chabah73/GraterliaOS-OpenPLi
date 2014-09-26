@@ -10,11 +10,11 @@
 #include <lib/gdi/fb.h>
 
 #ifndef FBIO_WAITFORVSYNC
-#define FBIO_WAITFORVSYNC _IOW('F', 0x20, uint32_t)
+#define FBIO_WAITFORVSYNC _IOW('F', 0x20, __u32)
 #endif
 
 #ifndef FBIO_BLIT
-#define FBIO_SET_MANUAL_BLIT _IOW('F', 0x21, uint8_t)
+#define FBIO_SET_MANUAL_BLIT _IOW('F', 0x21, __u8)
 #define FBIO_BLIT 0x22
 #endif
 

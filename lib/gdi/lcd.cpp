@@ -413,14 +413,14 @@ void eDBoxLCD::update()
 		for (int x = 0; x < width; x++)
 			for (int y = 0; y < height; y++)
 			{
-				uint16_t *buf16  = (uint16_t*) _buffer;
+				__u16 *buf16  = (__u16*) _buffer;
 #if BYTE_ORDER == LITTLE_ENDIAN
-				uint16_t col16 = bswap_16(*((uint16_t*)(((uint16_t*)buf16) + y * width + x)));
+				__u16 col16 = bswap_16(*((__u16*)(((__u16*)buf16) + y * width + x)));
 #else
-				uint16_t col16 = *((uint16_t*)(((uint16_t*)buf16) + y * width + x));
+				__u16 col16 = *((__u16*)(((__u16*)buf16) + y * width + x));
 #endif
-				uint8_t red, green, blue, alpha; 
-				uint32_t color32;
+				__u8 red, green, blue, alpha; 
+				__u32 color32;
 
 				/* BBBBB GGGGGG RRRRR */
 				blue  = ((col16 & 0xF800) >> 11) * ( 255 / 31);
