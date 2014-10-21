@@ -213,7 +213,10 @@ class SecConfigure:
 							currentCircular = False
 							if nim.diseqcA.value in ("360", "560"): 
 								currentCircular = nim.simpleDiSEqCSetCircularLNB.value
-							self.addLNBSimple(sec, slotid = x, orbpos = nim.diseqcA.orbital_position, toneburstmode = diseqcParam.NO, diseqcmode = diseqcParam.NONE, diseqcpos = diseqcParam.SENDNO, diseqc13V = nim.diseqc13V.value, CircularLNB = currentCircular)
+							if nim.simpleSingleSendDiSEqC.value:
+								self.addLNBSimple(sec, slotid = x, orbpos = nim.diseqcA.orbital_position, toneburstmode = diseqcParam.NO, diseqcmode = diseqcParam.V1_0, diseqcpos = diseqcParam.AA, diseqc13V = nim.diseqc13V.value, CircularLNB = currentCircular)
+							else:
+								self.addLNBSimple(sec, slotid = x, orbpos = nim.diseqcA.orbital_position, toneburstmode = diseqcParam.NO, diseqcmode = diseqcParam.NONE, diseqcpos = diseqcParam.SENDNO, diseqc13V = nim.diseqc13V.value, CircularLNB = currentCircular)
 						elif nim.diseqcMode.value == "toneburst_a_b":		#Toneburst A/B
 							self.addLNBSimple(sec, slotid = x, orbpos = nim.diseqcA.orbital_position, toneburstmode = diseqcParam.A, diseqcmode = diseqcParam.V1_0, diseqcpos = diseqcParam.SENDNO, diseqc13V = nim.diseqc13V.value)
 							self.addLNBSimple(sec, slotid = x, orbpos = nim.diseqcB.orbital_position, toneburstmode = diseqcParam.B, diseqcmode = diseqcParam.V1_0, diseqcpos = diseqcParam.SENDNO, diseqc13V = nim.diseqc13V.value)
@@ -370,6 +373,10 @@ class SecConfigure:
 					sec.setLNBLOFL(currLnb.lofl.value * 1000)
 					sec.setLNBLOFH(currLnb.lofh.value * 1000)
 					sec.setLNBThreshold(currLnb.threshold.value * 1000)
+				elif currLnb.lof.value == "circular_lnb":
+					sec.setLNBLOFL(10750000)
+					sec.setLNBLOFH(10750000)
+					sec.setLNBThreshold(10750000)
 
 #				if currLnb.output_12v.value == "0V":
 #					pass # nyi in drivers
@@ -1157,6 +1164,7 @@ def InitNimManager(nimmgr):
 		"universal_lnb": _("Universal LNB"),
 		"unicable": _("Unicable"),
 		"c_band": _("C-Band"),
+		"circular_lnb": _("Circular LNB"),
 		"user_defined": _("User defined")}
 
 	lnb_choices_default = "universal_lnb"
@@ -1467,6 +1475,7 @@ def InitNimManager(nimmgr):
 			nim.diseqc13V = ConfigYesNo(False)
 			nim.diseqcMode = ConfigSelection(diseqc_mode_choices, "diseqc_a_b")
 			nim.connectedTo = ConfigSelection([(str(id), nimmgr.getNimDescription(id)) for id in nimmgr.getNimListOfType("DVB-S") if id != x])
+			nim.simpleSingleSendDiSEqC = ConfigYesNo(False)
 			nim.simpleDiSEqCSetVoltageTone = ConfigYesNo(True)
 			nim.simpleDiSEqCOnlyOnSatChange = ConfigYesNo(False)
 			nim.simpleDiSEqCSetCircularLNB = ConfigYesNo(True)
