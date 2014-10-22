@@ -2897,6 +2897,8 @@ exit:
 	m_subtitle_sync_timer->start(next_timer, true);
 
 	//eDebug("\n\n");
+
+#endif
 }
 
 RESULT eServiceMP3::enableSubtitles(iSubtitleUser *user, struct SubtitleTrack &track)
