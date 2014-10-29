@@ -612,13 +612,16 @@
 		<key id="KEY_RECORD" mapto="rec" flags="m"/>
 		<key id="KEY_RADIO" mapto="radio" flags="m"/>
 		<key id="KEY_TV" mapto="showTv" flags="m"/>
-		<key id="KEY_TEXT" mapto="text" flags="m"/>
+		<key id="KEY_TEXT" mapto="text" flags="b"/>
+		<key id="KEY_TEXT" mapto="text_long" flags="l"/>
 		<key id="KEY_INFO" mapto="displayHelp" flags="m"/>
-		<key id="KEY_SUBTITLE" mapto="subtitle" flags="m"/>
-		<key id="KEY_MENU" mapto="mainMenu" flags="m"/>
+		<!--key id="KEY_SUBTITLE" mapto="subtitle" flags="m"/-->
+		<key id="KEY_MENU" mapto="mainMenu" flags="b"/>
+		<key id="KEY_MENU" mapto="mainMenu_long" flags="l"/>
 		<key id="KEY_HELP" mapto="info" flags="b"/>
 		<key id="KEY_HELP" mapto="info_long" flags="l"/>
-		<key id="KEY_LIST" mapto="list" flags="m"/>
+		<key id="KEY_LIST" mapto="list" flags="b"/>
+		<key id="KEY_LIST" mapto="list_long" flags="l"/>
 		<key id="KEY_HOME" mapto="back" flags="m"/>
 		<key id="KEY_END" mapto="end" flags="m"/>
 		<key id="KEY_EPG" mapto="epg" flags="b"/>
@@ -631,7 +634,7 @@
 		<key id="KEY_PAGEDOWN" mapto="channeldown" flags="m"/>
 		<key id="KEY_NEXT" mapto="next" flags="m"/>
 		<key id="KEY_PREVIOUS" mapto="previous" flags="m"/>
-		<key id="KEY_OPTION" mapto="audio" flags="m"/>
+		<key id="KEY_AUDIO" mapto="audio" flags="m"/>
 		<key id="KEY_PLAY" mapto="play" flags="m"/>
 		<key id="KEY_STOP" mapto="stop" flags="m"/>
 		<key id="KEY_PAUSE" mapto="pause" flags="m"/>
@@ -639,10 +642,10 @@
 		<key id="KEY_FASTFORWARD" mapto="fastforward" flags="m"/>
 		<key id="KEY_PREVIOUSSONG" mapto="skip_back" flags="m"/>
 		<key id="KEY_NEXTSONG" mapto="skip_forward" flags="m"/>
-		<key id="KEY_MEDIA" mapto="activatePiP" flags="m"/>
-		<key id="KEY_PROGRAM" mapto="timer" flags="m"/>
+		<key id="KEY_SCREEN" mapto="activatePiP" flags="m"/>
+		<!--key id="KEY_PROGRAM" mapto="timer" flags="m"/-->
 		<key id="KEY_PLAYPAUSE" mapto="play" flags="m"/>
-	        <key id="KEY_GOTO" mapto="playlist" flags="m"/>
+	        <!--key id="KEY_GOTO" mapto="playlist" flags="m"/-->
 	        <key id="KEY_TIME" mapto="timeshift" flags="m"/>
 	        <key id="KEY_SEARCH" mapto="search" flags="b"/>
 	        <key id="KEY_SEARCH" mapto="search_long" flags="l"/>
@@ -651,7 +654,8 @@
 		<key id="KEY_SLEEP" mapto="sleep" flags="m"/>
 		<!--key id="KEY_CONTEXT_MENU" mapto="contextmenu" flags="m"/-->
 		<key id="KEY_REFRESH" mapto="refresh" flags="m"/>
-		<key id="KEY_PVR" mapto="home" flags="m"/>
+		<key id="KEY_PVR" mapto="home" flags="b"/>
+		<key id="KEY_PVR" mapto="home_long" flags="l"/>
 		<key id="KEY_POWER" mapto="power" flags="b"/>
 		<key id="KEY_POWER" mapto="power_long" flags="l"/>
 		<key id="KEY_F1" mapto="f1" flags="b"/>
@@ -660,5 +664,17 @@
 		<key id="KEY_F2" mapto="f2_long" flags="l"/>
 		<key id="KEY_F3" mapto="f3" flags="b"/>
 		<key id="KEY_F3" mapto="f3_long" flags="l"/>
+		<key id="KEY_GOTO" mapto="n" flags="b"/>
+		<key id="KEY_GOTO" mapto="n_long" flags="l"/>
+		<key id="KEY_MEDIA" mapto="vod" flags="b"/>
+		<key id="KEY_MEDIA" mapto="vod_long" flags="l"/>
+		<key id="KEY_OPTION" mapto="opt" flags="b"/>
+		<key id="KEY_OPTION" mapto="opt_long" flags="l"/>
+		<key id="KEY_PROGRAM" mapto="app" flags="b"/>
+		<key id="KEY_PROGRAM" mapto="app_long" flags="l"/>
+		<key id="KEY_SUBTITLE" mapto="star" flags="b"/>
+		<key id="KEY_SUBTITLE" mapto="star_long" flags="l"/>
+		<key id="KEY_MODE" mapto="monkey" flags="b"/>
+		<key id="KEY_MODE" mapto="monkey_long" flags="l"/>
 	</map> 
 </keymap>

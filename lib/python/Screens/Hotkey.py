@@ -31,12 +31,15 @@ hotkeys = [(_("Red long"), "red_long", ""),
 	(_("Radio"), "radio", ""),
 	(_("TV"), "showTv", ""),
 	(_("Teletext"), "text", ""),
+	(_("Teletext long"), "text_long", ""),
 	(_("Help"), "displayHelp", ""),
 	(_("Subtitle"), "subtitle", ""),
-	(_("Menu"), "mainMenu", ""),
-	(_("Info (EPG)"), "info", "Infobar/openEventView"),
-	(_("Info (EPG) long"), "info_long", "Infobar/showEventInfoPlugins"),
-	(_("List/Fav/PVR"), "list", ""),
+	(_("Setup"), "mainMenu", ""),
+	(_("Setup long"), "mainMenu_long", ""),
+	(_("Info (EPG)"), "info", "Infobar/toggleShow"),
+	(_("Info (EPG) long"), "info_long", "Infobar/openEventView"),
+	(_("List"), "list", ""),
+	(_("List long"), "list_long", ""),
 	(_("Back"), "back", ""),
 	(_("End"), "end", ""),
 	(_("Epg/Guide"), "epg", "Plugins/Extensions/GraphMultiEPG/1"),
@@ -68,9 +71,20 @@ hotkeys = [(_("Red long"), "red_long", ""),
 	(_("Sleep"), "sleep", ""),
 	(_("Context"), "contextmenu", ""),
 	(_("Recall"), "refresh", ""),
-	(_("Home"), "home", ""),
 	(_("Power"), "power", ""),
-	(_("Power long"), "power_long", "")]
+	(_("Power long"), "power_long", "")
+	(_("Home"), "home", ""),
+	(_("Home long"), "home_long", "")
+	(_("N"), "n", ""),
+	(_("N long"), "n_long", "")
+	(_("OPT/Menu"), "opt", ""),
+	(_("OPT/Menu long"), "opt_long", "")
+	(_("APP"), "app", ""),
+	(_("APP long"), "app_long", "")
+	(_("Star"), "star", ""),
+	(_("Star long"), "star_long", "")
+	(_("@"), "monkey", ""),
+	(_("@ long"), "monkey_long", "")]
 
 config.misc.hotkey = ConfigSubsection()
 config.misc.hotkey.additional_keys = ConfigYesNo(default=False)
@@ -133,6 +147,10 @@ def getHotkeyFunctions():
 	hotkeyFunctions.append((_("Show second InfoBar"), "Infobar/showSecondInfoBar", "InfoBar"))
 	hotkeyFunctions.append((_("Toggle infoBar"), "Infobar/toggleShow", "InfoBar"))
 	hotkeyFunctions.append((_("Letterbox zoom"), "Infobar/vmodeSelection", "InfoBar"))
+	hotkeyFunctions.append((_("Aspect"), "Infobar/aspect", "InfoBar"))
+	hotkeyFunctions.append((_("Aspect Green"), "Infobar/aspectSelection", "InfoBar"))
+	hotkeyFunctions.append((_("Restart Softcam"), "Infobar/ScartHdmi", "InfoBar"))
+	hotkeyFunctions.append((_("Switch Scart/HDMI"), "Infobar/vmodeSelection", "InfoBar"))
 	if SystemInfo["PIPAvailable"]:
 		hotkeyFunctions.append((_("Show PIP"), "Infobar/showPiP", "InfoBar"))
 		hotkeyFunctions.append((_("Swap PIP"), "Infobar/swapPiP", "InfoBar"))
