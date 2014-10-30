@@ -75,8 +75,10 @@ hotkeys = [(_("Red long"), "red_long", ""),
 	(_("Power long"), "power_long", "")
 	(_("Home"), "home", ""),
 	(_("Home long"), "home_long", "")
-	(_("N"), "n", ""),
-	(_("N long"), "n_long", "")
+	(_("N/TV"), "n", ""),
+	(_("N/TV long"), "n_long", "")
+	(_("VOD"), "vod", ""),
+	(_("VOD long"), "vod_long", "")
 	(_("OPT/Menu"), "opt", ""),
 	(_("OPT/Menu long"), "opt_long", "")
 	(_("APP"), "app", ""),
