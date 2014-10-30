@@ -133,12 +133,12 @@ static bool is_a_candidate_for_accel(const gUnmanagedSurface* surface)
 gSurface::gSurface(int width, int height, int _bpp, int accel):
 	gUnmanagedSurface(width, height, _bpp)
 {
-	if ((accel > gPixmap::accelAuto) ||
-		((accel == gPixmap::accelAuto) && (is_a_candidate_for_accel(this))))
-	{
-		if (gAccel::getInstance()->accelAlloc(this) != 0)
+//	if ((accel > gPixmap::accelAuto) ||
+//		((accel == gPixmap::accelAuto) && (is_a_candidate_for_accel(this))))
+//	{
+//		if (gAccel::getInstance()->accelAlloc(this) != 0)
 //				eDebug("ERROR: accelAlloc failed");
-	}
+//	}
 	if (!data)
 	{
 		data = new unsigned char [y * stride];
