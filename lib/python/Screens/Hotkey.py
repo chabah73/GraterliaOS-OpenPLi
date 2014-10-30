@@ -16,7 +16,7 @@ from enigma import eServiceReference
 hotkeys = [(_("Red long"), "red_long", ""),
 	(_("Green long"), "green_long", ""),
 	(_("Yellow long"), "yellow_long", ""),
-	(_("Blue long"), "blue_long", "Plugins/PLi/SoftcamSetup/1"),
+	(_("Blue long"), "blue_long", ""),
 	(_("F1"), "f1", ""),
 	(_("F1 long"), "f1_long", ""),
 	(_("F2"), "f2", ""),
@@ -35,8 +35,7 @@ hotkeys = [(_("Red long"), "red_long", ""),
 	(_("Help"), "displayHelp", ""),
 	(_("Subtitle"), "subtitle", ""),
 	(_("Setup"), "mainMenu", ""),
-	(_("Setup long"), "mainMenu_long", ""),
-	(_("Info (EPG)"), "info", "Infobar/toggleShow"),
+	(_("Info (EPG)"), "info", ""),
 	(_("Info (EPG) long"), "info_long", "Infobar/openEventView"),
 	(_("List"), "list", ""),
 	(_("List long"), "list_long", ""),
@@ -72,19 +71,19 @@ hotkeys = [(_("Red long"), "red_long", ""),
 	(_("Context"), "contextmenu", ""),
 	(_("Recall"), "refresh", ""),
 	(_("Power"), "power", ""),
-	(_("Power long"), "power_long", "")
+	(_("Power long"), "power_long", ""),
 	(_("Home"), "home", ""),
-	(_("Home long"), "home_long", "")
+	(_("Home long"), "home_long", ""),
 	(_("N/TV"), "n", ""),
-	(_("N/TV long"), "n_long", "")
+	(_("N/TV long"), "n_long", ""),
 	(_("VOD"), "vod", ""),
-	(_("VOD long"), "vod_long", "")
-	(_("OPT/Menu"), "opt", ""),
-	(_("OPT/Menu long"), "opt_long", "")
-	(_("APP"), "app", ""),
-	(_("APP long"), "app_long", "")
+	(_("VOD long"), "vod_long", ""),
+	(_("OPT"), "opt", ""),
+	(_("OPT long"), "opt_long", ""),
+	(_("APP/Menu"), "app", ""),
+	(_("APP/Menu long"), "app_long", ""),
 	(_("Star"), "star", ""),
-	(_("Star long"), "star_long", "")
+	(_("Star long"), "star_long", ""),
 	(_("@"), "monkey", ""),
 	(_("@ long"), "monkey_long", "")]
 
@@ -148,11 +147,10 @@ def getHotkeyFunctions():
 	hotkeyFunctions.append((_("Show InfoBar"), "Infobar/showFirstInfoBar", "InfoBar"))
 	hotkeyFunctions.append((_("Show second InfoBar"), "Infobar/showSecondInfoBar", "InfoBar"))
 	hotkeyFunctions.append((_("Toggle infoBar"), "Infobar/toggleShow", "InfoBar"))
-	hotkeyFunctions.append((_("Letterbox zoom"), "Infobar/vmodeSelection", "InfoBar"))
-	hotkeyFunctions.append((_("Aspect"), "Infobar/aspect", "InfoBar"))
-	hotkeyFunctions.append((_("Aspect Green"), "Infobar/aspectSelection", "InfoBar"))
-	hotkeyFunctions.append((_("Restart Softcam"), "Infobar/ScartHdmi", "InfoBar"))
-	hotkeyFunctions.append((_("Switch Scart/HDMI"), "Infobar/vmodeSelection", "InfoBar"))
+	hotkeyFunctions.append((_("Aspect switch"), "Infobar/vmodeSelection", "InfoBar"))
+	hotkeyFunctions.append((_("Aspect selection"), "Infobar/aspectSelection", "InfoBar"))
+	hotkeyFunctions.append((_("Restart Softcam"), "Infobar/restartSoftcam", "InfoBar"))
+	hotkeyFunctions.append((_("Switch Scart/HDMI"), "Infobar/ScartHdmi", "InfoBar"))
 	if SystemInfo["PIPAvailable"]:
 		hotkeyFunctions.append((_("Show PIP"), "Infobar/showPiP", "InfoBar"))
 		hotkeyFunctions.append((_("Swap PIP"), "Infobar/swapPiP", "InfoBar"))

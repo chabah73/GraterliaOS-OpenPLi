@@ -81,7 +81,7 @@
 	</map>
 
 	<map context="InfobarInstantRecord">
-		<key id="KEY_RECORD" mapto="instantRecord" flags="m"/>
+		<key id="KEY_RECORD" mapto="instantRecord" flags="b"/>
 		<!-- Nagrywanie z klawisza czerwonego na pilocie -->
 		<!--key id="KEY_RED" mapto="instantRecord" flags="m"/-->
 	</map>
@@ -156,7 +156,7 @@
 
 	<map context="InfobarMenuActions">
 		<key id="KEY_MENU" mapto="mainMenu" flags="mr"/>
-		<key id="KEY_PROGRAM" mapto="mainMenu" flags="mr"/>
+		<key id="KEY_PROGRAM" mapto="mainMenu" flags="b"/>
 	</map>
 
 	<map context="MenuActions">
@@ -166,36 +166,36 @@
 	</map>
 
 	<map context="InfobarShowHideActions">
-		<key id="KEY_HELP" mapto="toggleShow" flags="m"/>
+		<key id="KEY_HELP" mapto="toggleShow" flags="b"/>
 		<key id="KEY_ENTER" mapto="toggleShow" flags="m"/>
 		<key id="KEY_EXIT" mapto="hide" flags="m"/>
 		<key id="KEY_HOME" mapto="hide" flags="m"/>
 	</map>
 
 	<map context="InfobarActions">
-		<key id="KEY_PLAY" mapto="showMovies" flags="m"/>
-		<key id="KEY_GOTO" mapto="showMovies" flags="m"/>
-		<key id="KEY_PVR" mapto="toogleTvRadio" flags="m"/>
-		<key id="KEY_MODE" mapto="ScartHdmi" flags="m"/>
+		<key id="KEY_PLAY" mapto="showMovies" flags="b"/>
+		<key id="KEY_GOTO" mapto="showMovies" flags="b"/>
+		<key id="KEY_PVR" mapto="toogleTvRadio" flags="b"/>
+		<key id="KEY_MODE" mapto="ScartHdmi" flags="b"/>
 		<!--key id="KEY_MODE" mapto="aspect" flags="m" /-->
 		<!--key id="KEY_MODE" mapto="resolution" flags="m" /-->
-		<key id="KEY_MEDIA" mapto="FreePlayer" flags="m"/>
+		<!--key id="KEY_MEDIA" mapto="FreePlayer" flags="m"/-->
 		<!--<key id="KEY_SUBTITLE" mapto="restart_softcam" flags="m" /-->
 		<!--<key id="KEY_LIST" mapto="restart_softcam" flags="m" /-->
-		<key id="KEY_BLUE" mapto="showTv" flags="m"/>
+		<!--key id="KEY_BLUE" mapto="showTv" flags="m"/-->
 		<!--key id="KEY_LIST" mapto="showPlugins" flags="m" /-->
 		<!--key id="KEY_LEFT" mapto="volumeDown" flags="m" /-->
 		<!--key id="KEY_RIGHT" mapto="volumeUp" flags="m" /-->
-		<key id="KEY_TEXT" mapto="showText" flags="m"/>
+		<key id="KEY_TEXT" mapto="showText" flags="b"/>
 	</map>
 	
 	<map context="InfobarAudioSelectionActions">
-		<key id="KEY_OPTION" mapto="audioSelection" flags="m"/>
-		<key id="KEY_SUBTITLE" mapto="audioSelection" flags="m"/>
+		<key id="KEY_OPTION" mapto="audioSelection" flags="b"/>
+		<key id="KEY_SUBTITLE" mapto="audioSelection" flags="b"/>
 	</map>
 
 	<map context="InfobarAspectSelectionActions">
-		<key id="KEY_GREEN" mapto="aspectSelection" flags="m"/>
+		<key id="KEY_GREEN" mapto="aspectSelection" flags="b"/>
 	</map>
 
 	<map context="InfobarSubserviceSelectionActions">
@@ -205,7 +205,7 @@
 	<map context="InfobarTimerButtonActions">
 			<!--<key id="KEY_PROGRAM" mapto="timerSelection" flags="m" /-->
 			<!--<key id="KEY_YELLOW" mapto="timerSelection" flags="m" /-->
-			<key id="KEY_LIST" mapto="timerSelection" flags="m"/>
+			<key id="KEY_LIST" mapto="timerSelection" flags="b"/>
 	</map>
 	
 	<map context="InfobarVmodeButtonActions">
@@ -345,7 +345,7 @@
 	</map>
 
 	<map context="InfobarTeletextActions">
-		<key id="KEY_TEXT" mapto="startTeletext" flags="m"/>
+		<key id="KEY_TEXT" mapto="startTeletext" flags="b"/>
 	</map>
 
 	<map context="TeletextActions">
@@ -616,8 +616,8 @@
 		<key id="KEY_TEXT" mapto="text_long" flags="l"/>
 		<key id="KEY_INFO" mapto="displayHelp" flags="m"/>
 		<!--key id="KEY_SUBTITLE" mapto="subtitle" flags="m"/-->
-		<key id="KEY_MENU" mapto="mainMenu" flags="b"/>
-		<key id="KEY_MENU" mapto="mainMenu_long" flags="l"/>
+		<key id="KEY_MENU" mapto="mainMenu" flags="m"/>
+		<!--key id="KEY_MENU" mapto="mainMenu_long" flags="l"/-->
 		<key id="KEY_HELP" mapto="info" flags="b"/>
 		<key id="KEY_HELP" mapto="info_long" flags="l"/>
 		<key id="KEY_LIST" mapto="list" flags="b"/>
