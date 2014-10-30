@@ -137,7 +137,7 @@ gSurface::gSurface(int width, int height, int _bpp, int accel):
 		((accel == gPixmap::accelAuto) && (is_a_candidate_for_accel(this))))
 	{
 		if (gAccel::getInstance()->accelAlloc(this) != 0)
-				eDebug("ERROR: accelAlloc failed");
+//				eDebug("ERROR: accelAlloc failed");
 	}
 	if (!data)
 	{
