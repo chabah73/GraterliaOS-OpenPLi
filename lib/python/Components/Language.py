@@ -14,15 +14,15 @@ class Language:
 		self.langlist = []
 		# FIXME make list dynamically
 		# name, iso-639 language, iso-3166 country. Please don't mix language&country!
-		self.addLanguage("Deutsch",     "de", "DE")
-		self.addLanguage("English",     "en", "EN")
-		self.addLanguage("Polski",      "pl", "PL")
+		self.addLanguage("Deutsch",     "de", "DE", "ISO-8859-15")
+		self.addLanguage("English",     "en", "EN", "ISO-8859-15")
+		self.addLanguage("Polski",      "pl", "PL", "ISO-8859-15")
 
 		self.callbacks = []
 
-	def addLanguage(self, name, lang, country):
+	def addLanguage(self, name, lang, country, encoding):
 		try:
-			self.lang[str(lang + "_" + country)] = ((name, lang, country))
+			self.lang[str(lang + "_" + country)] = ((name, lang, country, encoding))
 			self.langlist.append(str(lang + "_" + country))
 		except:
 			print "Language " + str(name) + " not found"
@@ -47,6 +47,7 @@ class Language:
 				pass
 		# HACK: sometimes python 2.7 reverts to the LC_TIME environment value, so make sure it has the correct value
 		os.environ["LC_TIME"] = self.getLanguage() + '.UTF-8'
+		os.environ["GST_SUBTITLE_ENCODING"] = self.getGStreamerSubtitleEncoding()
 
 	def activateLanguageIndex(self, index):
 		if index < len(self.langlist):
@@ -74,6 +75,12 @@ class Language:
 			return str(self.lang[self.activeLanguage][1]) + "_" + str(self.lang[self.activeLanguage][2])
 		except:
 			return ''
+
+	def getGStreamerSubtitleEncoding(self):
+		try:
+			return str(self.lang[self.activeLanguage][3])
+		except:
+			return 'ISO-8859-15'
 
 	def addCallback(self, callback):
 		self.callbacks.append(callback)
