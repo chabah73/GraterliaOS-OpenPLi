@@ -75,9 +75,9 @@
 		<!--key id="KEY_HELP" mapto="showEventInfo" flags="b"/-->
 		<!--key id="KEY_HELP" mapto="showEventInfoPlugin" flags="l"/-->
 		<key id="KEY_EPG" mapto="showEventInfoSingleEPG" flags="b"/>
-		<key id="KEY_EPG" mapto="showEventGuidePlugin" flags="l"/>
+		<!--key id="KEY_EPG" mapto="showEventGuidePlugin" flags="l"/-->
 		<key id="KEY_RED" mapto="showEventInfo" flags="b"/>
-		<key id="KEY_RED" mapto="showEventInfoPlugin" flags="l"/>
+		<!--key id="KEY_RED" mapto="showEventInfoPlugin" flags="l"/-->
 	</map>
 
 	<map context="InfobarInstantRecord">
