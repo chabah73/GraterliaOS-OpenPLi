@@ -28,7 +28,7 @@ hotkeys = [(_("Red long"), "red_long", ""),
 	(_("Yellow"), "yellow", ""),
 	(_("Blue"), "blue", ""),
 	(_("Rec"), "rec", ""),
-#	(_("Rec long"), "rec_long", ""),
+	(_("Rec long"), "rec_long", ""),
 	(_("Radio"), "radio", ""),
 	(_("TV"), "showTv", ""),
 	(_("Teletext"), "text", ""),
@@ -135,6 +135,7 @@ def getHotkeyFunctions():
 	hotkeyFunctions.append((_("Show Audioselection"), "Infobar/audioSelection", "InfoBar"))
 	hotkeyFunctions.append((_("Switch to radio mode"), "Infobar/showRadio", "InfoBar"))
 	hotkeyFunctions.append((_("Switch to TV mode"), "Infobar/showTv", "InfoBar"))
+	hotkeyFunctions.append((_("Switch between TV and Radio"), "Infobar/toogleTvRadio", "InfoBar"))
 	hotkeyFunctions.append((_("Show movies"), "Infobar/showMovies", "InfoBar"))
 	hotkeyFunctions.append((_("Instant record"), "Infobar/instantRecord", "InfoBar"))
 	hotkeyFunctions.append((_("Start instant recording"), "Infobar/startInstantRecording", "InfoBar"))
