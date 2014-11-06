@@ -359,7 +359,7 @@ private:
 	GstPad* gstCreateSubtitleSink(eServiceMP3* _this, subtype_t type);
 	void gstPoll(ePtr<GstMessageContainer> const &);
 	static void playbinNotifySource(GObject *object, GParamSpec *unused, gpointer user_data);
-#if GST_VERSION_MAJOR < 1
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	static gint match_sinktype(GstElement *element, gpointer type);
 #else
 	static gint match_sinktype(const GValue *velement, const gchar *type);
