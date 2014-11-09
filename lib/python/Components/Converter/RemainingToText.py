@@ -34,11 +34,9 @@ class RemainingToText(Converter, object):
 	@cached
 	def getText(self):
 		time = self.source.time
-		if time is None:
-			return ""
-
+		if time:
 		(duration, remaining) = self.source.time
-
+			if duration and remaining:
 		prefix = ""
 		tsecs = remaining
 		if self.type == self.PROGRESS or self.type == self.WITH_SECONDSPROGRESS:
@@ -74,5 +72,6 @@ class RemainingToText(Converter, object):
 			return _("%s%d min") % (prefix, tsecs / 60)
 		else:
 			return "???"
+		return ""
 
 	text = property(getText)

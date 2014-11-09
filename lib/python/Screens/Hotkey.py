@@ -63,18 +63,22 @@ hotkeys = [(_("Red long"), "red_long", ""),
 	(_("Skip forward"), "skip_forward", ""),
 	(_("activatePiP"), "activatePiP", ""),
 	(_("Timer"), "timer", ""),
+	(_("Timer long"), "timer_long", ""),
 	(_("Playlist"), "playlist", ""),
 	(_("Timeshift"), "timeshift", ""),
 	(_("Search"), "search", ""),
 	(_("Search long"), "search_long", ""),
 	(_("Slow"), "slow", ""),
 	(_("Mark/Portal/Playlist"), "mark", ""),
+	(_("Mark/Portal/Playlist long"), "mark_long", ""),
 	(_("Sleep"), "sleep", ""),
+	(_("Sleep long"), "sleep_long", ""),
 	(_("Context"), "contextmenu", ""),
+	(_("Context long"), "contextmenu_long", ""),
 	(_("Recall"), "refresh", ""),
+	(_("Recall long"), "refresh_long", ""),
 	(_("Video Mode"), "vmode", ""),
-	(_("Power"), "power", ""),
-	(_("Power long"), "power_long", ""),
+	(_("Video Mode long"), "vmode_long", ""),
 	(_("Home"), "home", ""),
 	(_("Home long"), "home_long", ""),
 	(_("N/TV"), "n", ""),
@@ -209,7 +213,7 @@ class HotkeySetup(Screen):
 		self.list = []
 		self.hotkeyFunctions = getHotkeyFunctions()
 		for x in hotkeys:
-			self.list.append(ChoiceEntryComponent('',((x[0]), x[1])))
+			self.list.append(ChoiceEntryComponent('',(_(x[0]), x[1])))
 		self["list"] = ChoiceList(list=self.list[:config.misc.hotkey.additional_keys.value and len(hotkeys) or 10], selection = 0)
 		self["choosen"] = ChoiceList(list=[])
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions"],
