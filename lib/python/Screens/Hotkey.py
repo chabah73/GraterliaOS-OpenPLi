@@ -123,6 +123,8 @@ def getHotkeyFunctions():
 				twinPaths[plugin.path[24:]] = 1
 			hotkeyFunctions.append((plugin.name, plugin.path[24:] + "/" + str(twinPaths[plugin.path[24:]]) , "Plugins"))
 			twinPlugins.append(plugin.name)
+	if os.path.isdir('/usr/lib/enigma2/python/Plugins/Extensions/FreePlayer'):
+		hotkeyFunctions.append((_("FreePlayer"), "Infobar/FreePlayer", "Plugins"))
 	hotkeyFunctions.append((_("Main menu"), "Infobar/mainMenu", "InfoBar"))
 	hotkeyFunctions.append((_("Show help"), "Infobar/showHelp", "InfoBar"))
 	hotkeyFunctions.append((_("Show extension selection"), "Infobar/showExtensionSelection", "InfoBar"))
@@ -197,8 +199,8 @@ def getHotkeyFunctions():
 		for x in [x for x in os.listdir("/etc/ppanels") if x.endswith(".xml")]:
 			x = x[:-4]
 			hotkeyFunctions.append((_("PPanel") + " " + x, "PPanel/" + x, "PPanels"))
-	if os.path.isdir("/usr/script"):
-		for x in [x for x in os.listdir("/usr/script") if x.endswith(".sh")]:
+	if os.path.isdir("/etc/sysconfig/user_scripts"):
+		for x in [x for x in os.listdir("/etc/sysconfig/user_scripts") if x.endswith(".sh")]:
 			x = x[:-3]
 			hotkeyFunctions.append((_("Shellscript") + " " + x, "Shellscript/" + x, "Shellscripts"))
 	return hotkeyFunctions
@@ -562,7 +564,10 @@ class InfoBarHotkey():
 					from Plugins.Extensions.PPanel.ppanel import PPanel
 					self.session.open(PPanel, name=selected[1] + ' PPanel', node=None, filename=ppanelFileName, deletenode=None)
 			elif selected[0] == "Shellscript":
-				command = '/usr/script/' + selected[1] + ".sh"
-				if os.path.isfile(command) and os.path.isdir('/usr/lib/enigma2/python/Plugins/Extensions/PPanel'):
-					from Plugins.Extensions.PPanel.ppanel import Execute
-					self.session.open(Execute, selected[1] + " shellscript", None, command)
+				command = '/etc/sysconfig/user_scripts/' + selected[1] + ".sh"
+#				if os.path.isfile(command) and os.path.isdir('/usr/lib/enigma2/python/Plugins/Extensions/PPanel'):
+				if os.path.isfile(command):
+					from Screens.Console import Console
+					self.session.open(Console, selected[1], [command], closeOnSuccess = True)
+#					from Plugins.Extensions.PPanel.ppanel import Execute
+#					self.session.open(Execute, selected[1] + " shellscript", None, command)
