@@ -2571,9 +2571,6 @@ class VideoMode(Screen):
 			{
 				"vmodeSelection": self.selectVMode
 			})
-
-		self.Timer = eTimer()
-		self.Timer.callback.append(self.quit)
 		self.selectVMode()
 
 	def selectVMode(self):
@@ -2584,17 +2581,13 @@ class VideoMode(Screen):
 		idx = (idx + 1) % len(policy.choices)
 		policy.value = policy.choices[idx]
 		self["videomode"].setText(policy.value)
-		self.Timer.start(1000, True)
-
+		self.close()
+		
 	def isWideScreen(self):
 		from Components.Converter.ServiceInfo import WIDESCREEN
 		service = self.session.nav.getCurrentService()
 		info = service and service.info()
 		return info.getInfo(iServiceInformation.sAspect) in WIDESCREEN
-
-	def quit(self):
-		self.Timer.stop()
-		self.close()
 
 class InfoBarAdditionalInfo:
 	def __init__(self):
