@@ -1,6 +1,7 @@
 from Plugins.Plugin import PluginDescriptor
 from GraphMultiEpg import GraphMultiEPG
 from Screens.ChannelSelection import BouquetSelector
+import Screens.InfoBar
 from enigma import eServiceCenter, eServiceReference
 from ServiceReference import ServiceReference
 from Screens.Screen import Screen
@@ -65,7 +66,7 @@ class SelectBouquet(Screen):
 
 def zapToService(service, preview = False, zapback = False):
 	if Servicelist.startServiceRef is None:
-		Servicelist.startServiceRef = Session.nav.getCurrentlyPlayingServiceReference()
+		Servicelist.startServiceRef = Session.nav.getCurrentlyPlayingServiceOrGroup()
 	if not service is None:
 		if not preview and not zapback:
 			if Servicelist.getRoot() != epg_bouquet:
@@ -73,12 +74,13 @@ def zapToService(service, preview = False, zapback = False):
 				if Servicelist.bouquet_root != epg_bouquet:
 					Servicelist.enterPath(Servicelist.bouquet_root)
 				Servicelist.enterPath(epg_bouquet)
-		Servicelist.setCurrentSelection(service)
+			Servicelist.setCurrentSelection(service)
 		if not zapback or preview:
-			Servicelist.zap(not preview, preview)
+			Servicelist.zap(not preview, preview, ref=preview and service or None)
 	if (Servicelist.dopipzap or zapback) and not preview:
 		Servicelist.zapBack()
 	if not preview:
+		Servicelist.revertMode = None
 		Servicelist.startServiceRef = None
 		Servicelist.startRoot = None
 
@@ -139,7 +141,7 @@ def main(session, servicelist = None, **kwargs):
 	global Session
 	Session = session
 	global Servicelist
-	Servicelist = servicelist
+	Servicelist = servicelist or Screens.InfoBar.InfoBar.instance.servicelist
 	global bouquets
 	bouquets = Servicelist and Servicelist.getBouquetList()
 	global epg_bouquet
