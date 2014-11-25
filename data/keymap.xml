@@ -72,8 +72,8 @@
 	</map>
 
 	<map context="InfobarEPGActions">
-		<!--key id="KEY_HELP" mapto="showEventInfo" flags="b"/-->
-		<!--key id="KEY_HELP" mapto="showEventInfoPlugin" flags="l"/-->
+		<!--key id="KEY_INFO" mapto="showEventInfo" flags="b"/-->
+		<!--key id="KEY_INFO" mapto="showEventInfoPlugin" flags="l"/-->
 		<key id="KEY_EPG" mapto="showEventInfoSingleEPG" flags="b"/>
 		<!--key id="KEY_EPG" mapto="showEventGuidePlugin" flags="l"/-->
 		<key id="KEY_RED" mapto="showEventInfo" flags="b"/>
@@ -156,17 +156,17 @@
 
 	<map context="InfobarMenuActions">
 		<key id="KEY_MENU" mapto="mainMenu" flags="mr"/>
-		<key id="KEY_PROGRAM" mapto="mainMenu" flags="b"/>
+		<!--key id="KEY_HELP" mapto="mainMenu" flags="b"/-->
 	</map>
 
 	<map context="MenuActions">
 		<key id="KEY_MENU" mapto="menu" flags="mr"/>
 		<key id="KEY_OPTION" mapto="menu" flags="mr"/>
-		<key id="KEY_PROGRAM" mapto="menu" flags="mr"/>
+		<!--key id="KEY_HELP" mapto="menu" flags="mr"/-->
 	</map>
 
 	<map context="InfobarShowHideActions">
-		<key id="KEY_HELP" mapto="toggleShow" flags="b"/>
+		<key id="KEY_INFO" mapto="toggleShow" flags="b"/>
 		<key id="KEY_ENTER" mapto="toggleShow" flags="m"/>
 		<key id="KEY_EXIT" mapto="hide" flags="m"/>
 		<key id="KEY_HOME" mapto="hide" flags="m"/>
@@ -202,7 +202,7 @@
 	</map>
 
 	<map context="InfobarTimerButtonActions">
-			<!--<key id="KEY_PROGRAM" mapto="timerSelection" flags="m" /-->
+			<!--<key id="KEY_HELP" mapto="timerSelection" flags="m" /-->
 			<!--<key id="KEY_YELLOW" mapto="timerSelection" flags="m" /-->
 			<key id="KEY_LIST" mapto="timerSelection" flags="b"/>
 	</map>
@@ -304,8 +304,8 @@
 	<map context="MovieSelectionActions">
 		<key id="KEY_MENU" mapto="contextMenu" flags="m"/>
 		<key id="KEY_OPTION" mapto="contextMenu" flags="m"/>
-		<key id="KEY_PROGRAM" mapto="contextMenu" flags="m"/>
-		<key id="KEY_HELP" mapto="showEventInfo" flags="m"/>
+		<!--key id="KEY_HELP" mapto="contextMenu" flags="m"/-->
+		<key id="KEY_INFO" mapto="showEventInfo" flags="m"/>
 	</map>
 
 	<map context="InfobarMovieListActions">
@@ -325,8 +325,8 @@
 		<!--key id="KEY_PAGEDOWN" mapto="moveNext" flags="m"/-->
 		<!--key id="KEY_REWIND" mapto="movePrev" flags="b"/-->
 		<!--key id="KEY_FASTFORWARD" mapto="moveNext" flags="b"/-->
-		<!--key id="KEY_HELP" mapto="InfoButtonPressed" flags="b"/-->
-		<!--key id="KEY_HELP" mapto="InfoButtonPressedLong" flags="l"/-->
+		<!--key id="KEY_INFO" mapto="InfoButtonPressed" flags="b"/-->
+		<!--key id="KEY_INFO" mapto="InfoButtonPressedLong" flags="l"/-->
 	</map>
 
 	<map context="InfobarCueSheetActions">
@@ -360,7 +360,7 @@
 		<key id="KEY_BLUE" mapto="blue" flags="m"/>
 		<key id="KEY_PAGEUP" mapto="zoomMode" flags="m"/>
 		<key id="KEY_PAGEDOWN" mapto="screenMode" flags="m"/>
-		<key id="KEY_HELP" mapto="hint" flags="m"/>
+		<key id="KEY_INFO" mapto="hint" flags="m"/>
 		<key id="KEY_MENU" mapto="menu" flags="m"/>
 		<key id="KEY_HOME" mapto="exit" flags="m"/>
 		<key id="KEY_POWER" mapto="exit" flags="m"/>
@@ -400,13 +400,13 @@
 
 	<map context="ChannelSelectEPGActions">
 		<key id="KEY_EPG" mapto="showEPGList" flags="m"/>
-		<key id="KEY_HELP" mapto="showEPGList" flags="m"/>
+		<key id="KEY_INFO" mapto="showEPGList" flags="m"/>
 	</map>
 
 	<map context="ChannelSelectEditActions">
 		<key id="KEY_MENU" mapto="contextMenu" flags="m"/>
 		<key id="KEY_OPTION" mapto="contextMenu" flags="m"/>
-		<key id="KEY_PROGRAM" mapto="contextMenu" flags="m"/>
+		<!--key id="KEY_HELP" mapto="contextMenu" flags="m"/-->
 	</map>
 
 	<map context="TvRadioActions">
@@ -415,7 +415,7 @@
 	</map>
 
 	<map context="TimerEditActions">
-		<key id="KEY_HELP" mapto="log" flags="m"/>
+		<key id="KEY_INFO" mapto="log" flags="m"/>
 	</map>
 
 	<map context="EPGSelectActions">
@@ -424,7 +424,7 @@
 		<key id="KEY_BLUE" mapto="blue" flags="mr"/>
 		<key id="KEY_RED" mapto="red" flags="m"/>
 		<key id="KEY_EPG" mapto="info" flags="m"/>
-		<key id="KEY_HELP" mapto="info" flags="m"/>
+		<key id="KEY_INFO" mapto="info" flags="m"/>
 		<key id="KEY_MENU" mapto="menu" flags="m"/>
 		<key id="KEY_OPTION" mapto="input_date_time" flags="m"/>
 		<!--key id="KEY_3" mapto="nextDay" flags="m"/-->
@@ -447,7 +447,7 @@
 		<key id="KEY_RIGHT" mapto="nextEvent" flags="mr"/>
 		<key id="KEY_RED" mapto="openSimilarList" flags="m"/>
 		<key id="KEY_GREEN" mapto="timerAdd" flags="m"/>
-		<key id="KEY_HELP" mapto="cancel" flags="m"/>
+		<key id="KEY_INFO" mapto="cancel" flags="m"/>
 		<key id="KEY_HOME" mapto="cancel" flags="m"/>
 		<key id="KEY_LIST" mapto="timerAdd" flags="m"/>
 	</map>
@@ -524,7 +524,7 @@
 	</map>
 
 	<map context="HelpActions">
-		<!--key id="KEY_HELP" mapto="displayHelp" flags="m" -->
+		<key id="KEY_HELP" mapto="displayHelp" flags="b" />
 	</map>
 
 	<map context="ShortcutActions">
@@ -591,7 +591,7 @@
 		<key id="KEY_STOP" mapto="shift_stop" flags="l"/>
 		<key id="KEY_MENU" mapto="menu" flags="m"/>
 		<key id="KEY_OPTION" mapto="menu" flags="m"/>
-		<key id="KEY_PROGRAM" mapto="menu" flags="m"/>
+		<!--key id="KEY_HELP" mapto="menu" flags="m"/-->
 
 		<key id="KEY_2" mapto="skipListbegin" flags="m"/>
 		<key id="KEY_8" mapto="skipListend" flags="m"/>
@@ -620,8 +620,8 @@
 		<!--key id="KEY_SUBTITLE" mapto="subtitle" flags="m"/-->
 		<key id="KEY_MENU" mapto="mainMenu" flags="m"/>
 		<!--key id="KEY_MENU" mapto="mainMenu_long" flags="l"/-->
-		<key id="KEY_HELP" mapto="info" flags="b"/>
-		<key id="KEY_HELP" mapto="info_long" flags="l"/>
+		<key id="KEY_INFO" mapto="info" flags="b"/>
+		<key id="KEY_INFO" mapto="info_long" flags="l"/>
 		<key id="KEY_LIST" mapto="list" flags="b"/>
 		<key id="KEY_LIST" mapto="list_long" flags="l"/>
 		<key id="KEY_HOME" mapto="back" flags="m"/>
@@ -645,7 +645,7 @@
 		<key id="KEY_PREVIOUSSONG" mapto="skip_back" flags="m"/>
 		<key id="KEY_NEXTSONG" mapto="skip_forward" flags="m"/>
 		<key id="KEY_SCREEN" mapto="activatePiP" flags="m"/>
-		<!--key id="KEY_PROGRAM" mapto="timer" flags="m"/-->
+		<!--key id="KEY_HELP" mapto="timer" flags="m"/-->
 		<key id="KEY_PLAYPAUSE" mapto="play" flags="m"/>
         <!--key id="KEY_GOTO" mapto="playlist" flags="m"/-->
         <key id="KEY_TIME" mapto="timeshift" flags="m"/>
@@ -679,8 +679,8 @@
 		<key id="KEY_MEDIA" mapto="vod_long" flags="l"/>
 		<key id="KEY_OPTION" mapto="opt" flags="b"/>
 		<key id="KEY_OPTION" mapto="opt_long" flags="l"/>
-		<key id="KEY_PROGRAM" mapto="app" flags="b"/>
-		<key id="KEY_PROGRAM" mapto="app_long" flags="l"/>
+		<key id="KEY_HELP" mapto="app" flags="b"/>
+		<key id="KEY_HELP" mapto="app_long" flags="l"/>
 		<key id="KEY_SUBTITLE" mapto="star" flags="b"/>
 		<key id="KEY_SUBTITLE" mapto="star_long" flags="l"/>
 		<key id="KEY_MODE" mapto="monkey" flags="b"/>
