@@ -1,12 +1,13 @@
 import os
 from Tools.HardwareInfo import HardwareInfo
+from Tools.GOSHardwareInfo import GOSHardwareInfo
 from Tools.Directories import SCOPE_SKIN, resolveFilename
 
 class RcModel:
         RcModels = {}
 
 	def __init__(self):
-		self.model = HardwareInfo().get_device_model()
+		self.model = GOSHardwareInfo().get_rcstype()
 		# cfg files has modelname  rcname entries.
 		# modelname is boxname optionally followed by .rctype
 		for line in open((resolveFilename(SCOPE_SKIN, 'rc_models/rc_models.cfg')), 'r'):
