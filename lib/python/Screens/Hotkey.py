@@ -565,9 +565,6 @@ class InfoBarHotkey():
 					self.session.open(PPanel, name=selected[1] + ' PPanel', node=None, filename=ppanelFileName, deletenode=None)
 			elif selected[0] == "Shellscript":
 				command = '/etc/sysconfig/user_scripts/' + selected[1] + ".sh"
-#				if os.path.isfile(command) and os.path.isdir('/usr/lib/enigma2/python/Plugins/Extensions/PPanel'):
 				if os.path.isfile(command):
 					from Screens.Console import Console
 					self.session.open(Console, selected[1], [command], closeOnSuccess = True)
-#					from Plugins.Extensions.PPanel.ppanel import Execute
-#					self.session.open(Execute, selected[1] + " shellscript", None, command)
