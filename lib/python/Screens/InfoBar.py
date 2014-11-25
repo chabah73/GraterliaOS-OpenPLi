@@ -286,7 +286,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		from Screens.Console import Console
 		from Tools.Directories import fileExists
 		if fileExists('/etc/init.d/softcam'):
-			self.session.open(Console, 'Restart Softcam', ['/etc/init.d/softcam restart'])
+			self.session.open(Console, 'Restart Softcam', ['/etc/init.d/softcam restart'], closeOnSuccess = True)
 		else:
 			print "Softcam startup screen not found!"
 
