@@ -56,14 +56,15 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				"showRadio": (self.showRadio, _("Show the radio player...")),
 				"showTv": (self.showTv, _("Show the tv player...")),
 				"toogleTvRadio": (self.toogleTvRadio, _("toggels betwenn tv and radio...")),
-				"volumeUp": (self._volUp, _("...")),
-				"volumeDown": (self._volDown, _("...")),
-				"resolution": (self.resolution, _("...")),
-				"aspect": (self.aspect, _("...")),
-				"showPlugins": (self.showPlugins, _("...")),
-				"FreePlayer": (self.FreePlayer, _("...")),
-				"ScartHdmi": (self.ScartHdmi, _("...")),
-				"restart_softcam": (self.restartSoftcam, _("...")),
+				"volumeUp": (self._volUp, _("Volume up")),
+				"volumeDown": (self._volDown, _("Volume down")),
+				"resolution": (self.resolution, _("Open resolution menu")),
+				"aspect": (self.aspect, _("Open aspect ratio menu")),
+				"showPlugins": (self.showPlugins, _("Open plugin browser")),
+				"FreePlayer": (self.FreePlayer, _("Open FreePlayer plugin")),
+				"BitrateViewer": (self.BitrateViewer, _("Open BitrateViewer plugin")),
+				"ScartHdmi": (self.ScartHdmi, _("Switch betwen SCART and HDMI")),
+				"restart_softcam": (self.restartSoftcam, _("Restart softcam")),
 			}, prio=2)
 
 		self.allowPiP = True
@@ -278,7 +279,22 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 			self.session.open(FreePlayer.FreePlayerStart)
 		else:
 			print "FreePlayer plugin not found!"
-					
+
+	def BitrateViewer(self):
+		def BitrateViewerPlugin():
+			try:
+				from Plugins.Extensions.Bitrate.plugin import BitrateViewer
+			except ImportError:
+				return False
+			else:
+				return True
+				
+		if FreePlayerPlugin():
+			from Plugins.Extensions.Bitrate.plugin import BitrateViewer
+			self.session.open(BitrateViewer)
+		else:
+			print "BitrateViewer plugin not found!"
+			
 	def startTeletext(self):
 		self.teletext_plugin(session=self.session, service=self.session.nav.getCurrentService())
 
