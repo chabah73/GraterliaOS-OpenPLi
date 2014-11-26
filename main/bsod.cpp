@@ -18,7 +18,7 @@
 
 /************************************************/
 #if defined(__sh__) // dont send mails to dm
-#define CRASH_EMAILADDR "somebody who cares"
+#define CRASH_EMAILADDR "forum.xunil.pl"
 #else
 #define CRASH_EMAILADDR "forum at www.openpli.org"
 #endif
