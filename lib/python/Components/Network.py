@@ -352,7 +352,7 @@ class Network:
 		for iface in self.ifaces.keys():
 			if iface != 'eth0' or not self.onRemoteRootFS():
 				self.commands.append("ip addr flush dev " + iface)
-		self.commands.append("/etc/init.d/networking stop")
+		self.commands.append("/etc/init.d/network stop")
 		self.commands.append("killall -9 udhcpc")
 		self.commands.append("rm /var/run/udhcpc*")
 		self.resetNetworkConsole.eBatch(self.commands, self.resetNetworkFinishedCB, [mode, callback], debug=True)
@@ -433,10 +433,11 @@ class Network:
 			if iface != 'eth0' or not self.onRemoteRootFS():
 				self.commands.append("ifdown " + iface)
 				self.commands.append("ip addr flush dev " + iface)
-		self.commands.append("/etc/init.d/networking stop")
+		self.commands.append("/etc/init.d/network stop")
 		self.commands.append("killall -9 udhcpc")
 		self.commands.append("rm /var/run/udhcpc*")
-		self.commands.append("/etc/init.d/networking start")
+		self.commands.append("rm /var/run/ifstate*")
+		self.commands.append("/etc/init.d/network start")
 		self.commands.append("/etc/init.d/avahi-daemon start")
 		self.restartConsole.eBatch(self.commands, self.restartNetworkFinished, callback, debug=True)
 
