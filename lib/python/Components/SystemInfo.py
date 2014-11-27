@@ -12,7 +12,7 @@ def getNumVideoDecoders():
 	return idx
 
 SystemInfo["NumVideoDecoders"] = getNumVideoDecoders()
-SystemInfo["PIPAvailable"] = SystemInfo["NumVideoDecoders"] > 1 and HardwareInfo().get_device_name() != "spark7162" and HardwareInfo().get_device_name() != "sagemcom88" and HardwareInfo().get_device_name() != "esi88"
+SystemInfo["PIPAvailable"] = SystemInfo["NumVideoDecoders"] > 1 and HardwareInfo().get_device_name() != "spark7162" and HardwareInfo().get_device_name() != "sagemcom88" and HardwareInfo().get_device_name() != "esi88" and HardwareInfo().get_device_name() != "nbox"
 SystemInfo["CanMeasureFrontendInputPower"] = eDVBResourceManager.getInstance().canMeasureFrontendInputPower()
 
 
@@ -31,7 +31,7 @@ SystemInfo["ZapMode"] = fileCheck("/proc/stb/video/zapmode") or fileCheck("/proc
 SystemInfo["NumFrontpanelLEDs"] = countFrontpanelLEDs()
 SystemInfo["FrontpanelDisplay"] = fileExists("/dev/dbox/oled0") or fileExists("/dev/dbox/lcd0")
 SystemInfo["FrontpanelDisplayGrayscale"] = fileExists("/dev/dbox/oled0")
-SystemInfo["DeepstandbySupport"] = HardwareInfo().get_device_name() != "dm800" and HardwareInfo().get_device_name() != "sagemcom88" and HardwareInfo().get_device_name() != "esi88"
+SystemInfo["DeepstandbySupport"] = HardwareInfo().get_device_name() != "dm800" and HardwareInfo().get_device_name() != "sagemcom88" and HardwareInfo().get_device_name() != "esi88" and HardwareInfo().get_device_name() != "nbox"
 SystemInfo["Fan"] = fileCheck("/proc/stb/fp/fan")
 SystemInfo["FanPWM"] = SystemInfo["Fan"] and fileCheck("/proc/stb/fp/fan_pwm")
 SystemInfo["StandbyLED"] = fileCheck("/proc/stb/power/standbyled")
