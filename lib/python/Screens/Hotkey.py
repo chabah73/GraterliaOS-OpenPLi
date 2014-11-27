@@ -31,7 +31,7 @@ def getHotkeys():
 		(_("Yellow"), "yellow", ""),
 		(_("Blue"), "blue", ""),
 		("Rec", "rec", ""),
-		("Rec" + " " + _("long"), "Rec_long", "")
+		("Rec" + " " + _("long"), "Rec_long", ""),
 		("Radio", "radio", ""),
 		("TV", "showTv", ""),
 		("Teletext", "text", ""),
@@ -39,7 +39,7 @@ def getHotkeys():
 		("Help" + " " + _("long"), "displayHelp_long", ""),
 		("Subtitle", "subtitle", ""),
 		("Menu", "mainMenu", ""),
-		("Info (EPG)", "info", "Infobar/openEventView"),
+		("Info (EPG)", "info", ""),
 		("Info (EPG)" + " " + _("long"), "info_long", "Infobar/showEventInfoPlugins"),
 		("List/Fav/PVR", "list", ""),
 		("Back/Recall", "back", ""),
