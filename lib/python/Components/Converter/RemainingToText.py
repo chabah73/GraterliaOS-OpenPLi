@@ -35,43 +35,36 @@ class RemainingToText(Converter, object):
 	def getText(self):
 		time = self.source.time
 		if time:
-		(duration, remaining) = self.source.time
+			(duration, remaining) = self.source.time
 			if duration and remaining:
-		prefix = ""
-		tsecs = remaining
-		if self.type == self.PROGRESS or self.type == self.WITH_SECONDSPROGRESS:
-			tsecs = duration - tsecs
-		if tsecs < 0:
-			tsecs = -tsecs
-			prefix = "-"
-		elif self.type == self.NO_SECONDS:
-			tsecs += 59
-		if tsecs > duration:
-			tsecs = duration
+				prefix = ""
+				tsecs = remaining
+				if self.type == self.PROGRESS or self.type == self.WITH_SECONDSPROGRESS:
+					tsecs = duration - tsecs
+				if tsecs < 0:
+					tsecs = -tsecs
+					prefix = "-"
+				elif self.type == self.NO_SECONDS:
+					tsecs += 59
+				if tsecs > duration:
+					tsecs = duration
 
-		seconds = tsecs % 60
-		minutes = tsecs / 60 % 60
-		hours = tsecs / 3600
+				seconds = tsecs % 60
+				minutes = tsecs / 60 % 60
+				hours = tsecs / 3600
 
-		if self.type == self.WITH_SECONDS or self.type == self.WITH_SECONDSPROGRESS:
-			return "%s%d:%02d:%02d" % (prefix, hours, minutes, seconds)
-		elif self.type == self.NO_SECONDS or self.type == self.PROGRESS:
-			return "%s%d:%02d" % (prefix, hours, minutes)
-		elif self.type == self.IN_SECONDS:
-			return prefix+str(tsecs)
-#+++>
-		elif self.type == self.FOLLOW:
-			if remaining is not None:
-				return "in %d min" % (remaining / 60)
-			else:
-				return "%d min" % (duration / 60)
-#+++<
-		elif self.type == self.DEFAULT:
-			if remaining <= duration:
-				prefix = "+"
-			return _("%s%d min") % (prefix, tsecs / 60)
-		else:
-			return "???"
+				if self.type == self.WITH_SECONDS or self.type == self.WITH_SECONDSPROGRESS:
+					return "%s%d:%02d:%02d" % (prefix, hours, minutes, seconds)
+				elif self.type == self.NO_SECONDS or self.type == self.PROGRESS:
+					return "%s%d:%02d" % (prefix, hours, minutes)
+				elif self.type == self.IN_SECONDS:
+					return prefix+str(tsecs)
+				elif self.type == self.DEFAULT:
+					if remaining <= duration:
+						prefix = "+"
+					return _("%s%d min") % (prefix, tsecs / 60)
+				else:
+					return "???"
 		return ""
 
 	text = property(getText)
