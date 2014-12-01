@@ -14,6 +14,8 @@ from Components.SystemInfo import SystemInfo
 from Components.UsageConfig import preferredInstantRecordPath, defaultMoviePath, ConfigSelection
 from Components.VolumeControl import VolumeControl
 from Components.Sources.StaticText import StaticText
+from Components.Pixmap import Pixmap
+from Components.Renderer.Picon import getPiconName
 from EpgSelection import EPGSelection
 from Plugins.Plugin import PluginDescriptor
 
@@ -414,13 +416,21 @@ class NumberZap(Screen):
 		self.Timer.stop()
 		self.close(self.service, self.bouquet)
 
-	def handleServiceName(self):
+	def getService(self):
 		if self.searchNumber:
 			self.service, self.bouquet = self.searchNumber(int(self["number"].getText()))
-			self["servicename"].text = self["servicename_summary"].text = ServiceReference(self.service).getServiceName()
-			if not self.startBouquet:
-				self.startBouquet = self.bouquet
+			
+	def handleServiceName(self):
+		self["servicename"].text = self["servicename_summary"].text = ServiceReference(self.service).getServiceName()
+		if not self.startBouquet:
+			self.startBouquet = self.bouquet
 
+	def handlePicon(self):
+		if self.service is not None:
+			sname = self.service.toString()
+			pngname = getPiconName(sname)
+			self["picon"].instance.setPixmapFromFile(pngname)
+			
 	def keyBlue(self):
 		self.Timer.start(3000, True)
 		if self.searchNumber:
@@ -435,6 +445,8 @@ class NumberZap(Screen):
 		self.numberString = self.numberString + str(number)
 		self["number"].text = self["number_summary"].text = self.numberString
 
+		self.getService()
+		self.handlePicon()
 		self.handleServiceName()
 
 		if len(self.numberString) >= 5:
@@ -452,7 +464,9 @@ class NumberZap(Screen):
 		self["channel_summary"] = StaticText(_("Channel:"))
 		self["number_summary"] = StaticText(self.numberString)
 		self["servicename_summary"] = StaticText()
+		self["picon"] = Pixmap()
 
+		self.getService()
 		self.handleServiceName()
 
 		self["actions"] = NumberActionMap( [ "SetupActions", "ShortcutActions" ],
@@ -475,6 +489,8 @@ class NumberZap(Screen):
 		self.Timer = eTimer()
 		self.Timer.callback.append(self.keyOK)
 		self.Timer.start(3000, True)
+
+		self.onLayoutFinish.append(self.handlePicon)
 
 class InfoBarNumberZap:
 	""" Handles an initial number for NumberZapping """
