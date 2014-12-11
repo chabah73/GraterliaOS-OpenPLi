@@ -35,6 +35,7 @@ from Screens.InputBox import PinInput
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Screens.MessageBox import MessageBox
 from Screens.ServiceInfo import ServiceInfo
+from Screens.Hotkey import InfoBarHotkey, hotkeyActionMap, getHotkeyFunctions
 profile("ChannelSelection.py 4")
 from Screens.PictureInPicture import PictureInPicture
 from Screens.RdsDisplay import RassInteractive
@@ -42,8 +43,11 @@ from ServiceReference import ServiceReference
 from Tools.BoundFunction import boundFunction
 from Tools import Notifications
 from Tools.Alternatives import CompareWithAlternatives
+from Tools.Directories import fileExists
 from Plugins.Plugin import PluginDescriptor
 from Components.PluginComponent import plugins
+from Screens.ChoiceBox import ChoiceBox
+from Screens.EventView import EventViewEPGSelect
 from os import remove
 profile("ChannelSelection.py after imports")
 
@@ -508,28 +512,153 @@ class SelectionEventInfo:
 		service.newService(cur)
 		self["Event"].newEvent(service.event)
 
-class ChannelSelectionEPG:
+class ChannelSelectionEPG(InfoBarHotkey):
 	def __init__(self):
-		self["ChannelSelectEPGActions"] = ActionMap(["ChannelSelectEPGActions"],
-			{
-				"showEPGList": self.showEPGList,
-			})
-		self.epg_bouquet = None
+		self.hotkeys = [("Info (EPG)", "info", "Infobar/openEventView"),
+			("Info (EPG)" + " " + _("long"), "info_long", "Infobar/showEventInfoPlugins"),
+			("Epg/Guide", "epg", "Plugins/Extensions/GraphMultiEPG/1"),
+			("Epg/Guide" + " " + _("long"), "epg_long", "Infobar/showEventInfoPlugins")]
+		self["ChannelSelectEPGActions"] = hotkeyActionMap(["ChannelSelectEPGActions"], dict((x[1], self.hotkeyGlobal) for x in self.hotkeys))
+		self.eventViewEPG = self.start_bouquet = self.epg_bouquet = None
+		self.currentSavedPath = []
+		self.onExecBegin.append(self.clearLongkeyPressed)
 
-	def showEPGList(self):
-		ref=self.getCurrentSelection()
+	def getKeyFunctions(self, key):
+		selection = eval("config.misc.hotkey." + key + ".value.split(',')")
+		selected = []
+		for x in selection:
+			function = list(function for function in getHotkeyFunctions() if function[1] == x and function[2] == "EPG")
+			if function:
+				selected.append(function[0])
+		return selected
+
+	def runPlugin(self, plugin):
+		Screens.InfoBar.InfoBar.instance.runPlugin(plugin)
+
+	def getEPGPluginList(self, getAll=False):
+		pluginlist = [(p.name, boundFunction(self.runPlugin, p), p.path) for p in plugins.getPlugins(where = PluginDescriptor.WHERE_EVENTINFO) \
+				if 'selectedevent' not in p.__call__.func_code.co_varnames] or []
+		from Components.ServiceEventTracker import InfoBarCount
+		if getAll or InfoBarCount == 1:
+			pluginlist.append((_("Show EPG for current channel..."), self.openSingleServiceEPG, "current_channel"))
+		pluginlist.append((_("Multi EPG"), self.openMultiServiceEPG, "multi_epg"))
+		pluginlist.append((_("Current event EPG"), self.openEventView, "event_epg"))
+		return pluginlist
+
+	def showEventInfoPlugins(self):
+		pluginlist = self.getEPGPluginList()
+		if pluginlist:
+			self.session.openWithCallback(self.EventInfoPluginChosen, ChoiceBox, title=_("Please choose an extension..."), list = pluginlist, skin_name = "EPGExtensionsList")
+		else:
+			self.openSingleServiceEPG()
+
+	def EventInfoPluginChosen(self, answer):
+		if answer is not None:
+			answer[1]()
+
+	def openEventView(self):
+		epglist = [ ]
+		self.epglist = epglist
+		ref = self.getCurrentSelection()
+		epg = eEPGCache.getInstance()
+		now_event = epg.lookupEventTime(ref, -1, 0)
+		if now_event:
+			epglist.append(now_event)
+			next_event = epg.lookupEventTime(ref, -1, 1)
+			if next_event:
+				epglist.append(next_event)
+		if epglist:
+			self.eventViewEPG = self.session.openWithCallback(self.eventViewEPGClosed, EventViewEPGSelect, epglist[0], ServiceReference(ref), self.eventViewEPGCallback, self.openSingleServiceEPG, self.openMultiServiceEPG, self.openSimilarList)
+
+	def eventViewEPGCallback(self, setEvent, setService, val):
+		epglist = self.epglist
+		if len(epglist) > 1:
+			tmp = epglist[0]
+			epglist[0] = epglist[1]
+			epglist[1] = tmp
+			setEvent(epglist[0])
+
+	def eventViewEPGClosed(self, ret=False):
+		self.eventViewEPG = None
+		if ret:
+			self.close()
+
+	def openMultiServiceEPG(self):
+		ref = self.getCurrentSelection()
 		if ref:
-			self.epg_bouquet = self.servicelist.getRoot()
+			self.start_bouquet = self.epg_bouquet = self.servicelist.getRoot()
 			self.savedService = ref
-			self.session.openWithCallback(self.SingleServiceEPGClosed, EPGSelection, ref, self.zapToService, serviceChangeCB=self.changeServiceCB)
+			self.currentSavedPath = self.servicePath[:]
+			services = self.getServicesList(self.servicelist.getRoot())
+			self.session.openWithCallback(self.SingleMultiEPGClosed, EPGSelection, services, self.zapToService, None, bouquetChangeCB=self.changeBouquetForMultiEPG)
 
-	def SingleServiceEPGClosed(self, ret=False):
+	def openSingleServiceEPG(self):
+		ref = self.getCurrentSelection()
+		if ref:
+			self.start_bouquet = self.epg_bouquet = self.servicelist.getRoot()
+			self.savedService = ref
+			self.currentSavedPath = self.servicePath[:]
+			self.session.openWithCallback(self.SingleMultiEPGClosed, EPGSelection, ref, self.zapToService, serviceChangeCB=self.changeServiceCB, bouquetChangeCB=self.changeBouquetForSingleEPG)
+
+	def openSimilarList(self, eventid, refstr):
+		self.session.open(EPGSelection, refstr, None, eventid)
+
+	def getServicesList(self, root):
+		services = [ ]
+		servicelist = root and eServiceCenter.getInstance().list(root)
+		if not servicelist is None:
+			while True:
+				service = servicelist.getNext()
+				if not service.valid():
+					break
+				if service.flags & (eServiceReference.isDirectory | eServiceReference.isMarker):
+					continue
+				services.append(ServiceReference(service))
+		return services
+
+	def SingleMultiEPGClosed(self, ret=False):
 		if ret:
 			service = self.getCurrentSelection()
-			if service is not None:
+			if self.eventViewEPG:
+				self.eventViewEPG.close(service)
+			elif service is not None:
 				self.close()
 		else:
+			if self.start_bouquet != self.epg_bouquet and len(self.currentSavedPath) > 0:
+				self.clearPath()
+				self.enterPath(self.bouquet_root)
+				self.epg_bouquet = self.start_bouquet
+				self.enterPath(self.epg_bouquet)
 			self.setCurrentSelection(self.savedService)
+
+	def changeBouquetForSingleEPG(self, direction, epg):
+		if config.usage.multibouquet.value:
+			inBouquet = self.getMutableList() is not None
+			if inBouquet and len(self.servicePath) > 1:
+				self.pathUp()
+				if direction < 0:
+					self.moveUp()
+				else:
+					self.moveDown()
+				cur = self.getCurrentSelection()
+				self.enterPath(cur)
+				self.epg_bouquet = self.servicelist.getRoot()
+				epg.setService(ServiceReference(self.getCurrentSelection()))
+
+	def changeBouquetForMultiEPG(self, direction, epg):
+		if config.usage.multibouquet.value:
+			inBouquet = self.getMutableList() is not None
+			if inBouquet and len(self.servicePath) > 1:
+				self.pathUp()
+				if direction < 0:
+					self.moveUp()
+				else:
+					self.moveDown()
+				cur = self.getCurrentSelection()
+				self.enterPath(cur)
+				self.epg_bouquet = self.servicelist.getRoot()
+				services = self.getServicesList(self.epg_bouquet)
+				epg.setServices(services)
 
 	def changeServiceCB(self, direction, epg):
 		beg = self.getCurrentSelection()
@@ -560,6 +689,7 @@ class ChannelSelectionEPG:
 		if not preview:
 			self.startServiceRef = None
 			self.startRoot = None
+			self.revertMode = None
 
 class ChannelSelectionEdit:
 	def __init__(self):
@@ -1047,6 +1177,7 @@ class ChannelSelectionBase(Screen):
 		self.dopipzap = False
 		self.pathChangeDisabled = False
 		self.movemode = False
+		self.showSatDetails = False
 
 		self["ChannelSelectBaseActions"] = NumberActionMap(["ChannelSelectBaseActions", "NumberActions", "InputAsciiActions"],
 			{
@@ -1284,7 +1415,13 @@ class ChannelSelectionBase(Screen):
 						justSet=True
 						self.clearPath()
 						self.enterPath(ref, True)
+					if currentRoot and currentRoot == ref:
+						self.showSatDetails = not self.showSatDetails
+						justSet = True
+						self.clearPath()
+						self.enterPath(ref, True)
 				if justSet:
+					addCableAndTerrestrialLater = []
 					serviceHandler = eServiceCenter.getInstance()
 					servicelist = serviceHandler.list(ref)
 					if not servicelist is None:
@@ -1297,29 +1434,32 @@ class ChannelSelectionBase(Screen):
 							if orbpos < 0:
 								orbpos += 3600
 							if "FROM PROVIDER" in service.getPath():
-								service_type = _("Providers")
+								service_type = self.showSatDetails and _("Providers")
 							elif ("flags == %d" %(FLAG_SERVICE_NEW_FOUND)) in service.getPath():
-								service_type = _("New")
+								service_type = self.showSatDetails and _("New")
 							else:
 								service_type = _("Services")
-							try:
-								# why we need this cast?
-								service_name = str(nimmanager.getSatDescription(orbpos))
-							except:
+							if service_type:
 								if unsigned_orbpos == 0xFFFF: #Cable
 									service_name = _("Cable")
+									addCableAndTerrestrialLater.append(("%s - %s" % (service_name, service_type), service.toString()))			
 								elif unsigned_orbpos == 0xEEEE: #Terrestrial
 									service_name = _("Terrestrial")
+									addCableAndTerrestrialLater.append(("%s - %s" % (service_name, service_type), service.toString()))			
 								else:
-									if orbpos > 1800: # west
-										orbpos = 3600 - orbpos
-										h = _("W")
-									else:
-										h = _("E")
-									service_name = ("%d.%d" + h) % (orbpos / 10, orbpos % 10)
-							service.setName("%s - %s" % (service_name, service_type))
-							self.servicelist.addService(service)
+									try:
+										service_name = str(nimmanager.getSatDescription(orbpos))
+									except:
+										if orbpos > 1800: # west
+											orbpos = 3600 - orbpos
+											h = _("W")
+										else:
+											h = _("E")
+										service_name = ("%d.%d" + h) % (orbpos / 10, orbpos % 10)
+									service.setName("%s - %s" % (service_name, service_type))
+									self.servicelist.addService(service)
 						cur_ref = self.session.nav.getCurrentlyPlayingServiceReference()
+						self.servicelist.l.sort()
 						if cur_ref:
 							pos = self.service_types.rfind(':')
 							refstr = '%s (channelID == %08x%04x%04x) && %s ORDER BY name' %(self.service_types[:pos+1],
@@ -1329,8 +1469,12 @@ class ChannelSelectionBase(Screen):
 								self.service_types[pos+1:])
 							ref = eServiceReference(refstr)
 							ref.setName(_("Current transponder"))
-							self.servicelist.addService(ref)
-						self.servicelist.finishFill()
+							self.servicelist.addService(ref, beforeCurrent=True)
+						for (service_name, service_ref) in addCableAndTerrestrialLater:
+							ref = eServiceReference(service_ref)
+							ref.setName(service_name)
+							self.servicelist.addService(ref, beforeCurrent=True)
+						self.servicelist.l.FillFinished()
 						if prev is not None:
 							self.setCurrentSelection(prev)
 						elif cur_ref:
@@ -2000,11 +2144,14 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 			self.new_service_played = True
 			self.session.nav.playService(self.startServiceRef)
 			self.saveChannel(self.startServiceRef)
+		self.setStartRoot(self.startRoot)	
 		self.startServiceRef = None
 		self.startRoot = None
 		if self.dopipzap:
 			# This unfortunately won't work with subservices
 			self.setCurrentSelection(self.session.pip.getCurrentService())
+		else:
+			self.setCurrentSelection(self.session.nav.getCurrentlyPlayingServiceOrGroup())
 
 	def setStartRoot(self, root):
 		if root:
