@@ -76,6 +76,12 @@ def getPiconName(serviceName):
 		name = re.sub('[^a-z0-9]', '', name.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower())
 		if name:
 			pngname = findPicon(name)
+	if not pngname:
+		tmp = resolveFilename(SCOPE_CURRENT_SKIN, "picon_default.png")
+		if pathExists(tmp):
+			pngname = tmp
+		else:
+			pngname = resolveFilename(SCOPE_SKIN_IMAGE, "skin_default/picon_default.png")
 	return pngname
 
 class Picon(Renderer):
