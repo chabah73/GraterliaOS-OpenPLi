@@ -33,6 +33,5 @@
 		<key id="KEY_MENU" mapto="showMenu" flags="m" />
 		<key id="KEY_OPTION" mapto="showMenu" flags="m" />
 		<key id="KEY_ENTER" mapto="showMenu" flags="m" />
-		<key id="KEY_MENU" mapto="showMenu" flags="m" />
 	</map>
 </keymap>
