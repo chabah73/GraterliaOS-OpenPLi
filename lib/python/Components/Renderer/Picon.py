@@ -77,7 +77,7 @@ def getPiconName(serviceName):
 		if name:
 			pngname = findPicon(name)
 			if not pngname and len(name) > 2 and name.endswith('hd'):
-				findPicon(name[:-2])
+				pngname = findPicon(name[:-2])
 	if not pngname:
 		tmp = resolveFilename(SCOPE_CURRENT_SKIN, "picon_default.png")
 		if pathExists(tmp):
