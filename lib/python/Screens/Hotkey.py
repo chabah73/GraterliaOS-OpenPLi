@@ -38,14 +38,18 @@ def getHotkeys():
 		("Help" + " " + _("long"), "displayHelp_long", ""),
 		("Subtitle", "subtitle", ""),
 		("Menu", "mainMenu", ""),
-		("Info (EPG)", "info", ""),
-		("Info (EPG)" + " " + _("long"), "info_long", "Infobar/showEventInfoPlugins"),
+		("Info", "info", ""),
+		("Info" + " - " + _("Channel Selection"), "info_cs", "Infobar/openEventView"),
+		("Info" + " " + _("long"), "info_long", "Infobar/showEventInfoPlugins"),
+		("Info" + " " + _("long") + " - " + _("Channel Selection"), "info_long_cs", "Infobar/showEventInfoPlugins"),
 		("List/Fav/PVR", "list", ""),
 		("Back/Recall", "back", ""),
 		("Back/Recall" + " " + _("long"), "back_long", ""),
 		("End", "end", ""),
 		("Epg/Guide", "epg", "Plugins/Extensions/GraphMultiEPG/1"),
+		("Epg/Guide" + " - " + _("Channel Selection"), "epg_cs", "Infobar/openSingleServiceEPG"),
 		("Epg/Guide" + " " + _("long"), "epg_long", "Infobar/showEventInfoPlugins"),
+		("Epg/Guide" + " " + _("long") + " - " + _("Channel Selection"), "epg_long_cs", "Plugins/Extensions/GraphMultiEPG/1"),
 		("Left", "cross_left", ""),
 		("Right", "cross_right", ""),
 		("Up", "cross_up", ""),
@@ -490,7 +494,7 @@ class InfoBarHotkey():
 		self.longkeyPressed = False
 
 	def getKeyFunctions(self, key):
-		if key in ("play", "playpause", "Stop", "stop", "pause", "rewind", "next", "previous", "fastforward", "skip_back", "skip_forward") and (self.__class__.__name__ == "MoviePlayer" or hasattr(self, "timeshiftActivated") and self.timeshiftActivated()):
+		if key in ("play", "playpause", "Stop", "stop", "pause", "rewind", "next", "previous", "fastforward", "skip_back", "skip_forward", "red", "green", "yellow", "blue") and (self.__class__.__name__ == "MoviePlayer" or hasattr(self, "timeshiftActivated") and self.timeshiftActivated()):
 			return False
 		selection = eval("config.misc.hotkey." + key + ".value.split(',')")
 		selected = []
