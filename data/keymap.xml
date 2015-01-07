@@ -275,8 +275,8 @@
 		<key id="KEY_7" mapto="seekdef:7" flags="m"/>
 		<key id="KEY_9" mapto="seekdef:9" flags="m"/>
 		<key id="KEY_OK" mapto="okButton" flags="m"/>
-		<key id="KEY_GREEN" mapto="jumpPreviousMark" flags="m"/>
-		<key id="KEY_YELLOW" mapto="jumpNextMark" flags="m"/>
+		<key id="KEY_GREEN" mapto="jumpPreviousMark" flags="b"/>
+		<key id="KEY_YELLOW" mapto="jumpNextMark" flags="b"/>
 	</map>
 
 	<map context="MediaPlayerSeekActions">
@@ -644,8 +644,6 @@
 		<key id="KEY_MENU" mapto="mainMenu" flags="m"/>
 		<key id="KEY_INFO" mapto="info" flags="b"/>
 		<key id="KEY_INFO" mapto="info_long" flags="l"/>
-		<key id="KEY_INFO" mapto="info_cs" flags="b"/>
-		<key id="KEY_INFO" mapto="info_long_cs" flags="l"/>
 		<key id="KEY_LIST" mapto="list" flags="b"/>
 		<key id="KEY_LIST" mapto="list_long" flags="l"/>
 		<key id="KEY_HOME" mapto="back" flags="b"/>
