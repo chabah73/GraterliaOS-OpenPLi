@@ -60,26 +60,26 @@ class PluginBrowser(Screen):
 			"back": self.close,
 		})
 
-        if fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/GOSmanager/GOSopkg.pyo")):
-            self["key_red"] = self["red"] = Label(_("Manage extensions"))
-            self["key_green"] = self["green"] = Label("")
-            self["PluginDownloadActions"] = ActionMap(["ColorActions"],
-            {
-                "red": self.openGOSopkg
-            })
-        else:
-            self["key_red"] = self["red"] = Label(_("Remove plugins"))
-            self["key_green"] = self["green"] = Label(_("Download plugins"))
+		if fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/GOSmanager/GOSopkg.pyo")):
+			self["key_red"] = self["red"] = Label(_("Manage extensions"))
+			self["key_green"] = self["green"] = Label("")
 			self["PluginDownloadActions"] = ActionMap(["ColorActions"],
 			{
-				"red": self.delete,
-				"green": self.download
+				"red": self.openGOSopkg
 			})
+		else:
+			self["key_red"] = self["red"] = Label(_("Remove plugins"))
+			self["key_green"] = self["green"] = Label(_("Download plugins"))
+			self["PluginDownloadActions"] = ActionMap(["ColorActions"],
+				{
+					"red": self.delete,
+					"green": self.download
+				})
 
 		self["DirectionActions"] = ActionMap(["DirectionActions"],
 		{
-			"moveUp": self.moveUp,
-			"moveDown": self.moveDown
+			"moveUp2": self.moveUp,
+			"moveDown0": self.moveDown
 		})
 
 		self.onFirstExecBegin.append(self.checkWarnings)

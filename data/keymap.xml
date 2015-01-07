@@ -505,6 +505,8 @@
 		<key id="KEY_REWIND" mapto="pageDown" flags="m"/>
 		<key id="KEY_PAGEUP" mapto="moveUp" flags="m"/>
 		<key id="KEY_PAGEDOWN" mapto="moveDown" flags="m"/>
+		<key id="KEY_2" mapto="moveUp2" flags="m"/>
+		<key id="KEY_0" mapto="moveDown0" flags="m"/>
 	</map>
 
 	<map context="AudioSelectionActions">
