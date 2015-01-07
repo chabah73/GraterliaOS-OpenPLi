@@ -289,7 +289,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 			else:
 				return True
 				
-		if FreePlayerPlugin():
+		if BitrateViewerPlugin():
 			from Plugins.Extensions.Bitrate.plugin import BitrateViewer
 			self.session.open(BitrateViewer)
 		else:
