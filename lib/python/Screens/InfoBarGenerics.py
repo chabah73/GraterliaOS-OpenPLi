@@ -163,7 +163,7 @@ class InfoBarUnhandledKey:
 	def checkUnused(self):
 		if self.flags == self.uflags:
 			self.unhandledKeyDialog.show()
-			self.hideUnhandledKeySymbolTimer.start(2000, True)
+			self.hideUnhandledKeySymbolTimer.start(300, True)
 
 class InfoBarScreenSaver:
 	def __init__(self):
