@@ -44,7 +44,7 @@ defaultPaths = {
 		SCOPE_CONFIG: (eEnv.resolve("${sysconfdir}/enigma2/"), PATH_CREATE),
 		SCOPE_PLUGINS: (eEnv.resolve("${libdir}/enigma2/python/Plugins/"), PATH_CREATE),
 
-		SCOPE_LANGUAGE: (eEnv.resolve("${datadir}/enigma2/po/"), PATH_DONTCREATE),
+		SCOPE_LANGUAGE: ("/usr/share/locale/", PATH_DONTCREATE),
 		SCOPE_GOSLANGUAGE: ("/usr/share/locale/", PATH_DONTCREATE),
 
 		SCOPE_SKIN: (eEnv.resolve("${datadir}/enigma2/"), PATH_DONTCREATE),
