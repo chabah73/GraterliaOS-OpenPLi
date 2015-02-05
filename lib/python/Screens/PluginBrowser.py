@@ -168,7 +168,7 @@ class PluginBrowser(Screen):
 		self.session.openWithCallback(self.PluginDownloadBrowserClosed, PluginDownloadBrowser, PluginDownloadBrowser.DOWNLOAD, self.firsttime)
 		self.firsttime = False
 
-	def PluginDownloadBrowserClosed(self):
+	def PluginDownloadBrowserClosed(self, ret = 0):
 		self.updateList()
 		self.checkWarnings()
 
