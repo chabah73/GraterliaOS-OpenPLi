@@ -15,6 +15,7 @@ import Screens.InfoBar
 from Screens.Screen import Screen
 from Screens.HelpMenu import HelpableScreen
 from Screens.EventView import EventViewEPGSelect
+from Screens.InputBox import PinInput
 from Screens.TimeDateInput import TimeDateInput
 from Screens.TimerEntry import TimerEntry
 from Screens.EpgSelection import EPGSelection
@@ -40,7 +41,7 @@ MAX_TIMELINES = 6
 config.misc.graph_mepg = ConfigSubsection()
 config.misc.graph_mepg.prev_time = ConfigClock(default = time())
 config.misc.graph_mepg.prev_time_period = ConfigInteger(default = 120, limits = (60, 300))
-config.misc.graph_mepg.ev_fontsize = ConfigSelectionNumber(default = 0, stepwidth = 1, min = -8, max = 8, wraparound = True)
+config.misc.graph_mepg.ev_fontsize = ConfigSelectionNumber(default = 0, stepwidth = 1, min = -12, max = 12, wraparound = True)
 config.misc.graph_mepg.items_per_page = ConfigSelectionNumber(min = 3, max = 40, stepwidth = 1, default = 6, wraparound = True)
 config.misc.graph_mepg.items_per_page_listscreen = ConfigSelectionNumber(min = 3, max = 60, stepwidth = 1, default = 12, wraparound = True)
 config.misc.graph_mepg.default_mode = ConfigYesNo(default = False)
@@ -831,8 +832,8 @@ class GraphMultiEPG(Screen, HelpableScreen):
 				"yellow":      (self.swapMode,       _("Switch between normal mode and list mode")),
 				"blue":        (self.enterDateTime,  _("Goto specific date/time")),
 				"menu":	       (self.furtherOptions, _("Further Options")),
-				"nextBouquet": (self.nextBouquet,    _("Show bouquet selection menu")),
-				"prevBouquet": (self.prevBouquet,    _("Show bouquet selection menu")),
+				"nextBouquet": (self.nextBouquet, self.getKeyNextBouquetHelptext),
+				"prevBouquet": (self.prevBouquet, self.getKeyPrevBouquetHelptext),
 				"nextService": (self.nextPressed,    _("Goto next page of events")),
 				"prevService": (self.prevPressed,    _("Goto previous page of events")),
 				"preview":     (self.preview,        _("Preview selected channel")),
@@ -858,6 +859,7 @@ class GraphMultiEPG(Screen, HelpableScreen):
 			}, -1)
 		self["inputactions"].csel = self
 
+		self.protectContextMenu = True
 		self.updateTimelineTimer = eTimer()
 		self.updateTimelineTimer.callback.append(self.moveTimeLines)
 		self.updateTimelineTimer.start(60 * 1000)
@@ -922,6 +924,12 @@ class GraphMultiEPG(Screen, HelpableScreen):
 	def key6(self):
 		self.updEpoch(360)
 
+	def getKeyNextBouquetHelptext(self):
+		return config.misc.graph_mepg.silent_bouquet_change.value and _("Switch to next bouquet") or _("Show bouquet selection menu")
+
+	def getKeyPrevBouquetHelptext(self):
+		return config.misc.graph_mepg.silent_bouquet_change.value and _("Switch to previous bouquet") or _("Show bouquet selection menu")
+
 	def nextBouquet(self):
 		if self.bouquetChangeCB:
 			self.bouquetChangeCB(1, self)
@@ -947,7 +955,17 @@ class GraphMultiEPG(Screen, HelpableScreen):
 				self.moveTimeLines(True)
 
 	def showSetup(self):
-		self.session.openWithCallback(self.onSetupClose, GraphMultiEpgSetup)
+		if self.protectContextMenu and config.ParentalControl.setuppinactive.value and config.ParentalControl.config_sections.context_menus.value:
+			self.session.openWithCallback(self.protectResult, PinInput, pinList=[x.value for x in config.ParentalControl.servicepin], triesEntry=config.ParentalControl.retries.servicepin, title=_("Please enter the correct pin code"), windowTitle=_("Enter pin code"))
+		else:
+			self.protectResult(True)
+
+	def protectResult(self, answer):
+		if answer:
+			self.session.openWithCallback(self.onSetupClose, GraphMultiEpgSetup)
+			self.protectContextMenu = False
+		elif answer is not None:
+			self.session.openWithCallback(self.close, MessageBox, _("The pin code you entered is wrong."), MessageBox.TYPE_ERROR)
 
 	def onSetupClose(self, ignore = -1):
 		l = self["list"]
@@ -1014,6 +1032,7 @@ class GraphMultiEPG(Screen, HelpableScreen):
 
 	def setServices(self, services):
 		self.services = services
+		self["list"].resetOffset()
 		self.onCreate()
 
 	def doRefresh(self, answer):

@@ -70,10 +70,10 @@
 	</map>
 
 	<map context="InfobarEPGActions">
-		<!--key id="KEY_INFO" mapto="showEventInfo" flags="b"/-->
-		<!--key id="KEY_INFO" mapto="showEventInfoPlugin" flags="l"/-->
+		<key id="KEY_INFO" mapto="showEventInfo" flags="b"/>
+		<key id="KEY_INFO" mapto="showEventInfoPlugin" flags="l"/>
 		<key id="KEY_EPG" mapto="showEventInfoSingleEPG" flags="b"/>
-		<!--key id="KEY_EPG" mapto="showEventGuidePlugin" flags="l"/-->
+		<key id="KEY_EPG" mapto="showEventGuidePlugin" flags="l"/>
 		<key id="KEY_RED" mapto="showEventInfo" flags="b"/>
 		<!--key id="KEY_RED" mapto="showEventInfoPlugin" flags="l"/-->
 	</map>
@@ -378,10 +378,6 @@
 
 	<map context="InfobarRdsActions">
 		<key id="KEY_TEXT" mapto="startRassInteractive" flags="m"/>
-	</map>
-
-	<map context="InfobarHDMIActions">
-		<key id="KEY_AUX" mapto="HDMIin" flags="m"/>
 	</map>
 
 	<map context="RassInteractiveActions">

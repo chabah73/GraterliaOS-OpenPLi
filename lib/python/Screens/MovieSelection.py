@@ -138,14 +138,14 @@ def canCopy(item):
 
 def createMoveList(serviceref, dest):
 	#normpath is to remove the trailing '/' from directories
-	src = os.path.normpath(serviceref.getPath())
+	src = isinstance(serviceref, str) and serviceref + ".ts" or os.path.normpath(serviceref.getPath())
 	srcPath, srcName = os.path.split(src)
 	if os.path.normpath(srcPath) == dest:
 		# move file to itself is allowed, so we have to check it
 		raise Exception, "Refusing to move to the same directory"
 	# Make a list of items to move
 	moveList = [(src, os.path.join(dest, srcName))]
-	if not serviceref.flags & eServiceReference.mustDescent:
+	if isinstance(serviceref, str) or serviceref.flags & eServiceReference.mustDescent:
 		# Real movie, add extra files...
 		srcBase = os.path.splitext(src)[0]
 		baseName = os.path.split(srcBase)[1]
@@ -353,11 +353,15 @@ class MovieContextMenuSummary(Screen):
 		item = self.parent["menu"].getCurrent()
 		self["selected"].text = item[0][0]
 
-class MovieContextMenu(Screen):
+from Screens.ParentalControlSetup import ProtectedScreen
+
+class MovieContextMenu(Screen, ProtectedScreen):
 	# Contract: On OK returns a callable object (e.g. delete)
 	def __init__(self, session, csel, service):
 		Screen.__init__(self, session)
 		self.csel = csel
+		ProtectedScreen.__init__(self)
+
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "NumberActions", "MenuActions"],
 			{
 				"ok": self.okbuttonClick,
@@ -403,6 +407,14 @@ class MovieContextMenu(Screen):
 		append_to_menu(menu, (_("Network") + "...", csel.showNetworkSetup), key="yellow")
 		append_to_menu(menu, (_("Settings") + "...", csel.configure), key="menu")
 		self["menu"] = ChoiceList(menu)
+
+	def isProtected(self):
+		return self.csel.protectContextMenu and config.ParentalControl.setuppinactive.value and config.ParentalControl.config_sections.context_menus.value
+
+	def pinEntered(self, answer):
+		if answer:
+			self.csel.protectContextMenu = False
+		ProtectedScreen.pinEntered(self, answer)
 
 	def createSummary(self):
 		return MovieContextMenuSummary
@@ -481,7 +493,7 @@ class MovieSelectionSummary(Screen):
 		else:
 			self["name"].text = ""
 
-class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
+class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, ProtectedScreen):
 	# SUSPEND_PAUSES actually means "please call my pauseService()"
 	ALLOW_SUSPEND = Screen.SUSPEND_PAUSES
 
@@ -490,6 +502,9 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 		HelpableScreen.__init__(self)
 		if not timeshiftEnabled:
 			InfoBarBase.__init__(self) # For ServiceEventTracker
+		ProtectedScreen.__init__(self)
+		self.protectContextMenu = True
+
 		self.initUserDefinedActions()
 		self.tags = {}
 		if selectedmovie:
@@ -646,6 +661,9 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 				#iPlayableService.evSOF: self.__evSOF,
 			})
 		self.onExecBegin.append(self.asciiOn)
+
+	def isProtected(self):
+		return config.ParentalControl.setuppinactive.value and config.ParentalControl.config_sections.movie_list.value
 
 	def asciiOn(self):
 		rcinput = eRCInput.getInstance()
@@ -1290,7 +1308,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase):
 		title = _("Recorded files...")
 		if config.usage.setup_level.index >= 2: # expert+
 			title += "  " + config.movielist.last_videodir.value
-		if self.selected_tags is not None:
+		if self.selected_tags:
 			title += " - " + ','.join(self.selected_tags)
 		self.setTitle(title)
 		self.displayMovieOffStatus()
