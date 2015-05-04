@@ -15,10 +15,10 @@ import skin
 from enigma import eListboxPythonMultiContent, eListbox, gFont, iServiceInformation, \
 	RT_HALIGN_LEFT, RT_HALIGN_RIGHT, eServiceReference, eServiceCenter, eTimer, RT_VALIGN_CENTER
 
-AUDIO_EXTENSIONS = frozenset((".dts", ".mp3", ".wav", ".wave", ".ogg", ".flac", ".m4a", ".mp2", ".m2a", ".3gp", ".3g2", ".asf", ".wma"))
+AUDIO_EXTENSIONS = frozenset((".dts", ".mp3", ".wav", ".wave", ".ogg", ".flac", ".m4a", ".mp2", ".m2a", ".3gp", ".3g2", ".wma"))
 DVD_EXTENSIONS = ('.iso', '.img')
 IMAGE_EXTENSIONS = frozenset((".jpg", ".png", ".gif", ".bmp"))
-MOVIE_EXTENSIONS = frozenset((".mpg", ".vob", ".wav", ".m4v", ".mkv", ".avi", ".divx", ".dat", ".flv", ".mp4", ".mov", ".wmv", ".m2ts"))
+MOVIE_EXTENSIONS = frozenset((".mpg", ".vob", ".wav", ".m4v", ".mkv", ".avi", ".divx", ".dat", ".flv", ".mp4", ".mov", ".wmv", ".m2ts", ".asf"))
 KNOWN_EXTENSIONS = MOVIE_EXTENSIONS.union(IMAGE_EXTENSIONS, DVD_EXTENSIONS, AUDIO_EXTENSIONS)
 
 cutsParser = struct.Struct('>QI') # big-endian, 64-bit PTS and 32-bit type
@@ -606,7 +606,7 @@ class MovieList(GUIComponent):
 			print "listing of movies failed"
 			return
 		realtags = set()
-		tags = {}
+		autotags = {}
 		rootPath = os.path.normpath(root.getPath());
 		parent = None
 		# Don't navigate above the "root"
@@ -624,6 +624,10 @@ class MovieList(GUIComponent):
 			serviceref = reflist.getNext()
 			if not serviceref.valid():
 				break
+			if config.ParentalControl.servicepinactive.value and config.ParentalControl.storeservicepin.value != "never":
+				from Components.ParentalControl import parentalControl
+				if not parentalControl.sessionPinCached and parentalControl.isProtected(serviceref):
+					continue
 			info = serviceHandler.info(serviceref)
 			if info is None:
 				info = justStubInfo
@@ -632,19 +636,21 @@ class MovieList(GUIComponent):
 				self.list.append((serviceref, info, begin, -1))
 				numberOfDirs += 1
 				continue
-			# convert separe-seperated list of tags into a set
+			# convert separe-separated list of tags into a set
 			this_tags = info.getInfoString(serviceref, iServiceInformation.sTags).split(' ')
 			name = info.getName(serviceref)
 			if this_tags == ['']:
 				# No tags? Auto tag!
 				this_tags = name.replace(',',' ').replace('.',' ').split()
+				# For auto tags, we are keeping a (tag, movies) dictionary.
+				#It will be used later to check if movies have a complete sentence in common.
+				for tag in this_tags:
+					if autotags.has_key(tag):
+						autotags[tag].append(name)
+					else:
+						autotags[tag] = [name]
 			else:
 				realtags.update(this_tags)
-			for tag in this_tags:
-				if tags.has_key(tag):
-					tags[tag].append(name)
-				else:
-					tags[tag] = [name]
 			# filter_tags is either None (which means no filter at all), or
 			# a set. In this case, all elements of filter_tags must be present,
 			# otherwise the entry will be dropped.
@@ -701,15 +707,15 @@ class MovieList(GUIComponent):
 		# really in the tag set of some file.
 
 		# reverse the dictionary to see which unique movie each tag now references
-		rtags = {}
-		for tag, movies in tags.items():
-			if (len(movies) > 1) or (tag in realtags):
+		rautotags = {}
+		for tag, movies in autotags.items():
+			if (len(movies) > 1):
 				movies = tuple(movies) # a tuple can be hashed, but a list not
-				item = rtags.get(movies, [])
-				if not item: rtags[movies] = item
+				item = rautotags.get(movies, [])
+				if not item: rautotags[movies] = item
 				item.append(tag)
 		self.tags = {}
-		for movies, tags in rtags.items():
+		for movies, tags in rautotags.items():
 			movie = movies[0]
 			# format the tag lists so that they are in 'original' order
 			tags.sort(key = movie.find)
@@ -729,13 +735,16 @@ class MovieList(GUIComponent):
 					if m[start:end] != match:
 						match = ''
 						break
+			# Adding the longest common sentence to the tag list
 			if match:
 				self.tags[match] = set(tags)
-				continue
 			else:
 				match = ' '.join(tags)
 				if len(match) > 2: #Omit small words
 					self.tags[match] = set(tags)
+		# Adding the realtags to the tag list
+		for tag in realtags:
+			self.tags[tag] = set([tag])
 
 	def buildAlphaNumericSortKey(self, x):
 		# x = ref,info,begin,...
