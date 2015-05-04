@@ -50,7 +50,7 @@ fbClass::fbClass(const char *fb)
 #if not defined(__sh__)
 	if (ioctl(fbFd, FBIOGET_VSCREENINFO, &screeninfo)<0)
 	{
-		eDebug("[fb] FBIOGET_VSCREENINFO %m");
+		eDebug("[fb] FBIOGET_VSCREENINFO: %m");
 		goto nolfb;
 	}
 #endif
@@ -58,7 +58,7 @@ fbClass::fbClass(const char *fb)
 	fb_fix_screeninfo fix;
 	if (ioctl(fbFd, FBIOGET_FSCREENINFO, &fix)<0)
 	{
-		eDebug("[fb] FBIOGET_FSCREENINFO %m");
+		eDebug("[fb] FBIOGET_FSCREENINFO: %m");
 		goto nolfb;
 	}
 
@@ -77,7 +77,7 @@ fbClass::fbClass(const char *fb)
 #endif
 	if (!lfb)
 	{
-		eDebug("[fb] mmap %m");
+		eDebug("[fb] mmap: %m");
 		goto nolfb;
 	}
 
@@ -159,7 +159,7 @@ int fbClass::SetMode(int nxRes, int nyRes, int nbpp)
 
 		if (ioctl(fbFd, FBIOPUT_VSCREENINFO, &screeninfo)<0)
 		{
-			eDebug("[fb] FBIOPUT_VSCREENINFO %m");
+			eDebug("[fb] FBIOPUT_VSCREENINFO: %m");
 			return -1;
 		}
 		eDebug("[fb] double buffering not available.");
@@ -188,7 +188,7 @@ int fbClass::SetMode(int nxRes, int nyRes, int nbpp)
 	fb_fix_screeninfo fix;
 	if (ioctl(fbFd, FBIOGET_FSCREENINFO, &fix)<0)
 	{
-		eDebug("[fb] FBIOGET_FSCREENINFO %m");
+		eDebug("[fb] FBIOGET_FSCREENINFO: %m");
 	}
 	stride=fix.line_length;
 	memset(lfb, 0, stride*yRes);
@@ -309,7 +309,7 @@ void fbClass::blit()
 #else
 	if (m_manual_blit == 1) {
 		if (ioctl(fbFd, FBIO_BLIT) < 0)
-			eDebug("[fb] FBIO_BLIT %m");
+			eDebug("[fb] FBIO_BLIT: %m");
 	}
 #endif
 }
@@ -402,7 +402,7 @@ void fbClass::enableManualBlit()
 #if not defined(__sh__)
 	unsigned char tmp = 1;
 	if (ioctl(fbFd,FBIO_SET_MANUAL_BLIT, &tmp)<0)
-		eDebug("[fb] FBIO_SET_MANUAL_BLIT %m");
+		eDebug("[fb] enable FBIO_SET_MANUAL_BLIT: %m");
 	else
 		m_manual_blit = 1;
 #endif
@@ -413,7 +413,7 @@ void fbClass::disableManualBlit()
 #if not defined(__sh__)
 	unsigned char tmp = 0;
 	if (ioctl(fbFd,FBIO_SET_MANUAL_BLIT, &tmp)<0)
-		eDebug("[fb] FBIO_SET_MANUAL_BLIT %m");
+		eDebug("[fb] disable FBIO_SET_MANUAL_BLIT: %m");
 	else
 		m_manual_blit = 0;
 #endif
