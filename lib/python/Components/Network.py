@@ -142,6 +142,7 @@ class Network:
 				self.configuredInterfaces.append(ifacename)
 			if iface['dhcp'] == True:
 				fp.write("iface "+ ifacename +" inet dhcp\n")
+				fp.write("    udhcpc_opts -t 10\n")
 			if iface['dhcp'] == False:
 				fp.write("iface "+ ifacename +" inet static\n")
 				if iface.has_key('ip'):
