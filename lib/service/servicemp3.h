@@ -101,7 +101,6 @@ public:
 #endif
 };
 
-#ifdef ENABLE_MEDIAFWGSTREAMER
 class GstMessageContainer: public iObject
 {
 	DECLARE_REF(GstMessageContainer);
@@ -131,7 +130,6 @@ public:
 };
 
 typedef struct _GstElement GstElement;
-#endif
 
 typedef enum { atUnknown, atMPEG, atMP3, atAC3, atDTS, atAAC, atPCM, atOGG, atFLAC, atWMA } audiotype_t;
 typedef enum { stUnknown, stPlainText, stSSA, stASS, stSRT, stVOB, stPGS } subtype_t;
