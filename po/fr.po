@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-04 22:15+0200\n"
-"PO-Revision-Date: 2015-05-04 22:23+0100\n"
+"POT-Creation-Date: 2015-06-27 18:09+0200\n"
+"PO-Revision-Date: 2015-06-27 18:24+0200\n"
 "Last-Translator: Pr2 <dummy@dummy.com>\n"
 "Language-Team: french\n"
 "Language: fr\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"X-Generator: Poedit 1.7.6\n"
+"X-Generator: Poedit 1.8.2\n"
 
 msgid ""
 "\n"
@@ -694,6 +694,9 @@ msgstr "Toutes"
 msgid "All ages"
 msgstr "Tous les âges"
 
+msgid "All frequency"
+msgstr "Toutes les fréquences"
+
 msgid "All satellites 1 (USALS)"
 msgstr "Tous satellites 1 (USALS)"
 
@@ -731,7 +734,7 @@ msgid "Alternative"
 msgstr "Ajouter les alternatifs"
 
 msgid "Alternative numbering mode"
-msgstr "Mode radio alternatif"
+msgstr "Mode de numérotation alternatif"
 
 msgid "Alternative services tuner priority"
 msgstr "Priorité tuner services alternatifs"
@@ -974,7 +977,7 @@ msgid "Begin time"
 msgstr "Heure début"
 
 msgid "Behavior of 'pause and ok' when paused"
-msgstr "Comportement de 'pause et ok\" en étant en pause"
+msgstr "Comportement de 'pause et ok’ en étant en pause"
 
 msgid "Behavior of 0 key in PiP-mode"
 msgstr "Effet touche 0 en mode PiP"
@@ -1275,6 +1278,9 @@ msgstr "Communication"
 msgid "Compact flash"
 msgstr "Compact Flash"
 
+msgid "Compensate for overscan"
+msgstr "Compensation pour overscan"
+
 msgid "Complete"
 msgstr "Terminé"
 
@@ -1352,7 +1358,7 @@ msgid "Configure the aspect ratio of the screen."
 msgstr "Configurez le format d'image de l'écran."
 
 msgid "Configure the behavior of the 'pause and ok' key when movie playback is already paused."
-msgstr "Configure le comportement de touches 'pause et ok' lorsque le film joué est déjà en pause."
+msgstr "Configure le comportement des touches 'pause et ok' lorsque le film joué est déjà en pause."
 
 msgid "Configure the behavior when movie playback is manually stopped."
 msgstr "Configurez le comportement lorsqu'un film est arrêté volontairement."
@@ -1382,7 +1388,7 @@ msgid "Configure the contrast level of the front panel display."
 msgstr "Configurez le niveau de contraste de l'affichage du panneau avant."
 
 msgid "Configure the cursor behaviour in the channel selection list. When opening the channel selection list you can keep on the current service or already select up/down and you are able to revert the B+/B- buttons."
-msgstr "Configurer le comportement du curseur dans la liste de sélection des chaînes. Lorsque vous ouvrez la liste de sélection des chaînes vous pouvez garder la position du service actuel ou déjà sélectionner le serveur haut/bas et vous pouvez inverser les touches B+/B-."
+msgstr "Configurer le comportement du curseur dans la liste de sélection des chaînes. Lorsque vous ouvrez la liste de sélection des chaînes vous pouvez garder la position du service actuel ou déjà sélectionner le service haut/bas et vous pouvez inverser les touches B+/B-."
 
 msgid "Configure the duration in hours the receiver should go to standby when the receiver is not controlled."
 msgstr "Configure la durée en heures après laquelle le récepteur doit se mettre en veille lorsque le récepteur n'est pas utilisé."
@@ -1457,13 +1463,13 @@ msgid "Configure the netmask."
 msgstr "Configurez le masque de réseau."
 
 msgid "Configure the number of days after which items are automaticaly removed from the trash can."
-msgstr "Configurez le nombre de jours après lequel les éléments sont automatiquement retirée de la corbeille."
+msgstr "Configurez le nombre de jours après lequel les éléments sont automatiquement retirés de la corbeille."
 
 msgid "Configure the number of days old timers are kept before they are automatically removed from the timer list."
 msgstr "Configurez le nombre de jours d'archivage des anciennes programmations avant qu'elles ne soient automatiquement supprimés de la liste des programmations."
 
 msgid "Configure the offline decoding delay in milliseconds. The configured delay is observed at each control word parity change."
-msgstr "Configurez le délai de déconnection du décodage en millisecondes. Le retard configuré est observé à chaque changement de parité."
+msgstr "Configurez le délai de décodage hors ligne en millisecondes. Le délai configuré est observé à chaque changement de parité du control word."
 
 msgid "Configure the possible fast forward speeds."
 msgstr "Configurez les vitesses d'avance Rapide possibles."
@@ -1508,7 +1514,7 @@ msgid "Configure the source of the frontend data as shown on the infobars. 'Sett
 msgstr "Configurer la source de donnée du frontend affiché dans la barre d'infos. 'Paramètres' est comme stocké dans les paramètres. 'Tuner' est comme retourné par le tuner."
 
 msgid "Configure the speed of the background deletion process. Lower speed will consume less hard disk drive performance."
-msgstr "Configurez la vitesse du processus de suppression d'arrière-plan. Une vitesse basse consommera moins les performances du disque dur."
+msgstr "Configurez la vitesse du processus de suppression d'arrière-plan. Une vitesse basse consommera moins de performance du disque dur."
 
 msgid "Configure the speed of the fan"
 msgstr "Configurer la vitesse du ventilateur."
@@ -1661,6 +1667,9 @@ msgstr "Impossible d'enregistrer en raison d'un service non valide %s"
 
 msgid "Create DVD-ISO"
 msgstr "Créer DVD-ISO"
+
+msgid "Create new folder and exit"
+msgstr "Créer un répertoire et quitter"
 
 #, python-format
 msgid "Creating directory %s failed."
@@ -2075,7 +2084,7 @@ msgid "Do you really want to remove your bookmark of %s?"
 msgstr "Voulez-vous vraiment retirer votre marque page %s ?"
 
 msgid "Do you want this?"
-msgstr "Voulez-vous ceci?"
+msgstr "Êtes-vous d'accord?"
 
 msgid "Do you want to burn this collection to DVD medium?"
 msgstr "Voulez-vous graver cette collection sur le DVD ?"
@@ -2429,6 +2438,9 @@ msgstr "Expert"
 msgid "Extend sleeptimer 15 minutes"
 msgstr "Étendre l'arrêt automatique de 15 minutes"
 
+msgid "Extended"
+msgstr "Etendu"
+
 msgid "Extended Software"
 msgstr "Logiciel étendu"
 
@@ -2747,8 +2759,8 @@ msgstr "Intervalle de garde"
 msgid "HD list"
 msgstr "Liste HD"
 
-msgid "HD1100/et7x00"
-msgstr "HD1100/et7x00"
+msgid "HD1100/et7x00/et8500"
+msgstr "HD1100/et7x00/et8500"
 
 msgid "HD2400"
 msgstr "HD2400"
@@ -3168,7 +3180,7 @@ msgid "Letterbox zoom"
 msgstr "Letterbox zoom"
 
 msgid "Limit character set for recording filenames"
-msgstr "Jeu de caractères limité pour noms de fichier enregistré"
+msgstr "Jeu de caractères limité pour nom de fichier enregistré"
 
 msgid "Limit east"
 msgstr "Limite est"
@@ -3435,7 +3447,7 @@ msgid "Movement"
 msgstr "Déplacement"
 
 msgid "Movie list configuration"
-msgstr "Configuration de la Liste des Films"
+msgstr "Configuration de la liste des Films"
 
 msgid "Movie location"
 msgstr "Emplacement des films"
@@ -3793,6 +3805,9 @@ msgstr "GUI 3D configuration"
 msgid "OSD name request"
 msgstr "Demande de nom de l'OSD"
 
+msgid "OSD position setup"
+msgstr "GUI position configuration"
+
 msgid "OSD settings"
 msgstr "Paramètres OSD"
 
@@ -3828,6 +3843,12 @@ msgstr "Scanner seulement libre"
 
 msgid "Only on startup"
 msgstr "Seulement au démarrage"
+
+msgid "Open select location"
+msgstr "Ouvrir la localisation sélectionnée"
+
+msgid "Open select location as timer name"
+msgstr "Ouvrir la localisation sélectionnée comme nom de programmation (timer)"
 
 msgid "Open service list"
 msgstr "Ouvrir liste service"
@@ -4621,13 +4642,13 @@ msgid "Resolution"
 msgstr "Résolution"
 
 msgid "Restart"
-msgstr "Redémarrer"
+msgstr "Redémarrer le récepteur"
 
 msgid "Restart GUI now?"
 msgstr "Redémarrer l'interface graphique maintenant ?"
 
 msgid "Restart enigma"
-msgstr "Redémarrer enigma"
+msgstr "Redémarrer OpenPLi"
 
 msgid "Restart network"
 msgstr "Relancer le réseau"
@@ -4772,6 +4793,9 @@ msgstr "Samedi"
 msgid "Save"
 msgstr "Sauver"
 
+msgid "Save and exit"
+msgstr "Sauvegarder et quitter"
+
 msgid "Save and restart timeshift"
 msgstr "Sauvergarder et redémarrer la PauseDirect"
 
@@ -4823,6 +4847,9 @@ msgstr "Analyser additional SR"
 
 msgid "Scan files..."
 msgstr "Parcourir les fichiers..."
+
+msgid "Scan options"
+msgstr "Options de recherche"
 
 msgid "Scan wireless networks"
 msgstr "Scanner réseaux sans fil"
@@ -4985,9 +5012,6 @@ msgstr "Choisir le périphérique entrée."
 
 msgid "Select interface"
 msgstr "Sélectionner l'interface"
-
-msgid "Select location"
-msgstr "Choisir l'Emplacement"
 
 msgid "Select movie"
 msgstr "Choisir un film"
@@ -5303,7 +5327,7 @@ msgid "Show positioner movement"
 msgstr "Afficher le mouvement du positionneur"
 
 msgid "Show positioner position"
-msgstr "Afficher le mouvement du positionneur"
+msgstr "Afficher la position du positionneur"
 
 msgid "Show record indicator"
 msgstr "Afficher l'indication d'enregistrement"
@@ -5778,10 +5802,10 @@ msgid "Subtitle border width"
 msgstr "Largeur de la bordure des sous-titres"
 
 msgid "Subtitle delay when timing is bad"
-msgstr "Délai des sous-titres lorsque le timing est mauvais"
+msgstr "Délai lorsque le timing est mauvais"
 
 msgid "Subtitle delay when timing lacks"
-msgstr "Délai des sous-titres pour synchroniser avec l'image"
+msgstr "Délai lorsque le timing est absent"
 
 msgid "Subtitle font size"
 msgstr "Taille de la police des sous-titres"
@@ -5906,7 +5930,7 @@ msgstr ""
 "Traduction Française\n"
 "Enigma2 - OpenPLi\n"
 "Support: www.openpli.org\n"
-"Dernière MAJ: 19 avril 2015"
+"Dernière MAJ: 30 mai 2015"
 
 msgid "TS file is too large for ISO9660 level 1!"
 msgstr "Fichier TS trop grand pour le niveau 1 ISO9660 !"
@@ -6378,7 +6402,10 @@ msgid "Tries left:"
 msgstr "Essais annulés :"
 
 msgid "Try to find used transponders in cable network.. please wait..."
-msgstr "Essai de trouver transpondeurs utilisés sur réseau câble... Veuillez patienter..."
+msgstr "Recherche des transpondeurs utilisés sur réseau câblé… Veuillez patienter..."
+
+msgid "Try to find used transponders in terrestrial network... please wait..."
+msgstr "Recherche des transpondeurs utilisés sur réseau terrestre… Veuillez patienter..."
 
 msgid "Trying to download a new packetlist. Please wait..."
 msgstr "Essai téléchargement nouvelle liste paquet. Veuillez patienter..."
@@ -6951,7 +6978,7 @@ msgid "When enabled, content with an aspect ratio of 4:3 will be stretched to fi
 msgstr "Lorsqu'elle est activée, le contenu d'un rapport d'aspect de 4:3 sera étirée pour remplir l'écran."
 
 msgid "When enabled, continue to the next bouquet when the last channel of the current bouquet is reached while changing channels."
-msgstr "Lorsqu'elle est activée, passez au prochain bouquet quand la dernière chaîne du bouquet en cour est atteint tout en changeant de chaines."
+msgstr "Lorsqu'elle est activée, passer au prochain bouquet quand la dernière chaîne du bouquet en cours est atteint tout en changeant de chaines."
 
 msgid "When enabled, deleted recordings are moved to the trash can, instead of being deleted immediately."
 msgstr "Lorsqu'elle est activée, les enregistrements supprimés sont déplacés dans la corbeille, au lieu d'être supprimé immédiatement."
@@ -6999,7 +7026,7 @@ msgid "When enabled, reformat subtitles to match the width of the screen."
 msgstr "Lorsqu'elle est activée, reformatte les sous-titres pour correspondre à la largeur de l'écran."
 
 msgid "When enabled, services may be grouped in multiple bouquets."
-msgstr "Lorsqu'elle est activée, les services peuvent être regroupées en bouquets multiples."
+msgstr "Lorsqu'elle est activée, les services peuvent être regroupés en bouquets multiples."
 
 msgid "When enabled, show channel numbers in the channel selection screen."
 msgstr "Lorsqu'elle est activée, afficher les numéros des chaines dans l'écran de sélection des chaines."
@@ -7032,7 +7059,7 @@ msgid "When enabled, the infobar will be displayed when skipping forwards/backwa
 msgstr "Lorsqu'elle est activée, la barre d'informations s'affiche lors du saut avant / arrière pendant la lecture des médias."
 
 msgid "When enabled, the lenght of each recording will be shown in the movielist (this might cause some additional loading time)."
-msgstr "Lorsqu'elle est activée, la longueur de chaque enregistrement sera affiché dans la Liste Des Films (ce qui peut provoquer un certain temps de chargement supplémentaire)."
+msgstr "Lorsqu'elle est activée, la longueur de chaque enregistrement sera affiché dans la liste des films (ce qui peut provoquer un certain temps de chargement supplémentaire)."
 
 msgid "When enabled, the receiver will automatically use the audio track which you selected before."
 msgstr "Lorsqu'elle est activée, le récepteur utilisera automatiquement la piste audio que vous avez sélectionnée auparavant."
@@ -7660,7 +7687,7 @@ msgid "film/cinema"
 msgstr "Film/Cinéma"
 
 msgid "find currently played service"
-msgstr "trouver le service en cours actuellement"
+msgstr "Trouver le service en cours"
 
 msgid "fine arts"
 msgstr "Beaux arts"
