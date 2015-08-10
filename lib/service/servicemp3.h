@@ -366,6 +366,7 @@ private:
 	/* last used seek position gst-1 only */
 	gint64 m_last_seek_pos;
 #endif
+#endif
 	bufferInfo m_bufferInfo;
 	errorInfo m_errorInfo;
 	std::string m_download_buffer_path;
