@@ -250,8 +250,18 @@ int eDVBServiceRecord::doPrepare()
 			else
 			{
 				/* re-record a recording */
+				int packetsize = 188;
+				eDVBMetaParser meta;
+				if (!meta.parseFile(m_ref.path))
+				{
+					std::string path = m_ref.path;
+					m_ref = meta.m_ref;
+					m_ref.path = path;
+					packetsize = meta.m_packet_size;
+					m_descramble = meta.m_scrambled;
+				}
 				servicetype = eDVBServicePMTHandler::offline;
-				eRawFile *f = new eRawFile();
+				eRawFile *f = new eRawFile(packetsize);
 				f->open(m_ref.path.c_str());
 				source = ePtr<iTsSource>(f);
 			}
@@ -443,6 +453,9 @@ int eDVBServiceRecord::doRecord()
 					if (i->capid >= 0) pids_to_record.insert(i->capid);
 				}
 			}
+
+			/* add AIT pid (if any) */
+			if (program.aitPid >= 0) pids_to_record.insert(program.aitPid);
 
 				/* find out which pids are NEW and which pids are obsolete.. */
 			std::set<int> new_pids, obsolete_pids;

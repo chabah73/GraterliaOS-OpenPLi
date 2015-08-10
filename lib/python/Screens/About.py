@@ -179,29 +179,28 @@ class CommitInfo(Screen):
 		]
 		self.cachedProjects = {}
 		self.Timer = eTimer()
-		self.Timer.callback.append(self.readCommitLogs)
+		self.Timer.callback.append(self.readGithubCommitLogs)
 		self.Timer.start(50, True)
 
-	def readCommitLogs(self):
-		url = 'http://sourceforge.net/p/openpli/%s/feed' % self.projects[self.project][0]
+	def readGithubCommitLogs(self):
+		url = 'https://api.github.com/repos/openpli/%s/commits' % self.projects[self.project][0]
 		commitlog = ""
+		from datetime import datetime
+		from json import loads
 		from urllib2 import urlopen
 		try:
 			commitlog += 80 * '-' + '\n'
 			commitlog += url.split('/')[-2] + '\n'
 			commitlog += 80 * '-' + '\n'
-			for x in  urlopen(url, timeout=5).read().split('<title>')[2:]:
-				for y in x.split("><"):
-					if '</title' in y:
-						title = y[:-7]
-					if '</dc:creator' in y:
-						creator = y.split('>')[1].split('<')[0]
-					if '</pubDate' in y:
-						date = y.split('>')[1].split('<')[0][:-6]
+			for c in loads(urlopen(url, timeout=5).read()):
+				creator = c['commit']['author']['name']
+				title = c['commit']['message']
+				date = datetime.strptime(c['commit']['committer']['date'], '%Y-%m-%dT%H:%M:%SZ').strftime('%x %X')
 				commitlog += date + ' ' + creator + '\n' + title + 2 * '\n'
+			commitlog = commitlog.encode('utf-8')
 			self.cachedProjects[self.projects[self.project][1]] = commitlog
 		except:
-			commitlog = _("Currently the commit log cannot be retrieved - please try later again")
+			commitlog += _("Currently the commit log cannot be retrieved - please try later again")
 		self["AboutScrollLabel"].setText(commitlog)
 
 	def updateCommitLogs(self):
