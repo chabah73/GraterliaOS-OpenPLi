@@ -46,7 +46,6 @@ void ep3Blit(){
 	fb->blit();
 }
 
-
 eServiceFactoryEPlayer3::eServiceFactoryEPlayer3()
 {
 	ePtr<eServiceCenter> sc;

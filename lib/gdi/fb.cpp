@@ -8,6 +8,9 @@
 #include <linux/kd.h>
 
 #include <lib/gdi/fb.h>
+#ifdef __sh__
+#include <linux/stmfb.h>
+#endif
 
 #ifndef FBIO_WAITFORVSYNC
 #define FBIO_WAITFORVSYNC _IOW('F', 0x20, uint32_t)
@@ -65,11 +68,11 @@ fbClass::fbClass(const char *fb)
 	available=fix.smem_len;
 	m_phys_mem = fix.smem_start;
 #if defined(__sh__)
-	eDebug("%dk total video mem", available/1024);
+	eDebug("[fb] %dk total video mem", available/1024);
 	// The first 1920x1080x4 bytes are reserved
 	// After that we can take 1280x720x4 bytes for our virtual framebuffer
 	available -= 1920*1080*4;
-	eDebug("[fb] %dk usable video mem", available/1024);
+	eDebug("%dk usable video mem", available/1024);
 	lfb=(unsigned char*)mmap(0, available, PROT_WRITE|PROT_READ, MAP_SHARED, fbFd, 1920*1080*4);
 #else
 	eDebug("[fb] %dk video mem", available/1024);
@@ -229,7 +232,7 @@ int fbClass::waitVSync()
 void fbClass::blit()
 {
 #if defined(__sh__)
-	int modefd=open("/proc/stb/video/3d_mode", O_RDWR);
+	int modefd = open("/proc/stb/video/3d_mode", O_RDWR);
 	char buf[16] = "off";
 	if (modefd > 0)
 	{
@@ -238,7 +241,7 @@ void fbClass::blit()
 		close(modefd);
 	}
 
-	STMFBIO_BLT_DATA    bltData;
+	STMFBIO_BLT_DATA     bltData;
 	memset(&bltData, 0, sizeof(STMFBIO_BLT_DATA));
 	bltData.operation  = BLT_OP_COPY;
 	bltData.srcOffset  = 1920*1080*4;

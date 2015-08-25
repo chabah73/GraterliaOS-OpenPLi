@@ -6,7 +6,7 @@
 int eDVBCIResourceManagerSession::receivedAPDU(const unsigned char *tag,const void *data, int len)
 {
 #ifdef __sh__
-	eDebug("eDVBCIResourceManagerSession::%s >", __func__);
+	eDebug("[CI RM] eDVBCIResourceManagerSession::%s >", __func__);
 	eDebugNoNewLineStart("[CI RM] SESSION(%d) %02x %02x %02x (len = %d): ", session_nb, tag[0], tag[1], tag[2], len);
 #else
 	eDebugNoNewLineStart("[CI RM] SESSION(%d) %02x %02x %02x: ", session_nb, tag[0], tag[1], tag[2]);

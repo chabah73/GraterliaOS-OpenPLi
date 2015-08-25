@@ -637,9 +637,6 @@ msgstr ""
 msgid "AC3 downmix"
 msgstr ""
 
-msgid "AC3/DTS downmix"
-msgstr "Downmix AC3/DTS"
-
 #
 msgid "Abort"
 msgstr "Przerwij"
@@ -725,10 +722,6 @@ msgstr "Dodaj plik do playlisty"
 #
 msgid "Add files to playlist"
 msgstr "Dodaj pliki do playlisty"
-
-#
-msgid "Add more details to the crash log"
-msgstr "Twórz szczegółowy dziennik usterek"
 
 #
 msgid "Add provider"
@@ -1637,7 +1630,6 @@ msgstr "Ustaw czy czcionka napisów ma przełączać się pomiędzy  normalną, 
 msgid "Configure interface"
 msgstr ""
 
-msgstr "Skonfiguruj DNS"
 msgid "Configure nameservers"
 msgstr ""
 
@@ -4534,26 +4526,6 @@ msgstr "Brak dostępnych aktualizacji."
 msgid "No updates available. Please try again later."
 msgstr "Brak aktualizacji. Spróbuj ponownie później."
 
-#
-msgid ""
-"No valid service PIN found!\n"
-"Do you like to change the service PIN now?\n"
-"When you say 'No' here the service protection stay disabled!"
-msgstr ""
-"Nie znaleziono kodu PIN dla kanału!\n"
-"Czy chcesz zmienić PIN kanału?\n"
-"Gdy wciśniesz NIE, ochrona kanału pozostanie wyłączona!"
-
-#
-msgid ""
-"No valid setup PIN found!\n"
-"Do you like to change the setup PIN now?\n"
-"When you say 'No' here the setup protection stay disabled!"
-msgstr ""
-"Nie znaleziono kodu PIN ustawień!\n"
-"Czy chcesz zmienić PIN ustawień?\n"
-"Gdy wciśniesz NIE, ochrona ustawień zostanie wyłączona!"
-
 msgid "No wireless networks found! Searching..."
 msgstr "Nie znaleziono sieci bezprzewodowych! Wyszukiwanie..."
 
@@ -5077,26 +5049,7 @@ msgid ""
 msgstr ""
 
 #
-msgid ""
-"Please select the network interface that you want to use for your internet "
-"connection.\n"
-"\n"
-"Please press OK to continue."
-msgstr ""
-"Wybierz interfejs za pomocą którego będziesz się łączył z internetem.\n"
-"Wciśnij OK, aby kontynuować"
 
-#
-msgid ""
-"Please select the wireless network that you want to connect to.\n"
-"\n"
-"Please press OK to continue."
-msgstr ""
-"Wybierz sieć WiFi z którą chcesz się połączyć.\n"
-"\n"
-"Wciśnij OK aby kontynuować"
-
-#
 msgid "Please set up tuner A"
 msgstr "Skonfiguruj tuner A"
 
@@ -7471,7 +7424,6 @@ msgstr "Kolor tekstu"
 msgid "Thai"
 msgstr "Tajski"
 
-#
 msgid ""
 "Thank you for using the wizard.\n"
 "Please press OK to continue."
@@ -7515,10 +7467,6 @@ msgstr ""
 
 msgid "The backup failed. Please choose a different backup location."
 msgstr ""
-
-#
-msgid "The backup failed. Please choose a different backup location."
-msgstr "Tworzenie backupu nie udało się. Wybierz inna lokalizacje dla kopii"
 
 #
 #, python-format
@@ -7620,14 +7568,6 @@ msgstr ""
 #
 msgid ""
 "The wireless LAN plugin is not installed!\n"
-"Please install it and choose what you want to do next."
-msgstr ""
-"Wtyczka sieci WiFi nie jest zainstalowana! \n"
-"Zainstaluj ją i wybierz co dalej"
-
-#
-msgid ""
-"The wireless LAN plugin is not installed!\n"
 "Please install it."
 msgstr ""
 "Plugin sieci bezprzewodowej nie jest zainstalowany!\n"
@@ -7643,10 +7583,6 @@ msgstr "Kreator znalazł backup plików konfiguracyjnych, Przywrócić stare ust
 
 msgid "The wizard is finished now."
 msgstr ""
-
-#
-msgid "The wizard is finished now."
-msgstr "Działanie kreatora zakończone"
 
 #
 msgid "There are at least "
@@ -8383,30 +8319,6 @@ msgid "Video mode selection."
 msgstr ""
 
 #
-msgid "Video fine tuning"
-msgstr "Precyzyjne ustawienia obrazu"
-
-#
-msgid ""
-"Video input selection\n"
-"\n"
-"Please press OK if you can see this page on your TV (or select a different "
-"input port).\n"
-"\n"
-"The next input port will be automatically probed in 20 seconds."
-msgstr ""
-"Wybór wejścia wideo\n"
-"\n"
-"Wciśnij OK, jeśli widzisz tą stronę na ekranie TV (lub wybierz inne "
-"wejście).\n"
-"\n"
-"Kolejne wejście będzie wypróbowane za 20 sekund"
-
-#
-msgid "Video mode selection."
-msgstr "Wybór trybu wideo"
-
-#
 msgid "Video output"
 msgstr "Wyjście video"
 
@@ -8632,15 +8544,6 @@ msgstr ""
 
 msgid "Welcome to the image upgrade wizard. The wizard will assist you in upgrading the firmware of your receiver by providing a backup facility for your current settings and a short explanation of how to upgrade your firmware."
 msgstr ""
-
-msgid ""
-"Welcome to the image upgrade wizard. The wizard will assist you in upgrading "
-"the firmware of your receiver by providing a backup facility for your "
-"current settings and a short explanation of how to upgrade your firmware."
-msgstr ""
-"Witaj w wizardzie aktualizacji oprogramowania. Wizard będzie asystował przy "
-"aktualizacji oprogramowania odbiornika ułatwiając backup aktualnych ustawień "
-"i krótko wyjaśni jak zaktualizować oprogramowanie"
 
 msgid ""
 "Welcome.\n"
@@ -8907,14 +8810,6 @@ msgid "Wireless network connection setup."
 msgstr ""
 
 #
-msgid "Wireless network connection setup"
-msgstr "Ustawienia połączenia sieci WiFi"
-
-#
-msgid "Wireless network connection setup."
-msgstr "Ustawienia połączenia sieci WiFi"
-
-#
 msgid "Wireless network state"
 msgstr "Status sieci bezprzewodowej"
 
@@ -8996,14 +8891,6 @@ msgstr ""
 
 msgid "Yes, restore the settings now"
 msgstr ""
-
-#
-msgid "Yes, perform a shutdown now."
-msgstr "Tak, wyłącz teraz"
-
-#
-msgid "Yes, restore the settings now"
-msgstr "Tak, przywróć ustawienia teraz"
 
 #
 msgid "Yes, returning to movie list"
@@ -9435,15 +9322,6 @@ msgstr "Kołowa prawa"
 
 msgid "comedy"
 msgstr "Komedia"
-
-msgid "committed, toneburst"
-msgstr "Wykonywana, toneburst"
-
-msgid "committed, uncommitted, toneburst"
-msgstr "Wykonywana, niewykonywana, toneburst"
-
-msgid "complex"
-msgstr "Złożony"
 
 #
 msgid "config menu"
@@ -10419,10 +10297,6 @@ msgstr "Przy włączonym PiPzap przełącz w oknie PiP na następny kanał"
 #
 msgid "white"
 msgstr "Biały"
-
-#
-msgid "whitelist"
-msgstr "Biała lista"
 
 #
 msgid "width"

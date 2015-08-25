@@ -320,9 +320,9 @@ eDBoxLCD::eDBoxLCD()
 	eDebug("eDBoxLCD::eDBoxLCD >");
 
 	displayNumber = 0;
-	is_oled = 1;
+	lcd_type = 1;
 
-	instance=this;
+	instance = this;
 
 	if (GLCD::Config.Load("/etc/graphlcd.conf") == false)
 	{
@@ -393,17 +393,6 @@ int eDBoxLCD::setLCDBrightness(int brightness)
 /* fixme range check */
 	lcd->SetBrightness(brightness);
 	return(0);
-}
-
-eDBoxLCD::~eDBoxLCD()
-{
-	eDebug("eDBoxLCD::~eDBoxLCD");
-}
-
-eDBoxLCD *eDBoxLCD::getInstance()
-{
-	eDebug("eDBoxLCD::getInstance");
-	return instance;
 }
 
 void eDBoxLCD::update()

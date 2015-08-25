@@ -23,7 +23,7 @@
 #endif
 #include <sys/stat.h>
 
-#define HTTP_TIMEOUT 30
+#define HTTP_TIMEOUT 60
 
 /*
  * UNUSED variable from service reference is now used as buffer flag for gstreamer
@@ -129,13 +129,7 @@ eServiceFactoryMP3::eServiceFactoryMP3()
 		extensions.push_back("img");
 		extensions.push_back("iso");
 		extensions.push_back("ifo");
-		int fd = open("/proc/stb/info/model", O_RDONLY);
-		char tmp[255];
-		int rd = fd >= 0 ? read(fd, tmp, 255) : 0;
-		if (fd >= 0)
-			close(fd);
-		if (!strncmp(tmp, "ufs912\n", rd) || !strncmp(tmp, "ufs913\n", rd) || !strncmp(tmp, "atevio7500\n", rd) || !strncmp(tmp, "hs7110\n", rd) || !strncmp(tmp, "hs7810a\n", rd) || !strncmp(tmp, "spark7162\n", rd) || !strncmp(tmp, "whitebox\n", rd))
-			extensions.push_back("wmv");
+		extensions.push_back("wmv");
 #endif
 #endif
 		extensions.push_back("wma");
@@ -412,7 +406,7 @@ void eServiceMP3InfoContainer::setBuffer(GstBuffer *buffer)
 {
 	bufferValue = buffer;
 	gst_buffer_ref(bufferValue);
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 	bufferData = GST_BUFFER_DATA(bufferValue);
 	bufferSize = GST_BUFFER_SIZE(bufferValue);
 #else
@@ -594,7 +588,7 @@ eServiceMP3::eServiceMP3(eServiceReference ref):
 		uri = g_filename_to_uri(filename, NULL, NULL);
 
 	eDebug("[eServiceMP3] playbin uri=%s", uri);
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 	m_gst_playbin = gst_element_factory_make("playbin2", "playbin");
 #else
 	m_gst_playbin = gst_element_factory_make("playbin", "playbin");
@@ -645,7 +639,7 @@ eServiceMP3::eServiceMP3(eServiceReference ref):
 			g_object_set (G_OBJECT (m_gst_playbin), "current-text", m_currentSubtitleStream, NULL);
 		}
 		GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE (m_gst_playbin));
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 		gst_bus_set_sync_handler(bus, gstBusSyncHandler, this);
 #else
 		gst_bus_set_sync_handler(bus, gstBusSyncHandler, this, NULL);
@@ -859,7 +853,7 @@ eServiceMP3::~eServiceMP3()
 	{
 		// disconnect sync handler callback
 		GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE (m_gst_playbin));
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 		gst_bus_set_sync_handler(bus, NULL, NULL);
 #else
 		gst_bus_set_sync_handler(bus, NULL, NULL, NULL);
@@ -1012,7 +1006,7 @@ RESULT eServiceMP3::stop()
 	if (m_state == stStopped)
 		return -1;
 
-	eDebug("[eServiceMP3] stop %s", m_ref.path.c_str());
+//	eDebug("[eServiceMP3] stop %s", m_ref.path.c_str());
 #ifdef ENABLE_MEDIAFWGSTREAMER
 	gst_element_set_state(m_gst_playbin, GST_STATE_NULL);
 #else
@@ -1119,7 +1113,7 @@ RESULT eServiceMP3::setSlowMotion(int ratio)
 RESULT eServiceMP3::setFastForward(int ratio)
 {
 #ifdef ENABLE_MEDIAFWGSTREAMER
-	eDebug("[eServiceMP3] setFastForward ratio=%i",ratio);
+//	eDebug("[eServiceMP3] setFastForward ratio=%i",ratio);
 	return trickSeek(ratio);
 #else
 // konfetti: in libeplayer3 we changed this because I dont like application specific stuff in a library
@@ -1193,7 +1187,7 @@ RESULT eServiceMP3::getLength(pts_t &pts)
 
 	GstFormat fmt = GST_FORMAT_TIME;
 	gint64 len;
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 	if (!gst_element_query_duration(m_gst_playbin, &fmt, &len))
 #else
 	if (!gst_element_query_duration(m_gst_playbin, fmt, &len))
@@ -1235,7 +1229,7 @@ RESULT eServiceMP3::seekToImpl(pts_t to)
 		eDebug("[eServiceMP3] seekTo failed");
 		return -1;
 	}
-#endif
+
 
 #if GST_VERSION_MAJOR < 1
 	if (m_paused)
@@ -1253,6 +1247,7 @@ RESULT eServiceMP3::seekToImpl(pts_t to)
 
 	return 0;
 }
+#endif
 
 RESULT eServiceMP3::seekTo(pts_t to)
 {
@@ -1343,10 +1338,18 @@ RESULT eServiceMP3::seekRelative(int direction, pts_t to)
 }
 
 #ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 gint eServiceMP3::match_sinktype(GstElement *element, gpointer type)
 {
 	return strcmp(g_type_name(G_OBJECT_TYPE(element)), (const char*)type);
 }
+#else
+gint eServiceMP3::match_sinktype(const GValue *velement, const gchar *type)
+{
+	GstElement *element = GST_ELEMENT_CAST(g_value_get_object(velement));
+	return strcmp(g_type_name(G_OBJECT_TYPE(element)), type);
+}
+#endif
 #endif
 
 RESULT eServiceMP3::getPlayPosition(pts_t &pts)
@@ -1368,7 +1371,7 @@ RESULT eServiceMP3::getPlayPosition(pts_t &pts)
 	else
 	{
 		GstFormat fmt = GST_FORMAT_TIME;
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 		if (!gst_element_query_position(m_gst_playbin, &fmt, &pos))
 #else
 		if (!gst_element_query_position(m_gst_playbin, fmt, &pos))
@@ -1547,8 +1550,8 @@ int eServiceMP3::getInfo(int w)
 	case sTagCRC:
 		tag = "has-crc";
 		break;
-	case sBuffer: return m_bufferInfo.bufferPercent;
 #endif
+	case sBuffer: return m_bufferInfo.bufferPercent;
 	default:
 		return resNA;
 	}
@@ -1955,12 +1958,9 @@ RESULT eServiceMP3::getTrackInfo(struct iAudioTrackInfo &info, unsigned int i)
 	if (i >= m_audioStreams.size())
 	{
 		return -2;
-	}
-
 #ifdef ENABLE_MEDIAFWGSTREAMER
-	info.m_description = m_audioStreams[i].codec;
-#else
-	if (m_audioStreams[i].type == atMPEG)
+		info.m_description = m_audioStreams[i].codec;
+/*	if (m_audioStreams[i].type == atMPEG)
 		info.m_description = "MPEG";
 	else if (m_audioStreams[i].type == atMP3)
 		info.m_description = "MP3";
@@ -1974,6 +1974,15 @@ RESULT eServiceMP3::getTrackInfo(struct iAudioTrackInfo &info, unsigned int i)
 		info.m_description = "PCM";
 	else if (m_audioStreams[i].type == atOGG)
 		info.m_description = "OGG";
+	else if (m_audioStreams[i].type == atFLAC)
+		info.m_description = "FLAC";
+	else
+		info.m_description = "???";*/
+	}
+#else
+	}
+
+	info.m_description = m_audioStreams[i].codec;
 #endif
 
 	if (info.m_language.empty())
@@ -1988,7 +1997,7 @@ RESULT eServiceMP3::getTrackInfo(struct iAudioTrackInfo &info, unsigned int i)
 subtype_t getSubtitleType(GstPad* pad, gchar *g_codec=NULL)
 {
 	subtype_t type = stUnknown;
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 	GstCaps* caps = gst_pad_get_negotiated_caps(pad);
 #else
 	GstCaps* caps = gst_pad_get_current_caps(pad);
@@ -2143,7 +2152,7 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 						videoSink = NULL;
 					}
 					children = gst_bin_iterate_recurse(GST_BIN(m_gst_playbin));
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 					audioSink = GST_ELEMENT_CAST(gst_iterator_find_custom(children, (GCompareFunc)match_sinktype, (gpointer)"GstDVBAudioSink"));
 #else
 					if (gst_iterator_find_custom(children, (GCompareFunc)match_sinktype, &result, (gpointer)"GstDVBAudioSink"))
@@ -2154,7 +2163,7 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 #endif
 					gst_iterator_free(children);
 					children = gst_bin_iterate_recurse(GST_BIN(m_gst_playbin));
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 					videoSink = GST_ELEMENT_CAST(gst_iterator_find_custom(children, (GCompareFunc)match_sinktype, (gpointer)"GstDVBVideoSink"));
 #else
 					if (gst_iterator_find_custom(children, (GCompareFunc)match_sinktype, &result, (gpointer)"GstDVBVideoSink"))
@@ -2307,7 +2316,7 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 				{
 					guint8 *data;
 					gsize size;
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 					data = GST_BUFFER_DATA(buf_image);
 					size = GST_BUFFER_SIZE(buf_image);
 #else
@@ -2364,7 +2373,7 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 				GstTagList *tags = NULL;
 				GstPad* pad = 0;
 				g_signal_emit_by_name (m_gst_playbin, "get-audio-pad", i, &pad);
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 				GstCaps* caps = gst_pad_get_negotiated_caps(pad);
 #else
 				GstCaps* caps = gst_pad_get_current_caps(pad);
@@ -2380,7 +2389,7 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 				g_codec = NULL;
 				g_lang = NULL;
 				g_signal_emit_by_name (m_gst_playbin, "get-audio-tags", i, &tags);
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 				if (tags && gst_is_tag_list(tags))
 #else
 				if (tags && GST_IS_TAG_LIST(tags))
@@ -2410,7 +2419,7 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 				g_signal_emit_by_name (m_gst_playbin, "get-text-tags", i, &tags);
 				subtitleStream subs;
 				subs.language_code = "und";
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 				if (tags && gst_is_tag_list(tags))
 #else
 				if (tags && GST_IS_TAG_LIST(tags))
@@ -2702,7 +2711,7 @@ void eServiceMP3::playbinNotifySource(GObject *object, GParamSpec *unused, gpoin
 		}
 		if (g_object_class_find_property(G_OBJECT_GET_CLASS(source), "extra-headers") != 0 && !_this->m_extra_headers.empty())
 		{
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 			GstStructure *extras = gst_structure_empty_new("extras");
 #else
 			GstStructure *extras = gst_structure_new_empty("extras");
@@ -2773,7 +2782,7 @@ void eServiceMP3::handleElementAdded(GstBin *bin, GstElement *element, gpointer 
 			}
 		}
 		else if (g_str_has_prefix(elementname, "uridecodebin")
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 			|| g_str_has_prefix(elementname, "decodebin2"))
 #else
 			|| g_str_has_prefix(elementname, "decodebin"))
@@ -2823,7 +2832,7 @@ audiotype_t eServiceMP3::gstCheckAudioPad(GstStructure* structure)
 		return atAC3;
 	else if ( gst_structure_has_name (structure, "audio/x-dts") || gst_structure_has_name (structure, "audio/dts") )
 		return atDTS;
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 	else if ( gst_structure_has_name (structure, "audio/x-raw-int") )
 #else
 	else if ( gst_structure_has_name (structure, "audio/x-raw") )
@@ -2916,7 +2925,7 @@ void eServiceMP3::gstTextpadHasCAPS_synced(GstPad *pad)
 
 			subs.language_code = "und";
 			subs.type = getSubtitleType(pad);
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 			if (tags && gst_is_tag_list(tags))
 #else
 			if (tags && GST_IS_TAG_LIST(tags))
@@ -2945,7 +2954,7 @@ void eServiceMP3::pullSubtitle(GstBuffer *buffer)
 {
 	if (buffer && m_currentSubtitleStream >= 0 && m_currentSubtitleStream < (int)m_subtitleStreams.size())
 	{
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 		gint64 buf_pos = GST_BUFFER_TIMESTAMP(buffer);
 		size_t len = GST_BUFFER_SIZE(buffer);
 #else
@@ -2973,7 +2982,7 @@ void eServiceMP3::pullSubtitle(GstBuffer *buffer)
 				if (subtitle_fps > 1 && m_framerate > 0)
 					convert_fps = subtitle_fps / (double)m_framerate;
 
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 				std::string line((const char*)GST_BUFFER_DATA(buffer), len);
 #else
 				std::string line((const char*)map.data, len);
@@ -3125,7 +3134,7 @@ exit:
 RESULT eServiceMP3::enableSubtitles(iSubtitleUser *user, struct SubtitleTrack &track)
 {
 	if (m_currentSubtitleStream != track.pid)
-	{	
+	{
 #ifdef ENABLE_MEDIAFWGSTREAMER
 		g_object_set (G_OBJECT (m_gst_playbin), "current-text", -1, NULL);
 #endif
@@ -3142,7 +3151,7 @@ RESULT eServiceMP3::enableSubtitles(iSubtitleUser *user, struct SubtitleTrack &t
 		m_subtitle_widget = user;
 
 #ifdef ENABLE_MEDIAFWGSTREAMER
-		eDebug ("[eServiceMP3] switched to subtitle stream %i", m_currentSubtitleStream);
+//		eDebug ("[eServiceMP3] switched to subtitle stream %i", m_currentSubtitleStream);
 
 #ifdef GSTREAMER_SUBTITLE_SYNC_MODE_BUG
 		/*
@@ -3164,8 +3173,8 @@ RESULT eServiceMP3::enableSubtitles(iSubtitleUser *user, struct SubtitleTrack &t
 
 RESULT eServiceMP3::disableSubtitles()
 {
-	eDebug("[eServiceMP3] disableSubtitles");
 #ifdef ENABLE_MEDIAFWGSTREAMER
+	eDebug("[eServiceMP3] disableSubtitles");
 	m_currentSubtitleStream = -1;
 	m_cachedSubtitleStream = m_currentSubtitleStream;
 	g_object_set (G_OBJECT (m_gst_playbin), "current-text", m_currentSubtitleStream, NULL);

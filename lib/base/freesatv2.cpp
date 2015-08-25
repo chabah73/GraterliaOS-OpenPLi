@@ -38,9 +38,10 @@ GNU General Public License for more details.
 static void loadFile(huffTableEntry **table, const char *filename);
 
 
-struct huffTableEntry {
-	__u32 value;
-	__u16 bits;
+struct huffTableEntry
+{
+	uint32_t value;
+	uint16_t bits;
 	char next;
 	huffTableEntry * nextEntry;
 
@@ -84,32 +85,27 @@ freesatHuffmanDecoder::~freesatHuffmanDecoder()
 */
 static unsigned char resolveChar(const char *str)
 {
-	if (str[1] == 0)
-		return str[0];
-
-	switch(str[0])
-	{
-		case '0':
+	const char *p = str;
+	unsigned c0 = *p++, c1 = *p++;
+	if (c1)
+		switch(c0|c1<<8)
 		{
-			int val;
-			if ( sscanf(str,"0x%02x", &val) == 1 )
-			{
-				return val;
-			}
+			case '0'|'x'<<8:
+				if ( sscanf(p,"%02x", &c1) == 1 )
+					c0 = c1;
+				break;
+			case 'E'|'S'<<8:
+				if ( !strcmp(p,"CAPE") )
+					c0 = ESCAPE;
+				break;
+			case 'S'|'T'<<8:
+				if ( !strcmp(p,"OP") )
+					c0 = STOP;
+				else if ( !strcmp(p,"ART") )
+					c0 = START;
+				break;
 		}
-		break;
-		case 'E':
-			if ( strcmp(str,"ESCAPE") == 0 )
-				return ESCAPE;
-			break;
-		case 'S':
-			if ( strcmp(str,"STOP") == 0 )
-				return STOP;
-			if ( strcmp(str,"START") == 0 )
-				return START;
-			break;
-	}
-	return str[0];
+	return c0;
 }
 
 

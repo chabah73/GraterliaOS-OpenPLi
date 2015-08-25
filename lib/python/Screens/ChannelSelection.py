@@ -1672,8 +1672,6 @@ class ChannelSelectionBase(Screen):
 	def keyRecord(self):
 		ref = self.getCurrentSelection()
 		if ref and not(ref.flags & (eServiceReference.isMarker|eServiceReference.isDirectory)):
-#			Screens.InfoBar.InfoBar.instance.instantRecord(serviceRef=ref)
-#			Screens.InfoBar.InfoBar.instance.instantRecord(serviceRef=self.ref)
 			Screens.InfoBar.InfoBar.instance.instantRecord(ref)
 
 	def showFavourites(self):

@@ -101,6 +101,7 @@ public:
 #endif
 };
 
+#ifdef ENABLE_MEDIAFWGSTREAMER
 class GstMessageContainer: public iObject
 {
 	DECLARE_REF(GstMessageContainer);
@@ -130,6 +131,7 @@ public:
 };
 
 typedef struct _GstElement GstElement;
+#endif
 
 typedef enum { atUnknown, atMPEG, atMP3, atAC3, atDTS, atAAC, atPCM, atOGG, atFLAC, atWMA } audiotype_t;
 typedef enum { stUnknown, stPlainText, stSSA, stASS, stSRT, stVOB, stPGS } subtype_t;
@@ -366,7 +368,6 @@ private:
 	/* last used seek position gst-1 only */
 	gint64 m_last_seek_pos;
 #endif
-#endif
 	bufferInfo m_bufferInfo;
 	errorInfo m_errorInfo;
 	std::string m_download_buffer_path;
@@ -377,6 +378,7 @@ private:
 		stIdle, stRunning, stStopped,
 	};
 	int m_state;
+#endif
 #ifdef ENABLE_MEDIAFWGSTREAMER
 	GstElement *m_gst_playbin, *audioSink, *videoSink;
 	GstTagList *m_stream_tags;
@@ -393,7 +395,7 @@ private:
 	GstPad* gstCreateSubtitleSink(eServiceMP3* _this, subtype_t type);
 	void gstPoll(ePtr<GstMessageContainer> const &);
 	static void playbinNotifySource(GObject *object, GParamSpec *unused, gpointer user_data);
-#ifdef ENABLE_MEDIAFWGSTREAMER
+#if GST_VERSION_MAJOR < 1
 	static gint match_sinktype(GstElement *element, gpointer type);
 #else
 /* TOC processing CVR */

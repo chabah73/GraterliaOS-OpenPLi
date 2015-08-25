@@ -99,8 +99,7 @@ void gLCDDC::exec(const gOpcode *o)
 			clock_gettime(CLOCK_MONOTONIC, &last_update);
 		}
 #else
-//		if (update)
-			lcd->update();
+		lcd->update();
 #endif
 	default:
 		gDC::exec(o);

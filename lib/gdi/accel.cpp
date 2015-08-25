@@ -181,23 +181,23 @@ int gAccel::blit(gUnmanagedSurface *dst, gUnmanagedSurface *src, const eRect &p,
 		if (accelAlloc(surfaceTmp))
 			return -1;
 
-		__u8 *srcptr=(__u8*)src->data;
-		__u8 *dstptr=(__u8*)surfaceTmp->data;
+		__u8 *srcptr = (__u8*)src->data;
+		__u8 *dstptr = (__u8*)surfaceTmp->data;
 		__u32 pal[256];
 
-		for (int i=0; i<256; ++i)
+		for (int i = 0; i < 256; ++i)
 		{
-			if (src->clut.data && (i<src->clut.colors))
-				pal[i]=(src->clut.data[i].a<<24)|(src->clut.data[i].r<<16)|(src->clut.data[i].g<<8)|(src->clut.data[i].b);
+			if (src->clut.data && (i < src->clut.colors))
+				pal[i] = (src->clut.data[i].a<<24)|(src->clut.data[i].r<<16)|(src->clut.data[i].g<<8)|(src->clut.data[i].b);
 			else
-				pal[i]=0x010101*i;
+				pal[i] = 0x010101*i;
 			if ((pal[i]&0xFF000000) >= 0xE0000000)
 				pal[i] = 0xFF000000;
-			pal[i]^=0xFF000000;
+			pal[i] ^= 0xFF000000;
 		}
 		srcptr+=area.left()*src->bypp+area.top()*src->stride;
 
-		for (int y=0; y<area.height(); y++)
+		for (int y = 0; y < area.height(); y++)
 		{
 			int width=area.width();
 			unsigned char *psrc=(unsigned char*)srcptr;

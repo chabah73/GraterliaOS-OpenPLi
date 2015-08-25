@@ -30,7 +30,7 @@
 #include <lib/python/python.h>
 #include <lib/python/pythonconfig.h>
 
-#if defined(__sh__) // vfd class
+#if defined(__sh__)
 #include <lib/driver/vfd.h>
 #endif
 #include "bsod.h"
