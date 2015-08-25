@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-13 22:21+0200\n"
+"POT-Creation-Date: 2015-08-21 09:29+0200\n"
 "PO-Revision-Date: 2015-07-22 21:10+0100\n"
 "Last-Translator: blzr <blzr@o2.pl>\n"
 "Language-Team: \n"
@@ -109,6 +109,12 @@ msgstr ""
 "\n"
 "Wybierz lokalizację dla backupu.\n"
 "Aktualna lokalizacja: "
+
+#, python-format
+msgid ""
+"\n"
+"Timer '%s' disabled!"
+msgstr ""
 
 #
 msgid ""
@@ -1628,9 +1634,12 @@ msgstr "Skonfiguruj czy wyświetlać pikony w liście kanałów."
 msgid "Configure if the subtitle should switch between normal, italic, bold and bolditalic"
 msgstr "Ustaw czy czcionka napisów ma przełączać się pomiędzy  normalną, kursywą, pogrubioną i pogrubioną kursywą"
 
-#
-msgid "Configure nameservers"
+msgid "Configure interface"
+msgstr ""
+
 msgstr "Skonfiguruj DNS"
+msgid "Configure nameservers"
+msgstr ""
 
 msgid "Configure on which devices the background delete option should be used."
 msgstr "Skonfiguruj dla jakich urządzeń opcja usuwania w tle ma być użyta."
@@ -1885,6 +1894,9 @@ msgstr "Skonfiguruj który tuner będzie preferowany gdy więcej niż jeden jest
 msgid "Configure your internal LAN"
 msgstr "Konfiguracja wewnętrznej sieci LAN"
 
+msgid "Configure your network again"
+msgstr ""
+
 #
 msgid "Configure your network settings, and press OK to start the scan"
 msgstr "Skonfiguruj ustawienia sieci i wciśnij OK aby rozpocząć skanowanie "
@@ -1899,6 +1911,9 @@ msgstr "Skonfiguruj które wyście wideo ma być użyte."
 #
 msgid "Configuring"
 msgstr "Konfigurowanie"
+
+msgid "Conflict not resolved!"
+msgstr ""
 
 #
 msgid "Conflicting timer"
@@ -2864,6 +2879,9 @@ msgstr ""
 msgid "Estonian"
 msgstr "Estoński"
 
+msgid "EtPortal"
+msgstr ""
+
 msgid "Ethernet network interface"
 msgstr "Interfejs sieciowy ethernet"
 
@@ -3624,6 +3642,12 @@ msgstr "Urządzenia wejścia"
 msgid "Install"
 msgstr "Instalacja"
 
+msgid "Install a new image with a USB stick"
+msgstr ""
+
+msgid "Install a new image with your web browser"
+msgstr ""
+
 #
 msgid "Install channel list"
 msgstr "Zainstaluj listę kanałów"
@@ -3889,13 +3913,8 @@ msgstr "Połączenie:"
 msgid "Linked titles with a DVD menu"
 msgstr "Dostępne tytuły DVD z menu"
 
-#
-msgid "List EPG functions..."
-msgstr "Lista rodzajów EPG"
-
-#
 msgid "List available networks"
-msgstr "Lista dostępnych sieci"
+msgstr ""
 
 msgid "List mode"
 msgstr "Tryb listy"
@@ -4025,6 +4044,9 @@ msgstr "Ręcznie"
 #
 msgid "Manual Scan"
 msgstr "Skanowanie ręczne"
+
+msgid "Manual configuration"
+msgstr ""
 
 #
 msgid "Manual scan"
@@ -4397,6 +4419,9 @@ msgstr "Nie znaleziono HDD lub dysk nie jest zainicjowany!"
 msgid "No age block"
 msgstr "Brak ograniczeń"
 
+msgid "No backup needed"
+msgstr ""
+
 msgid "No cable tuner found!"
 msgstr "Nie znaleziono tunera kablowego"
 
@@ -4560,14 +4585,11 @@ msgstr ""
 msgid "No, but restart from begin"
 msgstr "Nie, ale odtwórz od początku"
 
-msgid "No, but restart from beginning"
-msgstr "Nie, ale zacznij od początku"
-
 msgid "No, do nothing."
-msgstr "Nie, nie rób nic"
+msgstr ""
 
 msgid "No, just start my receiver"
-msgstr "Nie, po prostu włącz odbiornik"
+msgstr ""
 
 msgid "No, never"
 msgstr "Nie, nigdy"
@@ -4641,6 +4663,9 @@ msgstr "Ilość powtórzeń tekstu na wyświetlaczu"
 #
 msgid "OK"
 msgstr "OK"
+
+msgid "OK, guide me through the upgrade process"
+msgstr ""
 
 msgid "ONID"
 msgstr ""
@@ -4930,23 +4955,15 @@ msgstr "Sprawdź ustawienia sieci!"
 msgid "Please choose an extension..."
 msgstr "Menu rozszerzeń"
 
-#
 msgid ""
-"Please configure or verify your Nameservers by filling out the required "
-"values.\n"
+"Please configure or verify your Nameservers by filling out the required values.\n"
 "When you are ready press OK to continue."
 msgstr ""
-"Skonfiguruj lub sprawdź dane serwera DNS.\n"
-"Aby kontynuować, wciśnij OK"
 
-#
 msgid ""
-"Please configure your internet connection by filling out the required "
-"values.\n"
+"Please configure your internet connection by filling out the required values.\n"
 "When you are ready press OK to continue."
 msgstr ""
-"Skonfiguruj połączenie z internetem.\n"
-"Aby kontynuować, wciśnij OK"
 
 msgid "Please connect your receiver to the internet"
 msgstr "Podłącz odbiornik do internetu"
@@ -4992,6 +5009,9 @@ msgstr "Wpisz nowy kod PIN"
 #
 msgid "Please enter the old PIN code"
 msgstr "Wpisz poprzedni kod PIN"
+
+msgid "Please follow the instructions on the TV"
+msgstr ""
 
 #
 msgid "Please note that the previously selected media could not be accessed and therefore the default directory is being used instead."
@@ -5043,6 +5063,18 @@ msgstr "Wybierz 'tag' do filtrowania..."
 #
 msgid "Please select the movie path..."
 msgstr "Wybierz ścieżkę do filmu..."
+
+msgid ""
+"Please select the network interface that you want to use for your internet connection.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+
+msgid ""
+"Please select the wireless network that you want to connect to.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
 
 #
 msgid ""
@@ -5600,6 +5632,9 @@ msgstr "Odśwież"
 #
 msgid "Refresh rate"
 msgstr "Częstotliwość odświeżania"
+
+msgid "Refresh rate selection."
+msgstr ""
 
 #
 msgid "Regard deep standby as standby"
@@ -6242,6 +6277,9 @@ msgstr "Wybierz film"
 msgid "Select provider to add..."
 msgstr "Wybierz nadawcę do dodania..."
 
+msgid "Select refresh rate"
+msgstr ""
+
 #
 msgid "Select satellites"
 msgstr "Wybierz satelity"
@@ -6269,6 +6307,15 @@ msgstr "Wybierz źródło aktualizacji"
 #
 msgid "Select upgrade source to edit."
 msgstr "Wybierz źródło aktualizacji do edycji"
+
+msgid "Select video input with up/down buttons"
+msgstr ""
+
+msgid "Select video mode"
+msgstr ""
+
+msgid "Select wireless network"
+msgstr ""
 
 msgid "Select your provider, and press OK to start the scan"
 msgstr "Wybierz nadawcę i wciśnij OK aby rozpocząć skanowanie"
@@ -6583,8 +6630,8 @@ msgstr "Pokaż pasek info przy zmianie wydarzenia"
 msgid "Show infobar on skip forward/backward"
 msgstr "Pokaż pasek info przy przewijaniu przód/tył"
 
-msgid "Show latest commits on sourceforge"
-msgstr "Pokaż ostatnie commit'y na sourceforge"
+msgid "Show latest commits"
+msgstr ""
 
 #
 msgid "Show latest upgrade log"
@@ -7429,8 +7476,6 @@ msgid ""
 "Thank you for using the wizard.\n"
 "Please press OK to continue."
 msgstr ""
-"Dziękuję za skorzystanie z kreatora.\n"
-"Wciśnij OK aby kontynuować"
 
 msgid ""
 "Thank you for using the wizard. Your receiver is now ready for use.\n"
@@ -7466,6 +7511,9 @@ msgstr "Kody PIN które wpisałeś różnią się."
 msgid ""
 "The USB stick was prepared to be bootable.\n"
 "Now you can download an NFI image file!"
+msgstr ""
+
+msgid "The backup failed. Please choose a different backup location."
 msgstr ""
 
 #
@@ -7564,6 +7612,11 @@ msgstr ""
 "Trwa restart GUI odbiornika\n"
 "z powodu błędu w mytest.py"
 
+msgid ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it and choose what you want to do next."
+msgstr ""
+
 #
 msgid ""
 "The wireless LAN plugin is not installed!\n"
@@ -7587,6 +7640,9 @@ msgstr "Kreator może utworzyć backup aktualnych ustawień. Chcesz zrobić kopi
 #, python-format
 msgid "The wizard found a configuration backup. Do you want to restore your old settings from %s?"
 msgstr "Kreator znalazł backup plików konfiguracyjnych, Przywrócić stare ustawienia z %s?"
+
+msgid "The wizard is finished now."
+msgstr ""
 
 #
 msgid "The wizard is finished now."
@@ -8315,6 +8371,17 @@ msgstr "Korekcja obrazu"
 msgid "Video enhancement setup"
 msgstr "Ustawienia korekcji obrazu"
 
+msgid ""
+"Video input selection\n"
+"\n"
+"Please press OK if you can see this page on your TV (or select a different input port).\n"
+"\n"
+"The next input port will be automatically probed in 20 seconds."
+msgstr ""
+
+msgid "Video mode selection."
+msgstr ""
+
 #
 msgid "Video fine tuning"
 msgstr "Precyzyjne ustawienia obrazu"
@@ -8563,6 +8630,9 @@ msgstr ""
 "\n"
 "Przejdź do miejsca, które ma być nowym końcem pliku. Naciśnij OK, wybierz 'koniec cięcia'. To wszystko."
 
+msgid "Welcome to the image upgrade wizard. The wizard will assist you in upgrading the firmware of your receiver by providing a backup facility for your current settings and a short explanation of how to upgrade your firmware."
+msgstr ""
+
 msgid ""
 "Welcome to the image upgrade wizard. The wizard will assist you in upgrading "
 "the firmware of your receiver by providing a backup facility for your "
@@ -8575,16 +8645,10 @@ msgstr ""
 msgid ""
 "Welcome.\n"
 "\n"
-"If you want to connect your receiver to the Internet, this wizard will guide "
-"you through the basic network setup of your receiver.\n"
+"If you want to connect your receiver to the Internet, this wizard will guide you through the basic network setup of your receiver.\n"
 "\n"
 "Press OK to start configuring your network"
 msgstr ""
-"Witam. \n"
-"\n"
-"Jeśli chcesz się połączyć z internetem, ten kreator przeprowdzi cię przez "
-"uproszczoną konfigurację odbiornika. \n"
-"Nacisnij OK aby rozpocząć konfigurację sieci"
 
 msgid ""
 "Welcome.\n"
@@ -8817,6 +8881,9 @@ msgstr ""
 "\n"
 "Czy chcesz przywrócić ustawienia fabryczne?"
 
+msgid "Where do you want to backup your settings?"
+msgstr ""
+
 #
 msgid "Where to save temporary timeshift recordings?"
 msgstr "Gdzie zapisywać tymczasowe nagrania timeshift?"
@@ -8832,6 +8899,12 @@ msgstr "Sieć bezprzewodowa"
 #
 msgid "Wireless network configuration..."
 msgstr "Konfiguracja sieci bezprzewodowej..."
+
+msgid "Wireless network connection setup"
+msgstr ""
+
+msgid "Wireless network connection setup."
+msgstr ""
 
 #
 msgid "Wireless network connection setup"
@@ -8899,6 +8972,9 @@ msgstr "Tak, zawsze"
 msgid "Yes, and delete this movie"
 msgstr "Tak, i usuń ten film"
 
+msgid "Yes, backup my settings!"
+msgstr ""
+
 #
 msgid "Yes, delete this movie and return to movie list"
 msgstr "Tak, usuń i wróć do listy filmów"
@@ -8914,6 +8990,12 @@ msgstr "Tak, rozpocznij automatyczne skanowanie"
 #
 msgid "Yes, do another manual scan now"
 msgstr "Tak, rozpocznij kolejne ręczne skanowanie"
+
+msgid "Yes, perform a shutdown now."
+msgstr ""
+
+msgid "Yes, restore the settings now"
+msgstr ""
 
 #
 msgid "Yes, perform a shutdown now."
@@ -8970,7 +9052,13 @@ msgstr "Tego nie można usunąć!"
 msgid "You didn't select a channel to record from."
 msgstr "Nie wybrałeś kanału z którego nagrywać"
 
+msgid "You have chosen to backup your settings. Please press OK to start the backup now."
+msgstr ""
+
 msgid "You have chosen to create a new .NFI flasher bootable USB stick. This will repartition the USB stick and therefore all data on it will be erased."
+msgstr ""
+
+msgid "You have chosen to restore your settings. Enigma2 will restart after restore. Please press OK to start the restore now."
 msgstr ""
 
 #
@@ -8982,8 +9070,16 @@ msgstr "Musisz poczekać na %s!"
 msgid "You must switch to the service %s (%s - '%s')!\n"
 msgstr "Musisz przełączyć na kanał %s (%s - '%s')!\n"
 
+msgid ""
+"You need a PC connected to your receiver. If you need further instructions, please visit the website http://www.dm7025.de.\n"
+"Your receiver will now be halted. After you have performed the update instructions from the website, your new firmware will ask you to restore your settings."
+msgstr ""
+
 msgid "You system does not support ext4"
 msgstr "Twój system nie wspiera ext4"
+
+msgid "Your backup succeeded. We will now continue to explain the further upgrade process."
+msgstr ""
 
 #
 msgid "Your collection exceeds the size of a single layer medium, you will need a blank dual layer DVD!"
@@ -9010,13 +9106,10 @@ msgstr ""
 "Czekaj aż odbiornik zrestartuje się\n"
 "To może potrwać kilka minut"
 
-#
 msgid ""
 "Your internet connection is not working!\n"
 "Please choose what you want to do next."
 msgstr ""
-"Brak połączenia internetowego! \n"
-"Wybierz co chcesz zrobić dalej"
 
 #, python-format
 msgid "Your internet connection is working (ip: %s)"
@@ -9041,11 +9134,22 @@ msgstr ""
 "Połączenie z internetem jest aktywne.\n"
 "\n"
 
+msgid ""
+"Your receiver is now ready to use.\n"
+"\n"
+"Your internet connection is working now.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+
 msgid "Your receiver is rebooting"
 msgstr "Trwa restart odbiornika"
 
 msgid "Your receiver is shutting down"
 msgstr "Trwa wyłączanie odbiornika"
+
+msgid "Your receiver is shutting down. Please stand by..."
+msgstr ""
 
 msgid "Your receiver might be unusable now. Please consult the manual for further assistance before rebooting your receiver."
 msgstr "Odbiornik może być teraz niezdatny do użytku. Zajrzyj do instrukcji użytkownika przed ponownym uruchomieniem."
@@ -9059,26 +9163,12 @@ msgstr "Odbiornik przejdzie w tryb czuwania z powodu bezczynności"
 msgid "Your receiver will restart after pressing OK on your remote control."
 msgstr "Odbiornik zostanie zrestartowany po wciśnięciu OK."
 
-msgid "Your receiver will shutdown due to inactivity."
-msgstr "Odbiornik zostanie wyłączony z powodu bezczynności"
-
-msgid "Your receiver will shutdown due to the sleeptimer."
-msgstr "Odbiornik zostanie wyłączony przez sleeptimer"
-
-#
 msgid ""
 "Your wireless LAN internet connection could not be started!\n"
 "Have you attached your USB WLAN Stick?\n"
 "\n"
 "Please choose what you want to do next."
 msgstr ""
-"Połączenie WiFi z internetem nie może zostać zainicjowane \n"
-"Podłączyłeś kartę WiFi USB? \n"
-"\n"
-"Wybierz co chcesz zrobić dalej"
-
-msgid "Za"
-msgstr "Przełącz"
 
 msgid "Zap"
 msgstr "Przełącz"
@@ -9671,6 +9761,9 @@ msgstr "Powróć do poprzedniego tytułu"
 #
 msgid "jump forward to the next title"
 msgstr "Przeskocz do następnego tytułu"
+
+msgid "jump to chapter by number"
+msgstr ""
 
 msgid "languages"
 msgstr "Języki"
@@ -10385,3 +10478,6 @@ msgstr "Przełącz i nagraj"
 #
 msgid "zapped"
 msgstr "Przełączony"
+
+msgid "®"
+msgstr ""
