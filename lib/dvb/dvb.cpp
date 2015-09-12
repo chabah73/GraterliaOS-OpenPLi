@@ -231,11 +231,18 @@ void eDVBAdapterLinux::scanDevices()
 		 * In that case, we cannot be sure the devicenodes are available yet.
 		 * So it is safer to scan for sys entries, than for device nodes
 		 */
+#ifdef __sh__
+		struct stat s;
+		char filename[128];
+		snprintf(filename, sizeof(filename), "/dev/dvb/adapter%d/frontend%d", m_nr, num_fe);
+		if (stat(filename, &s))
+			break;
+#else
 		char filename[128];
 		snprintf(filename, sizeof(filename), "/sys/class/dvb/dvb%d.frontend%d", m_nr, num_fe);
 		if (::access(filename, X_OK) < 0) break;
 		snprintf(filename, sizeof(filename), "/dev/dvb/adapter%d/frontend%d", m_nr, num_fe);
-
+#endif
 		eDVBFrontend *fe;
 		std::string name = filename;
 		std::map<std::string, std::string>::iterator it = mappedFrontendName.find(name);
