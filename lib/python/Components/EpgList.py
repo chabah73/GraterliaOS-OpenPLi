@@ -13,6 +13,9 @@ from ServiceReference import ServiceReference
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN
 from skin import parseFont
 
+from Components.Language import language
+import locale
+
 EPG_TYPE_SINGLE = 0
 EPG_TYPE_MULTI = 1
 EPG_TYPE_SIMILAR = 2
@@ -55,6 +58,13 @@ class EPGList(HTMLComponent, GUIComponent):
 		self.skinColumns = False
 		self.tw = 90
 		self.dy = 0
+
+		self.lang = language.getLanguage()
+		try:
+			locale.setlocale(locale.LC_COLLATE, self.lang)
+			self.useLocale=True
+		except:
+			self.useLocale=False
 
 		if type == EPG_TYPE_SINGLE:
 			self.l.setBuildFunc(self.buildSingleEntry)
@@ -346,7 +356,10 @@ class EPGList(HTMLComponent, GUIComponent):
 		if list:
 			event_id = self.getSelectedEventId()
 			if type == 1:
-				list.sort(key=lambda x: (x[4] and x[4].lower(), x[2]))
+				if self.useLocale:
+					list.sort(key=lambda x: (locale.strxfrm(x[4]), x[2]))
+				else:
+					list.sort(key=lambda x: (x[4] and x[4].lower(), x[2]))
 			else:
 				assert(type == 0)
 				list.sort(key=lambda x: x[2])
