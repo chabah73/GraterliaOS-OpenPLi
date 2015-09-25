@@ -3,6 +3,7 @@ from Components.config import config, ConfigSelection, ConfigSubDict, ConfigYesN
 
 from Tools.CList import CList
 from Tools.HardwareInfo import HardwareInfo
+from Tools.Directories import fileExists
 from os import path
 
 # The "VideoHardware" is the interface to /proc/stb/video.
@@ -251,11 +252,15 @@ class VideoHardware:
 
 			# create list of available modes
 			modes = self.getModeList(port)
+			print "[mode+**********+++++++]", modes
 			if len(modes):
 				config.av.videomode[port] = ConfigSelection(choices = [mode for (mode, rates) in modes])
 			for (mode, rates) in modes:
 				config.av.videorate[mode] = ConfigSelection(choices = rates)
 		config.av.videoport = ConfigSelection(choices = lst)
+                if HardwareInfo().get_device_model == "fusionhd":
+                        config.av.videoport = ConfigSelection(choices = dest)
+		print "[createConfig]+++++++******+++++]", lst
 
 	def setConfiguredMode(self):
 		port = config.av.videoport.value
