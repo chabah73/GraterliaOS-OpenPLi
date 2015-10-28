@@ -183,7 +183,7 @@ RESULT eStaticServiceDVBBouquetInformation::getName(const eServiceReference &ref
 		return err;
 	}
 
-	eBouquet *bouquet=0;
+	eBouquet *bouquet = NULL;
 	if ((err = db->getBouquet(ref, bouquet)) != 0)
 	{
 		eDebug("[eStaticServiceDVBBouquetInformation] getName failed.. getBouquet failed!");
@@ -219,7 +219,7 @@ int eStaticServiceDVBBouquetInformation::isPlayable(const eServiceReference &ref
 			return 0;
 		}
 
-		eBouquet *bouquet=0;
+		eBouquet *bouquet = NULL;
 		if (db->getBouquet(ref, bouquet))
 		{
 			eDebug("[eStaticServiceDVBBouquetInformation] isPlayable failed.. getBouquet failed!");
@@ -1371,7 +1371,13 @@ RESULT eDVBServicePlay::start()
 		 * streams are considered to be descrambled by default;
 		 * user can indicate a stream is scrambled, by using servicetype id + 0x100
 		 */
+		bool config_descramble_client = eConfigManager::getConfigBoolValue("config.streaming.descramble_client", false);
+
 		scrambled = (m_reference.type == eServiceFactoryDVB::id + 0x100);
+
+		if(config_descramble_client)
+			scrambled = true;
+
 		type = eDVBServicePMTHandler::streamclient;
 	}
 
