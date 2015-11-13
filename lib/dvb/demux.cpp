@@ -187,7 +187,7 @@ void eDVBSectionReader::data(int)
 		unsigned int c;
 		if ((c = crc32((unsigned)-1, data, r)))
 		{
-			eDebug("[eDVBSectionReader] section crc32 failed! is %x\n", c);
+			//eDebug("[eDVBSectionReader] section crc32 failed! is %x\n", c);
 			return;
 		}
 	}
@@ -496,7 +496,7 @@ int eDVBRecordFileThread::AsyncIO::poll()
 
 int eDVBRecordFileThread::AsyncIO::start(int fd, off_t offset, size_t nbytes, void* buffer)
 {
-	memset(&aio, 0, sizeof(struct aiocb)); // Documentation says "zero it before call".
+	memset(&aio, 0, sizeof(aiocb)); // Documentation says "zero it before call".
 	aio.aio_fildes = fd;
 	aio.aio_nbytes = nbytes;
 	aio.aio_offset = offset;   // Offset can be omitted with O_APPEND
