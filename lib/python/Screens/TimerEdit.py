@@ -369,7 +369,7 @@ class TimerSanityConflict(Screen):
 		self["key_yellow"] = Button(" ")
 		self["key_blue"] = Button(" ")
 
-		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions", "ShortcutActions", "TimerEditActions"],
+		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions", "ShortcutActions", "TimerEditActions", "MenuActions"],
 			{
 				"cancel": self.leave_cancel,
 				"red": self.leave_cancel,
@@ -379,7 +379,8 @@ class TimerSanityConflict(Screen):
 				"blue": self.ignoreConflict,
 				"up": self.up,
 				"down": self.down,
-				"log": self.showLog
+				"log": self.showLog,
+				"menu": self.openExtendedSetup
 			}, -1)
 		self.onShown.append(self.updateState)
 
@@ -396,29 +397,42 @@ class TimerSanityConflict(Screen):
 
 	def editTimerCallBack(self, answer=None):
 		if answer and len(answer) > 1 and answer[0] is True:
+			self.session.nav.RecordTimer.timeChanged(answer[1])
 			self.leave_ok()
 
 	def toggleTimer(self):
 		selected_timer = self["timerlist"].getCurrent()
 		if selected_timer and self["key_yellow"].getText() != " ":
 			selected_timer.disabled = not selected_timer.disabled
+			self.session.nav.RecordTimer.timeChanged(selected_timer)
 			self.leave_ok()
 
-	def ignoreConflict(self,  answer = None):
+	def ignoreConflict(self):
 			selected_timer = self["timerlist"].getCurrent()
 			if selected_timer and selected_timer.conflict_detection:
-				if answer is None:
-					self.session.openWithCallback(self.ignoreConflict, MessageBox, _("Warning!\nThis is an option for advanced users.\nReally disable timer conflict detection?"))
-				elif answer:
-					selected_timer.conflict_detection = False
-					selected_timer.disabled = False
-					self.leave_ok()
+				if config.usage.show_timer_conflict_warning.value:
+					list = [(_("yes"), True), (_("no"), False), (_("yes") + " " + _("and never ask this again"), "never")]
+					self.session.openWithCallback(self.ignoreConflictConfirm, MessageBox, _("Warning!\nThis is an option for advanced users.\nReally disable timer conflict detection?"), list=list)
+				else:
+					self.ignoreConflictConfirm(True)
+
+	def ignoreConflictConfirm(self, answer):
+		selected_timer = self["timerlist"].getCurrent()
+		if answer and selected_timer and selected_timer.conflict_detection:
+			if answer == "never":
+				config.usage.show_timer_conflict_warning.value = False
+				config.usage.show_timer_conflict_warning.save()
+			selected_timer.conflict_detection = False
+			selected_timer.disabled = False
+			self.session.nav.RecordTimer.timeChanged(selected_timer)
+			self.leave_ok()
 
 	def leave_ok(self):
 		if self.isResolvedConflict():
 			self.close((True, self.timer[0]))
 		else:
 			self.timer[0].disabled = True
+			self.session.nav.RecordTimer.timeChanged(self.timer[0])
 			self.updateState()
 			self.session.open(MessageBox, _("Conflict not resolved!"), MessageBox.TYPE_ERROR, timeout=3)
 
@@ -451,6 +465,18 @@ class TimerSanityConflict(Screen):
 		else:
 			success = True
 		return success
+
+	def openExtendedSetup(self):
+		menu = []
+		if not config.usage.show_timer_conflict_warning.value:
+			menu.append((_("Show warning before set 'Ignore conflict'"), "blue_key_warning"))
+		def showAction(choice):
+			if choice is not None:
+				if choice[1] == "blue_key_warning":
+					config.usage.show_timer_conflict_warning.value = True
+					config.usage.show_timer_conflict_warning.save()
+		if menu:
+			self.session.openWithCallback(showAction, ChoiceBox, title= _("Select action"), list=menu)
 
 	def up(self):
 		self["timerlist"].instance.moveSelection(self["timerlist"].instance.moveUp)
