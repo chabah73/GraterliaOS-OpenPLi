@@ -1442,7 +1442,7 @@ RESULT eServiceMP3::isCurrentlySeekable()
 #ifdef ENABLE_MEDIAFWGSTREAMER // Hellmaster1024: 1 for skipping 3 for skipping anf fast forward
 	int ret = 3; /* just assume that seeking and fast/slow winding are possible */
 
-	if (!m_gst_playbin || m_state != stRunning)
+	if (!m_gst_playbin)
 		return 0;
 
 	return ret;
