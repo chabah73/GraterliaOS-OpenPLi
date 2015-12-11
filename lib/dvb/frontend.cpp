@@ -979,6 +979,20 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 		default: break;
 		}
 	}
+	else if (!strcmp(m_description, "Si216x"))
+	{
+		eDVBFrontendParametersTerrestrial parm;
+
+		oparm.getDVBT(parm);
+
+		switch (parm.system)
+		{
+			case eDVBFrontendParametersTerrestrial::System_DVB_T:
+			case eDVBFrontendParametersTerrestrial::System_DVB_T2: 
+			case eDVBFrontendParametersTerrestrial::System_DVB_T_T2: ret = (int)((snr * 10) / 15); break;
+			default: break;
+		}
+	}
 #ifdef __sh__
 	else if ((!strcmp(m_description, "STB0899 Multistandard"))||(!strcmp(m_description, "STB0899 Multistandard ID1"))||(!strcmp(m_description, "STB0899 Multistandard ID2")))
 	{
