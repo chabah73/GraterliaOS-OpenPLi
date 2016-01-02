@@ -8,9 +8,5 @@ if HAVE_TEMPFANCONTROL
 SUBDIRS += TempFanControl
 endif
 
-if DREAMBOX
-SUBDIRS += FrontprocessorUpgrade NFIFlash
-endif
-
 install_PYTHON =	\
 	__init__.py
