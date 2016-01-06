@@ -690,7 +690,7 @@ class InfoBarChannelSelection:
 					value += " " + _("and select previous channel")
 		return value
 
-	def getKeyDownHelptext(self):
+	def getKeyDownHelpText(self):
 		if config.usage.oldstyle_zap_controls.value:
 			value = _("Switch to previous channel")
 		else:
