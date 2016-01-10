@@ -94,7 +94,7 @@ nolfb:
 		::close(fbFd);
 		fbFd = -1;
 	}
-	eDebug("[fb] framebuffer not available");
+	eDebug("[fb] framebuffer %s not available", fb);
 	return;
 }
 
