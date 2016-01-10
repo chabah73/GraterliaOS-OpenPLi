@@ -31,7 +31,9 @@ def getHotkeys():
 		("Rec", "rec", ""),
 		("Rec" + " " + _("long"), "Rec_long", ""),
 		("Radio", "radio", ""),
+		("Radio" + " " + _("long"), "radio_long", ""),
 		("TV", "showTv", ""),
+		("TV" + " " + _("long"), "showTv_long", SystemInfo["LcdLiveTV"] and "Infobar/ToggleLCDLiveTV" or ""),
 		("Teletext", "text", ""),
 		("Help", "displayHelp", ""),
 		("Help" + " " + _("long"), "displayHelp_long", ""),
@@ -102,7 +104,7 @@ def getHotkeys():
 		("Power", "power", ""),
 		("Power" + " " + _("long"), "power_long", ""),
 		("HDMIin", "HDMIin", "Infobar/HDMIIn"),
-		("HDMIin" + " " + _("long"), "HDMIin_long", SystemInfo["LcdLiveTV"] and "Infobar/ToggleLCDLiveTV" or "")]
+		("HDMIin" + " " + _("long"), "HDMIin_long", "")]
 
 config.misc.hotkey = ConfigSubsection()
 config.misc.hotkey.additional_keys = ConfigYesNo(default=False)
