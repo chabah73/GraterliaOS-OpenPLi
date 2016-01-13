@@ -2661,7 +2661,7 @@ class InfoBarSubserviceSelection:
 				idx += 1
 
 			if cnt_parent and self.bouquets and len(self.bouquets):
-				keys = ["red", "blue", "yellow", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
+				keys = ["red", "blue", "yellow", "",  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
 				if config.usage.multibouquet.value:
 					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to bouquet"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("Exit", "exit"), ("--", "")] + tlist
 				else:

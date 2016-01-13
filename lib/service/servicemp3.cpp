@@ -966,15 +966,7 @@ RESULT eServiceMP3::start()
 {
 #ifdef ENABLE_MEDIAFWGSTREAMER
 	ASSERT(m_state == stIdle);
-#else
-	if (m_state != stIdle)
-	{
-		eDebug("eServiceMP3::%s < m_state != stIdle", __func__);
-		return -1;
-	}
-#endif
 
-#ifdef ENABLE_MEDIAFWGSTREAMER
 	if (m_gst_playbin)
 	{
 		eDebug("[eServiceMP3] starting pipeline");
@@ -998,11 +990,19 @@ RESULT eServiceMP3::start()
 		}
 	}
 #else
+	if (m_state != stIdle)
+	{
+		eDebug("eServiceMP3::%s < m_state != stIdle", __func__);
+		return -1;
+	}
+
 	if (player && player->output && player->playback)
 	{
 		player->output->Command(player, OUTPUT_OPEN, NULL);
 		player->playback->Command(player, PLAYBACK_PLAY, NULL);
 	}
+
+	m_event(this, evStart);
 #endif
 
 	return 0;
@@ -1020,14 +1020,12 @@ RESULT eServiceMP3::stop()
 #ifdef ENABLE_MEDIAFWGSTREAMER
 	if (!m_gst_playbin || m_state == stStopped)
 		return -1;
-	eDebug("[eServiceMP3] stop %s", m_ref.path.c_str());
 #else
 	if (m_state == stIdle)
 	{
 		eDebug("eServiceMP3::%s < m_state == stIdle", __func__);
 		return -1;
 	}
-
 	if (player && player->playback && player->output)
 	{
 		player->playback->Command(player, PLAYBACK_STOP, NULL);
@@ -1050,8 +1048,9 @@ RESULT eServiceMP3::stop()
 	if (player != NULL)
 		player = NULL;
 #endif
+	eDebug("[eServiceMP3] stop %s", m_ref.path.c_str());
 	m_state = stStopped;
-	
+
 #ifdef ENABLE_MEDIAFWGSTREAMER
 	GstStateChangeReturn ret;
 	GstState state, pending;
@@ -1066,7 +1065,6 @@ RESULT eServiceMP3::stop()
 	if (ret != GST_STATE_CHANGE_SUCCESS)
 		eDebug("[eServiceMP3] stop GST_STATE_NULL failure");
 #endif
-
 	saveCuesheet();
 	m_nownext_timer->stop();
 	if (m_streamingsrc_timeout)
@@ -1279,7 +1277,6 @@ RESULT eServiceMP3::seekToImpl(pts_t to)
 	return 0;
 }
 #endif
-
 RESULT eServiceMP3::seekTo(pts_t to)
 {
 	RESULT ret = -1;
