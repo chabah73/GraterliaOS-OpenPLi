@@ -1272,7 +1272,7 @@ RESULT eServiceMP3::seekToImpl(pts_t to)
 
 	return 0;
 }
-
+#endif
 RESULT eServiceMP3::seekTo(pts_t to)
 {
 	RESULT ret = -1;
