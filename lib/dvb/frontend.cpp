@@ -995,6 +995,11 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 			default: break;
 		}
 	}
+	else if (strstr(m_description, "Sundtek DVB-T (III)")) // Sundtek MediaTV Digital Home III...dvb-t/t2 mode
+	{
+		ret = (int)(snr / 75);
+		ter_max = 1700;
+	}
 #ifdef __sh__
 	else if ((!strcmp(m_description, "STB0899 Multistandard"))||(!strcmp(m_description, "STB0899 Multistandard ID1"))||(!strcmp(m_description, "STB0899 Multistandard ID2")))
 	{
