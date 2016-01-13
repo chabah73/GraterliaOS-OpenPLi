@@ -70,10 +70,10 @@
 	</map>
 
 	<map context="InfobarEPGActions">
-		<key id="KEY_INFO" mapto="showEventInfo" flags="b"/>
-		<key id="KEY_INFO" mapto="showEventInfoPlugin" flags="l"/>
+		<!--key id="KEY_INFO" mapto="showEventInfo" flags="b"/-->
+		<!--key id="KEY_INFO" mapto="showEventInfoPlugin" flags="l"/-->
 		<key id="KEY_EPG" mapto="showEventInfoSingleEPG" flags="b"/>
-		<key id="KEY_EPG" mapto="showEventGuidePlugin" flags="l"/>
+		<!--key id="KEY_EPG" mapto="showEventGuidePlugin" flags="l"/-->
 		<key id="KEY_RED" mapto="showEventInfo" flags="b"/>
 		<!--key id="KEY_RED" mapto="showEventInfoPlugin" flags="l"/-->
 	</map>
@@ -221,12 +221,7 @@
 		<key id="KEY_PREVIOUS" mapto="prevSubservice" flags="m"/>
 		<key id="KEY_NEXT" mapto="nextSubservice" flags="m"/>
 		<key id="KEY_EXIT" mapto="exit" flags="m"/>
-<<<<<<< HEAD
 		<key id="KEY_HOME" mapto="exit" flags="m"/>
-=======
-		<key id="KEY_ESC" mapto="exit" flags="m"/>
-		<key id="KEY_TV" mapto="exit" flags="b"/>
->>>>>>> OpenPLi/master
 	</map>
 
 	<map context="GlobalActions">
@@ -299,17 +294,6 @@
 	</map>
 
 	<map context="InfobarTimeshiftActions">
-<<<<<<< HEAD
-=======
-		<device name="dreambox remote control (native)">
-			<key id="KEY_YELLOW" mapto="timeshiftStart" flags="b"/>
-			<key id="KEY_TV" mapto="timeshiftStop" flags="b"/>
-		</device>
-		<device name="dreambox ir keyboard">
-			<key id="KEY_YELLOW" mapto="timeshiftStart" flags="m"/>
-		</device>
-		<key id="KEY_PLAYPAUSE" mapto="timeshiftStart" flags="m"/>
->>>>>>> OpenPLi/master
 		<key id="KEY_PAUSE" mapto="timeshiftStart" flags="m"/>
 		<key id="KEY_STOP" mapto="timeshiftStop" flags="m"/>
 		<key id="KEY_PLAYPAUSE" mapto="timeshiftStart" flags="m"/>
@@ -336,10 +320,6 @@
 	</map>
 
 	<map context="MoviePlayerActions">
-<<<<<<< HEAD
-=======
-		<key id="KEY_TV" mapto="leavePlayer" flags="b"/>
->>>>>>> OpenPLi/master
 		<key id="KEY_STOP" mapto="leavePlayer" flags="m"/>
 		<key id="KEY_HOME" mapto="leavePlayerOnExit" flags="m"/>
 		<key id="KEY_OPTION" mapto="AudioSelection" flags="m"/>
@@ -400,6 +380,10 @@
 		<key id="KEY_TEXT" mapto="startRassInteractive" flags="m"/>
 	</map>
 
+	<map context="InfobarHDMIActions">
+		<key id="KEY_AUX" mapto="HDMIin" flags="m"/>
+	</map>
+
 	<map context="RassInteractiveActions">
 		<key id="KEY_LEFT" mapto="prevSubPage" flags="mr"/>
 		<key id="KEY_RIGHT" mapto="nextSubPage" flags="mr"/>
@@ -441,13 +425,8 @@
 	</map>
 
 	<map context="TvRadioActions">
-<<<<<<< HEAD
 		<key id="KEY_0" mapto="keyTV" flags="m"/>
 		<key id="KEY_TEXT" mapto="keyRadio" flags="m"/>
-=======
-		<key id="KEY_TV" mapto="keyTV" flags="b"/>
-		<key id="KEY_RADIO" mapto="keyRadio" flags="b"/>
->>>>>>> OpenPLi/master
 	</map>
 
 	<map context="TimerEditActions">
@@ -661,55 +640,8 @@
 		<key id="KEY_PAGEUP" mapto="nextBouquet" flags="m"/>
 		<key id="KEY_PAGEDOWN" mapto="prevBouquet" flags="m"/>
 		<key id="KEY_TEXT" mapto="subtitles" flags="m"/>
-<<<<<<< HEAD
 		<key id="KEY_SUBTITLE" mapto="subtitles" flags="m"/>
 		<key id="KEY_BLUE" mapto="subtitles2" flags="m"/>
-=======
-		<key id="KEY_FILE" mapto="nextBouquet" flags="m"/>
-		<key id="KEY_LIST" mapto="prevBouquet" flags="m"/>
-	</map>
-
-	<map context="DVDPlayerActions">
-		<key id="KEY_MENU" mapto="dvdMenu" flags="m"/>
-		<key id="KEY_INFO" mapto="toggleInfo" flags="m"/>
-		<key id="KEY_CHANNELUP" mapto="nextTitle" flags="m"/>
-		<key id="KEY_CHANNELDOWN" mapto="prevTitle" flags="m"/>
-		<device name="dreambox remote control (native)">
-			<key id="KEY_PREVIOUS" mapto="prevChapter" flags="m"/>
-			<key id="KEY_NEXT" mapto="nextChapter" flags="m"/>
-			<key id="KEY_TV" mapto="tv" flags="m"/>
-			<key id="KEY_AUDIO" mapto="AudioSelection" flags="m"/>
-			<key id="KEY_AUDIO" mapto="dvdAudioMenu" flags="l"/>
-			<key id="KEY_RADIO" mapto="nextAudioTrack" flags="m"/>
-			<key id="KEY_TEXT" mapto="nextSubtitleTrack" flags="m"/>
-			<key id="KEY_VIDEO" mapto="nextAngle" flags="m"/>
-		</device>
-		<device name="dreambox advanced remote control (native)">
-			<key id="KEY_PREVIOUS" mapto="prevChapter" flags="m"/>
-			<key id="KEY_NEXT" mapto="nextChapter" flags="m"/>
-			<key id="KEY_TV" mapto="tv" flags="m"/>
-			<key id="KEY_STOP" mapto="tv" flags="m"/>
-			<key id="KEY_RADIO" mapto="dvdAudioMenu" flags="l"/>
-			<key id="KEY_RADIO" mapto="nextAudioTrack" flags="b"/>
-			<key id="KEY_TEXT" mapto="nextSubtitleTrack" flags="m"/>
-			<key id="KEY_VIDEO" mapto="nextAngle" flags="m"/>
-		</device>
-		<!--device name="dreambox ir keyboard">
-			<key id="KEY_PAUSE" mapto="pause" flags="m"/>
-			<key id="KEY_PLAY" mapto="play" flags="m"/>
-			<key id="KEY_STOP" mapto="stop" flags="b"/>
-			<key id="KEY_STOP" mapto="shift_stop" flags="l"/>
-			<key id="KEY_RECORD" mapto="shift_record" flags="l"/>
-			<key id="KEY_PREVIOUSSONG" mapto="previous" flags="m"/>
-			<key id="KEY_NEXTSONG" mapto="next" flags="m"/>
-		</device-->
->>>>>>> OpenPLi/master
-	</map>
-	<map context="DVDPlayerActions">
-		<key id="KEY_MENU" mapto="dvdMenu" flags="m"/>
-		<key id="KEY_INFO" mapto="toggleInfo" flags="m"/>
-		<key id="KEY_PAGEUP" mapto="nextTitle" flags="m"/>
-		<key id="KEY_PAGEDOWN" mapto="prevTitle" flags="m"/>
 	</map>
 	<map context="HotkeyActions">
 		<key id="KEY_RED" mapto="red" flags="b"/>
@@ -720,21 +652,12 @@
 		<key id="KEY_YELLOW" mapto="yellow_long" flags="l"/>
 		<key id="KEY_BLUE" mapto="blue" flags="b"/>
 		<key id="KEY_BLUE" mapto="blue_long" flags="l"/>
-<<<<<<< HEAD
 		<key id="KEY_RECORD" mapto="rec" flags="b"/>
 		<key id="KEY_RECORD" mapto="rec_long" flags="l"/>
 		<key id="KEY_RADIO" mapto="radio" flags="m"/>
 		<key id="KEY_TV" mapto="showTv" flags="m"/>
 		<key id="KEY_TEXT" mapto="text" flags="b"/>
 		<key id="KEY_TEXT" mapto="text_long" flags="l"/>
-=======
-		<key id="KEY_RECORD" mapto="rec" flags="m"/>
-		<key id="KEY_RADIO" mapto="radio" flags="b"/>
-		<key id="KEY_RADIO" mapto="radio_long" flags="l"/>
-		<key id="KEY_TV" mapto="showTv" flags="b"/>
-		<key id="KEY_TV" mapto="showTv_long" flags="l"/>
-		<key id="KEY_TEXT" mapto="text" flags="m"/>
->>>>>>> OpenPLi/master
 		<key id="KEY_HELP" mapto="displayHelp" flags="b"/>
 		<key id="KEY_HELP" mapto="displayHelp_long" flags="l"/>
 		<key id="KEY_MENU" mapto="mainMenu" flags="m"/>
