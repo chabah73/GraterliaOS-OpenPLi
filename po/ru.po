@@ -1851,7 +1851,7 @@ msgid "Date"
 msgstr "Дата"
 
 msgid "Date/time input"
-msgstr "Ввод время/дата "
+msgstr "Ввод времени/даты"
 
 msgid "Deep standby"
 msgstr "Глубокий режим ожидания"
@@ -6127,9 +6127,6 @@ msgstr "Теги"
 msgid "Teletext subtitle color"
 msgstr "Цвет телетекста субтитров"
 
-msgid "Temperature and fan control"
-msgstr "Температура и контроль вентилятора"
-
 msgid "Terrestrial"
 msgstr "Наземный"
 
@@ -9396,4 +9393,138 @@ msgid "When enabled, http streams are descrambled on the server side. The (remot
 msgstr "Если это включено, то http стрим потоки декодируются на стороне сервера. (Дистанционный) клиент получатель стрим потока не должен делать декодирование. По дефолту включено."
 
 msgid "When you use the remote fallback tuner to do recording, the timer conflict detection can't handle remote fallback tuners. This option allows you to turn off the timer confict detection"
-msgstr "При использовании дистанционного резервного тюнера для записей, обнаружение конфликтов таймеров не может сделать исключение для резервного тюнера. Эта опция позволяет отключить обнаружение конфликтов таймеров глобально. Не рекомендуется!"
+msgstr "При использовании дистанционного резервного тюнера для записей, обнаружение конфликтов таймеров не может сделать исключение для резервного тюнера. Эта опция позволяет отключить обнаружение конфликта таймера. Не рекомендуется!"
+
+
+msgid "A recording is currently running. Please stop the recording before trying to start a testing DiSEqC."
+msgstr "В текущее время идет запись. Пожалуйста остановите запись перед началом тестирования DiSEqC."
+
+msgid "DiSEqC Tester"
+msgstr "Тестирование DiSEqC"
+
+msgid "DiSEqC-tester settings"
+msgstr "Настройки DiSEqC-тестер"
+
+msgid "Failed:"
+msgstr "Неудачно:"
+
+msgid "Log results to /tmp"
+msgstr "Запись результата лога в /tmp"
+
+msgid "Not tested:"
+msgstr "Без теста:"
+
+msgid "Overall progress:"
+msgstr "Общий прогресс:"
+
+msgid "Press OK to get further details for %s"
+msgstr "Нажмите ОК, чтобы получить подробную информацию для %s"
+
+msgid "Progress:"
+msgstr "Прогресс:"
+
+msgid "Stop testing plane after # failed transponders"
+msgstr "Остановка теста после # неудачного транспондера"
+
+msgid "Stop testing plane after # successful transponders"
+msgstr "Остановка теста после # успешного транспондера"
+
+msgid "Succeeded:"
+msgstr "Успешных:"
+
+msgid "Test DiSEqC settings"
+msgstr "Настройки теста DiSEqC"
+
+
+msgid "The results have been written to %s"
+msgstr "Результаты были записаны в %s"
+
+msgid "With errors:"
+msgstr "С ошибками:"
+
+msgid "failed"
+msgstr "неудачно"
+
+msgid "not tested"
+msgstr "без теста"
+
+msgid "successful"
+msgstr "успешно"
+
+msgid "with errors"
+msgstr "с ошибками"
+
+msgid "working"
+msgstr "в работе"
+
+msgid ""
+"Warning!\n"
+"This is an option for advanced users.\n"
+"Really disable timer conflict detection?"
+msgstr ""
+"Внимание!\n"
+"Это вариант для продвинутых пользователей, нужен только при использовании запасного ресивера.\n"
+"Действительно отключить обнаружение конфликтов таймера?"
+
+msgid "and never ask this again"
+msgstr "и никогда больше не спрашивать опять"
+
+msgid "Ignore conflict"
+msgstr "Игнорировать конфликт"
+
+msgid "Show warning before set 'Ignore conflict'"
+msgstr "Показать предупреждение перед установкой 'Игнорировать конфликт'"
+
+msgid "Choose bouquet"
+msgstr "Выбор букета"
+
+msgid "Cutlist editor"
+msgstr "Видео редактор списка сокращений"
+
+msgid "Default Services Scanner"
+msgstr "Дефолтный сервисный сканер"
+
+msgid "FP upgrade required"
+msgstr "FP требуется обновление"
+
+msgid "System Message"
+msgstr "Системное сообщение"
+
+msgid "FP Upgrade"
+msgstr "FP обновление"
+
+msgid "System Message Check"
+msgstr "Проверка системных сообщений"
+
+msgid "HDMI CEC setup"
+msgstr "Настройки HDMI CEC"
+
+msgid "Select your Skin"
+msgstr "Выбор Вашего скина"
+
+msgid "Restart GUI"
+msgstr "Рестарт GUI"
+
+msgid "DVD Burn"
+msgstr "Запись на DVD"
+
+msgid "Skin selector"
+msgstr "Выбор скина"
+
+msgid "Temperature and fan control"
+msgstr "Температура и управление вентилятором"
+
+msgid "Video clipping setup"
+msgstr "Настройки видео клиппинга"
+
+msgid "clip overscan / letterbox borders"
+msgstr "изменение границ видео"
+
+msgid "EPG Selection"
+msgstr "Выбор EPG"
+
+msgid "Network configuration"
+msgstr "Конфигурация сети"
+
+msgid "Service Info"
+msgstr "Информация о сервисе"
