@@ -639,6 +639,12 @@
 		<key id="KEY_SUBTITLE" mapto="subtitles" flags="m"/>
 		<key id="KEY_BLUE" mapto="subtitles2" flags="m"/>
 	</map>
+	<map context="DVDPlayerActions">
+		<key id="KEY_MENU" mapto="dvdMenu" flags="m"/>
+		<key id="KEY_INFO" mapto="toggleInfo" flags="m"/>
+		<key id="KEY_PAGEUP" mapto="nextTitle" flags="m"/>
+		<key id="KEY_PAGEDOWN" mapto="prevTitle" flags="m"/>
+	</map>
 	<map context="HotkeyActions">
 		<key id="KEY_RED" mapto="red" flags="b"/>
 		<key id="KEY_RED" mapto="red_long" flags="l"/>
