@@ -35,8 +35,6 @@ private:
 	eDVBRegisteredFrontend *getLast(eDVBRegisteredFrontend *fe);
 	bool isLinked(eDVBRegisteredFrontend *fe);
 	bool isLinkedByIndex(int fe_idx);
-	int connectLinkByIndex(int link_fe_index, int prev_fe_index, int next_fe_index, bool simulate);
-	int connectLinkByIndex(int link_fe_index, int prev_fe_index, bool simulate);
 	int disconnectLinkByIndex(int link_fe_index, int prev_fe_index, int next_fe_index, bool simulate);
 	int disconnectLinkByIndex(int link_fe_index, int prev_fe_index, bool simulate);
 	int connectLink(eDVBRegisteredFrontend *link_fe, eDVBRegisteredFrontend *prev_fe, eDVBRegisteredFrontend *next_fe, bool simulate);
