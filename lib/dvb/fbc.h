@@ -38,7 +38,6 @@ private:
 	int disconnectLinkByIndex(int link_fe_index, int prev_fe_index, int next_fe_index, bool simulate);
 	int disconnectLinkByIndex(int link_fe_index, int prev_fe_index, bool simulate);
 	int connectLink(eDVBRegisteredFrontend *link_fe, eDVBRegisteredFrontend *prev_fe, eDVBRegisteredFrontend *next_fe, bool simulate);
-	int connectLink(eDVBRegisteredFrontend *link_fe, eDVBRegisteredFrontend *prev_fe, bool simulate);
 	int disconnectLink(eDVBRegisteredFrontend *link_fe, eDVBRegisteredFrontend *prev_fe, eDVBRegisteredFrontend *next_fe, bool simulate);
 	int disconnectLink(eDVBRegisteredFrontend *linkable_fe, eDVBRegisteredFrontend *top_fe, bool simulate);
 	void connectLinkNoSimulate(eDVBRegisteredFrontend *link_fe, eDVBRegisteredFrontend *top_fe);
