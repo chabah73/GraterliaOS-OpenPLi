@@ -14,7 +14,9 @@ service_libenigma_service_a_SOURCES = \
 	service/servicemp3record.cpp \
 	service/servicem2ts.cpp \
 	service/servicedvbstream.cpp \
-	service/servicehdmi.cpp
+	service/servicehdmi.cpp \
+	service/servicets.cpp \
+	service/servicewebts.cpp
 
 if ENABLE_LIBEPLAYER3 
 if ENABLE_MEDIAFWGSTREAMER
@@ -36,7 +38,9 @@ serviceinclude_HEADERS = \
 	service/servicemp3record.h \
 	service/servicem2ts.h \
 	service/servicedvbstream.h \
-	service/servicehdmi.h
+	service/servicehdmi.h \
+	service/servicets.h \
+	service/servicewebts.h
 
 if ENABLE_LIBEPLAYER3 
 if ENABLE_MEDIAFWGSTREAMER
