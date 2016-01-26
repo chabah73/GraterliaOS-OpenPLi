@@ -412,16 +412,14 @@ class NumberZap(Screen):
 	def keyOK(self):
 		self.Timer.stop()
 		self.close(self.service, self.bouquet)
-
-	def getService(self):
+		
+	def handleServiceName(self):
 		if self.searchNumber:
 			self.service, self.bouquet = self.searchNumber(int(self["number"].getText()))
-			
-	def handleServiceName(self):
-		self["servicename"].text = self["servicename_summary"].text = ServiceReference(self.service).getServiceName()
-		if not self.startBouquet:
-			self.startBouquet = self.bouquet
-
+			self["servicename"].text = self["servicename_summary"].text = ServiceReference(self.service).getServiceName()
+			if not self.startBouquet:
+				self.startBouquet = self.bouquet
+	
 	def handlePicon(self):
 		if self.service is not None:
 			sname = self.service.toString()
@@ -442,10 +440,9 @@ class NumberZap(Screen):
 		self.numberString = self.numberString + str(number)
 		self["number"].text = self["number_summary"].text = self.numberString
 
-		self.getService()
-		self.handlePicon()
 		self.handleServiceName()
-
+		self.handlePicon()
+		
 		if len(self.numberString) >= 5:
 			self.keyOK()
 
@@ -462,9 +459,6 @@ class NumberZap(Screen):
 		self["number_summary"] = StaticText(self.numberString)
 		self["servicename_summary"] = StaticText()
 		self["picon"] = Pixmap()
-
-		self.getService()
-		self.handleServiceName()
 
 		self["actions"] = NumberActionMap( [ "SetupActions", "ShortcutActions" ],
 			{
@@ -486,8 +480,16 @@ class NumberZap(Screen):
 		self.Timer = eTimer()
 		self.Timer.callback.append(self.endTimer)
 		self.Timer.start(250)
-		self.startTimer()
+		self.onFirstExecBegin.append(self.onLayoutReady)
 
+	def onLayoutReady(self):
+			self.updateData()
+			self.startTimer()
+
+	def updateData(self):
+		self.handleServiceName()
+		self.handlePicon()
+		
 	def startTimer(self, repeat=False):
 		self.timer_target = repeat and self.timer_counter < 6 and [4,4,4,5,8,10][self.timer_counter] or 12
 		self.timer_counter = 0
