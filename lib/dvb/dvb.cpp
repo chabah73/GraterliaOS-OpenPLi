@@ -44,7 +44,7 @@ eDVBAllocatedFrontend::~eDVBAllocatedFrontend()
 	m_fe->dec_use();
 
 	if (m_fe->m_frontend->is_FBCTuner() && m_fbcmng)
-		m_fbcmng->unset(m_fe);
+		m_fbcmng->unlink(m_fe);
 }
 
 DEFINE_REF(eDVBAllocatedDemux);
