@@ -15,8 +15,6 @@ enigma2_SOURCES = \
 	bsod.cpp \
 	bsod.h \
 	enigma.cpp \
-	xmlgenerator.cpp \
-	xmlgenerator.h \
 	version_info.cpp \
 	version_info.h \
 	version.h
@@ -46,6 +44,9 @@ enigma2_LDADD = \
 	@PYTHON_LDFLAGS@ \
 	@LIBDDVD_LIBS@ \
 	@ALSA_LIBS@ \
+	@AMCODEC_LIBS@ \
+	@AMADEC_LIBS@ \
+	@DVBCSA_LIBS@ \
 	-ltuxtxt -ltuxtxt32bpp -lcrypt -lrt
 
 if ENABLE_LIBEPLAYER3

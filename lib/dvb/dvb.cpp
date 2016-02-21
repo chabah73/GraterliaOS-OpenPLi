@@ -8,6 +8,7 @@
 #include <lib/dvb/idvb.h>
 #include <lib/dvb/dvb.h>
 #include <lib/dvb/sec.h>
+#include <lib/dvb/fbc.h>
 #include <lib/dvb/specs.h>
 #include "filepush.h"
 
@@ -26,7 +27,14 @@ DEFINE_REF(eDVBRegisteredDemux);
 
 DEFINE_REF(eDVBAllocatedFrontend);
 
-eDVBAllocatedFrontend::eDVBAllocatedFrontend(eDVBRegisteredFrontend *fe): m_fe(fe)
+void eDVBRegisteredFrontend::closeFrontend()
+{
+	if (!m_inuse && m_frontend->closeFrontend()) // frontend busy
+		disable->start(60000, true);  // retry close in 60secs
+}
+
+eDVBAllocatedFrontend::eDVBAllocatedFrontend(eDVBRegisteredFrontend *fe, eFBCTunerManager *fbcmng)
+	: m_fe(fe), m_fbcmng(fbcmng)
 {
 	m_fe->inc_use();
 }
@@ -34,6 +42,9 @@ eDVBAllocatedFrontend::eDVBAllocatedFrontend(eDVBRegisteredFrontend *fe): m_fe(f
 eDVBAllocatedFrontend::~eDVBAllocatedFrontend()
 {
 	m_fe->dec_use();
+
+	if (m_fe->m_frontend->is_FBCTuner() && m_fbcmng)
+		m_fbcmng->unlink(m_fe);
 }
 
 DEFINE_REF(eDVBAllocatedDemux);
@@ -197,6 +208,8 @@ eDVBResourceManager::eDVBResourceManager()
 	eDebug("[eDVBResourceManager] found %zd adapter, %zd frontends(%zd sim) and %zd demux, boxtype %d",
 		m_adapter.size(), m_frontend.size(), m_simulate_frontend.size(), m_demux.size(), m_boxtype);
 #endif
+
+	m_fbcmng = new eFBCTunerManager(instance);
 
 	CONNECT(m_releaseCachedChannelTimer->timeout, eDVBResourceManager::releaseCachedChannel);
 }
@@ -488,6 +501,7 @@ eDVBUsbAdapter::eDVBUsbAdapter(int nr)
 #define VTUNER_SET_ADAPTER 33
 	ioctl(vtunerFd, VTUNER_SET_NAME, name);
 	ioctl(vtunerFd, VTUNER_SET_TYPE, type);
+	ioctl(vtunerFd, VTUNER_SET_FE_INFO, &fe_info);
 	ioctl(vtunerFd, VTUNER_SET_HAS_OUTPUTS, "no");
 	ioctl(vtunerFd, VTUNER_SET_ADAPTER, nr);
 
@@ -870,33 +884,48 @@ void eDVBResourceManager::setFrontendType(int index, const char *type)
 RESULT eDVBResourceManager::allocateFrontend(ePtr<eDVBAllocatedFrontend> &fe, ePtr<iDVBFrontendParameters> &feparm, bool simulate)
 {
 	eSmartPtrList<eDVBRegisteredFrontend> &frontends = simulate ? m_simulate_frontend : m_frontend;
-	ePtr<eDVBRegisteredFrontend> best;
-	int bestval = 0;
-	int foundone = 0;
+	eDVBRegisteredFrontend *best, *fbc_fe, *best_fbc_fe;
+	int bestval, foundone, check_fbc_linked, c;
+
+	fbc_fe  = NULL;
+	best_fbc_fe = NULL;
+	best = NULL;
+	bestval = 0;
+	foundone = 0;
+	check_fbc_linked = 0;
 
 	for (eSmartPtrList<eDVBRegisteredFrontend>::iterator i(frontends.begin()); i != frontends.end(); ++i)
 	{
-		int c = i->m_frontend->isCompatibleWith(feparm);
+		fbc_fe = NULL;
+
+		if (!check_fbc_linked && i->m_frontend->is_FBCTuner() && m_fbcmng->canLink(*i))
+		{
+			check_fbc_linked = 1;
+			c = m_fbcmng->isCompatibleWith(feparm, *i, fbc_fe, simulate);
+		}
+		else
+			c = i->m_frontend->isCompatibleWith(feparm);
 
 		if (c)	/* if we have at least one frontend which is compatible with the source, flag this. */
 			foundone = 1;
 
 		if (!i->m_inuse)
 		{
-//			eDebug("[eDVBResourceManager] Slot %d, score %d", i->m_frontend->getSlotID(), c);
 			if (c > bestval)
 			{
 				bestval = c;
-				best = i;
+				best = *i;
+				best_fbc_fe = fbc_fe;
 			}
 		}
-//		else
-//			eDebug("[eDVBResourceManager] Slot %d, score %d... but BUSY!!!!!!!!!!!", i->m_frontend->getSlotID(), c);
 	}
 
 	if (best)
 	{
-		fe = new eDVBAllocatedFrontend(best);
+		if (best_fbc_fe)
+			m_fbcmng->addLink(best, best_fbc_fe, simulate);
+
+		fe = new eDVBAllocatedFrontend(best, m_fbcmng);
 		return 0;
 	}
 
@@ -954,7 +983,7 @@ RESULT eDVBResourceManager::allocateFrontendByIndex(ePtr<eDVBAllocatedFrontend> 
 					prev->m_frontend->getData(eDVBFrontend::LINKED_PREV_PTR, tmp);
 				}
 			}
-			fe = new eDVBAllocatedFrontend(i);
+			fe = new eDVBAllocatedFrontend(i, m_fbcmng);
 			return 0;
 		}
 alloc_fe_by_id_not_possible:
@@ -975,6 +1004,35 @@ RESULT eDVBResourceManager::allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBA
 	ePtr<eDVBRegisteredDemux> unused;
 	uint8_t d, a;
 
+#ifdef HAVE_AMLOGIC
+	// find first unused demux which is on same adapter as frontend
+	while (i != m_demux.end())
+	{
+		i->m_demux->getCADemuxID(d);
+		if (fe) {
+			if (!i->m_inuse && d == fesource) {
+				unused = i;
+				break;
+			}
+			else if (i->m_adapter == adapter && i->m_demux->getSource() == fesource) {
+				// demux is in use, but can be shared
+				demux = new eDVBAllocatedDemux(i);
+				i->m_demux->getCAAdapterID(a);
+				eDebug("[eDVBResourceManager] allocating shared demux adapter=%d, demux=%d, source=%d fesource=%d", a, d, i->m_demux->getSource(), fesource);
+				return 0;
+			}
+		}
+		else if (d == (m_demux.size() - 1)) { // always use last demux for PVR
+			if (i->m_inuse) {
+				demux = new eDVBAllocatedDemux(i);
+				return 0;
+			}
+			unused = i;
+			break;
+		}
+		i++;
+	}
+#else
 	/*
 	 * For pvr playback, start with the last demux.
 	 * On some hardware, there are less ca devices than demuxes, so try to leave
@@ -1022,6 +1080,7 @@ RESULT eDVBResourceManager::allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBA
 			--i;
 		}
 	}
+#endif
 
 	if (unused)
 	{
@@ -1070,12 +1129,14 @@ RESULT eDVBResourceManager::allocateChannel(const eDVBChannelID &channelid, eUse
 	if (!simulate && m_cached_channel)
 	{
 		eDVBChannel *cache_chan = (eDVBChannel*)&(*m_cached_channel);
+#ifndef HAVE_AMLOGIC
 		if(channelid==cache_chan->getChannelID())
 		{
 			eDebug("[eDVBResourceManager] use cached_channel");
 			channel = m_cached_channel;
 			return 0;
 		}
+#endif
 		m_cached_channel_state_changed_conn.disconnect();
 		m_cached_channel=0;
 		m_releaseCachedChannelTimer->stop();
@@ -1268,15 +1329,28 @@ int eDVBResourceManager::canAllocateFrontend(ePtr<iDVBFrontendParameters> &fepar
 {
 	eSmartPtrList<eDVBRegisteredFrontend> &frontends = simulate ? m_simulate_frontend : m_frontend;
 	ePtr<eDVBRegisteredFrontend> best;
-	int bestval = 0;
+	eDVBRegisteredFrontend *dummy;
+	int bestval, check_fbc_link, c;
+
+	bestval = 0;
+	check_fbc_link = 0;
 
 	for (eSmartPtrList<eDVBRegisteredFrontend>::iterator i(frontends.begin()); i != frontends.end(); ++i)
+	{
 		if (!i->m_inuse)
 		{
-			int c = i->m_frontend->isCompatibleWith(feparm);
+			if(i->m_frontend->is_FBCTuner() && m_fbcmng->canLink(*i) && !check_fbc_link)
+			{
+				check_fbc_link = 1;
+				c = m_fbcmng->isCompatibleWith(feparm, *i, dummy, simulate);
+			}
+			else
+				c = i->m_frontend->isCompatibleWith(feparm);
+
 			if (c > bestval)
 				bestval = c;
 		}
+	}
 	return bestval;
 }
 
