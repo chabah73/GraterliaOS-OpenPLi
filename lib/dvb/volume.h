@@ -6,6 +6,7 @@
 #endif
 
 #include <lib/base/ebase.h>
+#include <lib/base/nconfig.h>
 
 class eDVBVolumecontrol
 {
@@ -29,9 +30,8 @@ private:
 
 public:
 	static eDVBVolumecontrol* getInstance();
-
-	void volumeUp(int left = 5, int right = 5);
-	void volumeDown(int left = 5, int right = 5);
+	void volumeUp(int left = eConfigManager::getConfigIntValue("config.usage.volumestep"), int right = eConfigManager::getConfigIntValue("config.usage.volumestep")); //j00zek
+	void volumeDown(int left = eConfigManager::getConfigIntValue("config.usage.volumestep"), int right = eConfigManager::getConfigIntValue("config.usage.volumestep")); //j00zek
 
 	void setVolume(int left, int right);
 

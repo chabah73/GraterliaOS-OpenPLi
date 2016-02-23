@@ -10,6 +10,9 @@ from Screens.MessageBox import MessageBox
 
 profile("LOAD:enigma")
 import enigma
+#+++>
+from enigma import iServiceInformation, iPlayableService
+#+++<
 
 profile("LOAD:InfoBarGenerics")
 from Screens.InfoBarGenerics import InfoBarShowHide, \
@@ -20,6 +23,7 @@ from Screens.InfoBarGenerics import InfoBarShowHide, \
 	InfoBarServiceNotifications, InfoBarPVRState, InfoBarCueSheetSupport, InfoBarBuffer, \
 	InfoBarSummarySupport, InfoBarMoviePlayerSummarySupport, InfoBarTimeshiftState, InfoBarTeletextPlugin, InfoBarExtensions, \
 	InfoBarSubtitleSupport, InfoBarPiP, InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarPowersaver, \
+	InfoBarAspectSelection, InfoBarSleepTimer, \
 	InfoBarHDMI, setResumePoint, delResumePoint
 from Screens.Hotkey import InfoBarHotkey
 
@@ -38,6 +42,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 	InfoBarSubserviceSelection, InfoBarTimeshift, InfoBarSeek, InfoBarCueSheetSupport, InfoBarBuffer,
 	InfoBarSummarySupport, InfoBarTimeshiftState, InfoBarTeletextPlugin, InfoBarExtensions,
 	InfoBarPiP, InfoBarPlugins, InfoBarSubtitleSupport, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarPowersaver,
+	InfoBarAspectSelection, InfoBarSleepTimer,
 	InfoBarHDMI, InfoBarHotkey, Screen):
 
 	ALLOW_SUSPEND = True
@@ -50,6 +55,16 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				"showMovies": (self.showMovies, _("Play recorded movies...")),
 				"showRadio": (self.showRadio, _("Show the radio player...")),
 				"showTv": (self.showTv, _("Show the tv player...")),
+				"toogleTvRadio": (self.toogleTvRadio, _("toggels betwenn tv and radio...")),
+				"volumeUp": (self._volUp, _("Volume up")),
+				"volumeDown": (self._volDown, _("Volume down")),
+				"resolution": (self.resolution, _("Open resolution menu")),
+				"aspect": (self.aspect, _("Open aspect ratio menu")),
+				"showPlugins": (self.showPlugins, _("Open plugin browser")),
+				"FreePlayer": (self.FreePlayer, _("Open FreePlayer plugin")),
+				"BitrateViewer": (self.BitrateViewer, _("Open BitrateViewer plugin")),
+				"ScartHdmi": (self.ScartHdmi, _("Switch betwen SCART and HDMI")),
+				"restart_softcam": (self.restartSoftcam, _("Restart softcam")),
 			}, prio=2)
 
 		self.allowPiP = True
@@ -61,6 +76,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				InfoBarAdditionalInfo, InfoBarNotifications, InfoBarDish, InfoBarSubserviceSelection, InfoBarBuffer, \
 				InfoBarTimeshift, InfoBarSeek, InfoBarCueSheetSupport, InfoBarSummarySupport, InfoBarTimeshiftState, \
 				InfoBarTeletextPlugin, InfoBarExtensions, InfoBarPiP, InfoBarSubtitleSupport, InfoBarJobman, InfoBarPowersaver, \
+				InfoBarAspectSelection, InfoBarSleepTimer, \
 				InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarHotkey:
 			x.__init__(self)
 
@@ -75,6 +91,88 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		self.current_begin_time=0
 		assert InfoBar.instance is None, "class InfoBar is a singleton class and just one instance of this class is allowed!"
 		InfoBar.instance = self
+
+	def aspect(self):
+		selection = 0
+		tlist = []
+		try:
+			policy = open("/proc/stb/video/policy_choices").read()[:-1]
+		except IOError:
+			print "couldn't read available policymodes."
+			policy_available = [ ]
+			return
+		policy_available = policy.split(' ')
+		for x in policy_available:
+			tlist.append((x[0].upper() + x[1:], _(x)))
+
+		mode = open("/proc/stb/video/policy").read()[:-1]
+		for x in range(len(tlist)):
+			if tlist[x][1] == mode:
+				selection = x
+
+		keys = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+		from Screens.ChoiceBox import ChoiceBox
+		self.session.openWithCallback(self.aspectSelect, ChoiceBox, title=_("Please select an aspect ratio..."), list = tlist, selection = selection, keys = keys)
+
+	def aspectSelect(self, aspect):
+		if not aspect is None:
+			if isinstance(aspect[1], str):
+				open("/proc/stb/video/policy", "w").write(aspect[1])
+		return
+
+	def resolution(self):
+		xresString = open("/proc/stb/vmpeg/0/xres", "r").read()
+		yresString = open("/proc/stb/vmpeg/0/yres", "r").read()
+		fpsString = open("/proc/stb/vmpeg/0/framerate", "r").read()
+		xres = int(xresString, 16)
+		yres = int(yresString, 16)
+		fps = int(fpsString, 16)
+		fpsFloat = float(fps)
+		fpsFloat = fpsFloat/1000
+
+		selection = 0
+		tlist = []
+		tlist.append(("Video: " + str(xres) + "x" + str(yres) + "@" + str(fpsFloat) + "hz", ""))
+		tlist.append(("--", ""))
+		tlist.append(("576i", "576i50"))
+		tlist.append(("576p", "576p50"))
+		tlist.append(("720p@50hz", "720p50"))
+		tlist.append(("720p@60hz", "720p60"))
+		tlist.append(("1080i@50hz", "1080i50"))
+		tlist.append(("1080i@60hz", "1080i60"))
+		tlist.append(("1080p@23.976hz", "1080p23"))
+		tlist.append(("1080p@24hz", "1080p24"))
+		tlist.append(("1080p@25hz", "1080p25"))
+		tlist.append(("1080p@30hz", "1080p30"))
+		tlist.append(("1080p@50hz", "1080p50"))
+		tlist.append(("1080p@59hz", "1080p59"))
+		tlist.append(("1080p@60hz", "1080p60"))
+		keys = ["green", "", "yellow", "blue", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+
+		mode = open("/proc/stb/video/videomode").read()[:-1]
+		for x in range(len(tlist)):
+			if tlist[x][1] == mode:
+				selection = x
+		from Screens.ChoiceBox import ChoiceBox
+		self.session.openWithCallback(self.ResolutionSelect, ChoiceBox, title=_("Please select a resolution..."), list = tlist, selection = selection, keys = keys)
+
+	def ResolutionSelect(self, Resolution):
+		if not Resolution is None:
+			if isinstance(Resolution[1], str):
+				open("/proc/stb/video/videomode", "w").write(Resolution[1])
+				from enigma import gMainDC
+				gMainDC.getInstance().setResolution(-1, -1)
+		return
+
+	def _volUp(self):
+		print "_volUp"
+		from Components.VolumeControl import VolumeControl
+		VolumeControl.instance.volUp()
+
+	def _volDown(self):
+		print "_volDown"
+		from Components.VolumeControl import VolumeControl
+		VolumeControl.instance.volDown()
 
 	def __onClose(self):
 		InfoBar.instance = None
@@ -94,6 +192,24 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		self.__serviceStarted(True)
 		self.onExecBegin.remove(self.__checkServiceStarted)
 
+	def toogleTvRadio(self): 
+		service = self.session.nav.getCurrentService()
+		if service:
+			info = service.info()
+			if info:
+				AudioPID = info.getInfo(iServiceInformation.sAudioPID)
+				VideoPID = info.getInfo(iServiceInformation.sVideoPID)
+
+				print "sAudioPID", AudioPID
+				print "sVideoPID", VideoPID
+
+				if VideoPID == -1:
+					print "radio->tv"
+					self.showTv2()
+				else:
+					print "tv->radio"
+					self.showRadio2()
+
 	def serviceStarted(self):  #override from InfoBarShowHide
 		new = self.servicelist.newServicePlayed()
 		if self.execing:
@@ -112,6 +228,19 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 	def showRadio(self):
 		if config.usage.e1like_radio_mode.value:
 			self.showRadioChannelList(True)
+		else:
+			self.rds_display.hide() # in InfoBarRdsDecoder
+			from Screens.ChannelSelection import ChannelSelectionRadio
+			self.session.openWithCallback(self.ChannelSelectionRadioClosed, ChannelSelectionRadio, self)
+
+	def showTv2(self):
+		self.showTvChannelList(False)
+		self.openServiceList()
+
+	def showRadio2(self):
+		if config.usage.e1like_radio_mode.value:
+			self.showRadioChannelList(False)
+			self.openServiceList()
 		else:
 			self.rds_display.hide() # in InfoBarRdsDecoder
 			from Screens.ChannelSelection import ChannelSelectionRadio
@@ -139,9 +268,81 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 	def openMoviePlayer(self, ref):
 		self.session.open(MoviePlayer, ref, slist=self.servicelist, lastservice=self.session.nav.getCurrentlyPlayingServiceOrGroup(), infobar=self)
 
+	def showPlugins(self):
+		from Screens.PluginBrowser import PluginBrowser
+		self.session.open(PluginBrowser)
+
+	def FreePlayer(self):
+		def FreePlayerPlugin():
+			try:
+				from Plugins.Extensions.FreePlayer.plugin import FreePlayer
+			except ImportError:
+				return False
+			else:
+				return True
+				
+		if FreePlayerPlugin():
+			from Plugins.Extensions.FreePlayer.plugin import FreePlayer
+			self.session.open(FreePlayer.FreePlayerStart)
+		else:
+			print "FreePlayer plugin not found!"
+
+	def BitrateViewer(self):
+		def BitrateViewerPlugin():
+			try:
+				from Plugins.Extensions.Bitrate.plugin import BitrateViewer
+			except ImportError:
+				return False
+			else:
+				return True
+				
+		if BitrateViewerPlugin():
+			from Plugins.Extensions.Bitrate.plugin import BitrateViewer
+			self.session.open(BitrateViewer)
+		else:
+			print "BitrateViewer plugin not found!"
+			
+	def startTeletext(self):
+		self.teletext_plugin(session=self.session, service=self.session.nav.getCurrentService())
+
+	def restartSoftcam(self):
+		from Screens.Console import Console
+		from Tools.Directories import fileExists
+		if fileExists('/etc/init.d/softcam'):
+			self.session.open(Console, 'Restart Softcam', ['/etc/init.d/softcam restart'], closeOnSuccess = True)
+		else:
+			print "Softcam startup screen not found!"
+
+	def ScartHdmi(self):
+		if isinstance(self, InfoBar):
+			#print '****** videomode ******'
+			port = config.av.videoport.value
+			#print 'actual port = ', port
+			from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
+			if port == 'HDMI':
+				port = 'Scart'
+				mode = 'PAL'
+				rate = '50Hz'
+				config.av.videoport.value = port
+				config.av.videomode[port].value = mode
+				config.av.videorate[mode].value = rate
+				config.av.save()
+				video_hw.setMode(port, mode, rate)
+			else:
+				port = 'HDMI'
+				mode = '720p'
+				rate = '50Hz'
+				config.av.videoport.value = port
+				config.av.videomode[port].value = mode
+				config.av.videorate[mode].value = rate
+				config.av.save()
+				video_hw.setMode(port, mode, rate)
+			self.session.open(MessageBox, 'Videomode changed to ' + mode + ' at ' + rate + ' on ' + port, MessageBox.TYPE_INFO, timeout=10)
+						
 class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBarShowMovies, InfoBarInstantRecord,
 		InfoBarAudioSelection, HelpableScreen, InfoBarNotifications, InfoBarServiceNotifications, InfoBarPVRState,
 		InfoBarCueSheetSupport, InfoBarMoviePlayerSummarySupport, InfoBarSubtitleSupport, Screen, InfoBarTeletextPlugin,
+		InfoBarAspectSelection,
 		InfoBarServiceErrorPopupSupport, InfoBarExtensions, InfoBarPlugins, InfoBarPiP, InfoBarHDMI, InfoBarHotkey):
 
 	ENABLE_RESUME_SUPPORT = True
@@ -149,6 +350,8 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 
 	def __init__(self, session, service, slist=None, lastservice=None, infobar=None):
 		Screen.__init__(self, session)
+
+		InfoBarAspectSelection.__init__(self)
 
 		self["actions"] = HelpableActionMap(self, "MoviePlayerActions",
 			{
@@ -305,11 +508,21 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 					return
 
 		if answer in ("quit", "quitanddeleteconfirmed"):
+#+++>
+			# make sure that playback is unpaused otherwise the
+			# player driver might stop working
+			self.setSeekState(self.SEEK_STATE_PLAY)
+#+++<
 			self.close()
 		elif answer in ("movielist", "deleteandmovielistconfirmed"):
 			ref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
 			self.returning = True
 			self.session.openWithCallback(self.movieSelected, Screens.MovieSelection.MovieSelection, ref)
+#+++>
+			# make sure that playback is unpaused otherwise the
+			# player driver might stop working
+			self.setSeekState(self.SEEK_STATE_PLAY)
+#+++<
 			self.session.nav.stopService()
 			if not config.movielist.stop_service.value:
 				self.session.nav.playService(self.lastservice)
@@ -533,3 +746,6 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 
 	def ref2HumanName(self, ref):
 		return enigma.eServiceCenter.getInstance().info(ref).getName(ref)
+	def sleepTimer(self):
+		from Screens.SleepTimerEdit import SleepTimerEdit
+		self.session.open(SleepTimerEdit)

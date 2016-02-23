@@ -35,19 +35,10 @@ class HardwareInfo:
 			pass
 
 		# Model
-		for line in open((resolveFilename(SCOPE_SKIN, 'hw_info/hw_info.cfg')), 'r'):
-			if not line.startswith('#') and not line.isspace():
-				l = line.strip().replace('\t', ' ')
-				if ' ' in l:
-					infoFname, prefix = l.split()
-				else:
-					infoFname = l
-					prefix = ""
-				try:
-					self.device_model = prefix + open("/proc/stb/info/" + infoFname).read().strip()
-					break
-				except:
-					pass
+		try:
+			self.device_model = prefix + open("/proc/stb/info/" + infoFname).read().strip()
+		except:
+			pass
 
 		self.device_model = self.device_model or self.device_name
 

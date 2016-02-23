@@ -329,6 +329,7 @@ class AdapterSetup(Screen, ConfigListScreen, HelpableScreen):
 		self["actions"] = NumberActionMap(["SetupActions"],
 		{
 			"ok": self.keySave,
+			"cancel": self.close,
 		}, -2)
 
 		self.list = []

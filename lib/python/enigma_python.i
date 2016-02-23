@@ -109,6 +109,7 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/python/python.h>
 #include <lib/python/python_helpers.h>
 #include <lib/gdi/picload.h>
+#include <lib/driver/vfd.h> 
 %}
 
 %feature("ref")   iObject "$this->AddRef(); /* eDebug(\"AddRef (%s:%d)!\", __FILE__, __LINE__); */ "
@@ -251,6 +252,7 @@ typedef long time_t;
 %include <lib/python/pythonconfig.h>
 %include <lib/gdi/picload.h>
 %include <lib/dvb/streamserver.h>
+%include <lib/driver/vfd.h>
 /**************  eptr  **************/
 
 /**************  signals  **************/

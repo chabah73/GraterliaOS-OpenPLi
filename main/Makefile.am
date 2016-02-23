@@ -9,6 +9,8 @@ AM_CXXFLAGS = \
 
 bin_PROGRAMS = enigma2
 
+installdir = $(targetprefix)/usr/local/bin
+
 enigma2_SOURCES = \
 	bsod.cpp \
 	bsod.h \
@@ -47,21 +49,30 @@ enigma2_LDADD = \
 	@DVBCSA_LIBS@ \
 	-ltuxtxt -ltuxtxt32bpp -lcrypt -lrt
 
+if ENABLE_LIBEPLAYER3
+enigma2_LDADD += \
+	-leplayer3
+endif
+
+if HAVE_GRAPHLCD
+enigma2_LDADD += -lglcddrivers -lglcdgraphics -lglcdskin
+endif
+
 enigma2_LDFLAGS = -Wl,--export-dynamic
 
 if HAVE_GIT_DIR
 GIT_DIR = $(top_srcdir)/.git
 GIT = git --git-dir=$(GIT_DIR)
 
-if HAVE_FAKE_GIT_DIR
-ENIGMA2_COMMIT_DATE = `grep '^CommitDate:' $(GIT_DIR)/last_commit_info | cut -d' ' -f2`
-ENIGMA2_BRANCH = `cat $(GIT_DIR)/branch`
-else
+#if HAVE_FAKE_GIT_DIR
+#ENIGMA2_COMMIT_DATE = `grep '^CommitDate:' $(GIT_DIR)/last_commit_info | cut -d' ' -f2`
+#ENIGMA2_BRANCH = `cat $(GIT_DIR)/branch`
+#else
 ENIGMA2_COMMIT_DATE = `$(GIT) log --no-color -n 1 --pretty=format:%cd --date=short`
 ENIGMA2_BRANCH = `$(GIT) branch --no-color 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
 ENIGMA2_REV = `$(GIT) describe --abbrev=7 --always --long --tags`
 endif
-endif
+#endif
 
 BUILT_SOURCES = version-intermediate.h
 .INTERMEDIATE: version-intermediate.h

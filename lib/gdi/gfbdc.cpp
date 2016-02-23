@@ -25,8 +25,8 @@ gFBDC::gFBDC()
 		|| (xres == 1920 && yres == 1080)))
 	{
 		/* fallback to a decent default */
-		xres = 720;
-		yres = 576;
+		xres = 1280; //j00zek lets make HD our default for openPLI
+		yres = 720;
 	}
 
 	surface.clut.data = 0;
@@ -177,14 +177,35 @@ void gFBDC::setGamma(int g)
 
 void gFBDC::setResolution(int xres, int yres, int bpp)
 {
+#if defined(__sh__)
+	/* if xres and yres are negative call SetMode with the lates xres and yres
+	 * we need that to read the new screen dimesnions after a resolution change
+	 * without changing the frambuffer dimensions
+	 */
+	int m_xres;
+	int m_yres;
+	int m_bpp;
+	fb->getMode(m_xres, m_yres, m_bpp);
+
+	if (xres<0 && yres<0 ) {
+		fb->SetMode(m_xres, m_yres, bpp);
+		return;
+	}
+#else
 	if (m_pixmap && (surface.x == xres) && (surface.y == yres) && (surface.bpp == bpp))
 		return;
+#endif
 
 	if (gAccel::getInstance())
 		gAccel::getInstance()->releaseAccelMemorySpace();
 
 	fb->SetMode(xres, yres, bpp);
 
+#if defined(__sh__)
+	for (int y = 0; y<yres; y++) { // make whole screen transparent
+		memset(fb->lfb+y*fb->Stride(), 0x00, fb->Stride());
+	}
+#endif
 	surface.x = xres;
 	surface.y = yres;
 	surface.bpp = bpp;

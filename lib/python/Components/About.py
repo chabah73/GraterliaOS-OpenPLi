@@ -9,6 +9,8 @@ def getImageVersionString():
 	try:
 		if os.path.isfile('/var/lib/opkg/status'):
 			st = os.stat('/var/lib/opkg/status')
+		elif os.path.isfile('/var/opkg/status'):
+			st = os.stat('/var/opkg/status')
 		else:
 			st = os.stat('/usr/lib/ipkg/status')
 		tm = time.localtime(st.st_mtime)

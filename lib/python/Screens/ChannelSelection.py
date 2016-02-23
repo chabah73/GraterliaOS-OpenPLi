@@ -5,6 +5,11 @@ import Screens.InfoBar
 import Components.ParentalControl
 from Components.Button import Button
 from Components.ServiceList import ServiceList, refreshServiceList
+#+++>
+#from Components.Sources.StaticText import StaticText
+#from Components.Label import Label
+#from os import path as os_path, system, unlink
+#+++<
 from Components.ActionMap import NumberActionMap, ActionMap, HelpableActionMap
 from Components.MenuList import MenuList
 from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
@@ -621,10 +626,10 @@ class SelectionEventInfo:
 
 class ChannelSelectionEPG(InfoBarHotkey):
 	def __init__(self):
-		self.hotkeys = [("Info (EPG)", "info", "Infobar/openEventView"),
-			("Info (EPG)" + " " + _("long"), "info_long", "Infobar/showEventInfoPlugins"),
-			("Epg/Guide", "epg", "Plugins/Extensions/GraphMultiEPG/1"),
-			("Epg/Guide" + " " + _("long"), "epg_long", "Infobar/showEventInfoPlugins")]
+		self.hotkeys = [("Info" + " - " + _("Channel Selection"), "info_cs", "Infobar/openEventView"),
+			("Info" + " " + _("long") + " - " + _("Channel Selection"), "info_long_cs", "Infobar/showEventInfoPlugins"),
+			("Epg/Guide" + " - " + _("Channel Selection"), "epg_cs", "Infobar/openSingleServiceEPG"),
+			("Epg/Guide" + " " + _("long") + " - " + _("Channel Selection"), "epg_long_cs", "Plugins/Extensions/GraphMultiEPG/1")]
 		self["ChannelSelectEPGActions"] = hotkeyActionMap(["ChannelSelectEPGActions"], dict((x[1], self.hotkeyGlobal) for x in self.hotkeys))
 		self.eventViewEPG = self.start_bouquet = self.epg_bouquet = None
 		self.currentSavedPath = []
@@ -1075,6 +1080,9 @@ class ChannelSelectionEdit:
 			else:
 				new_title += ' ' + _("[favourite edit]")
 		self.setTitle(new_title)
+#+++>
+#		self["title"].setText(new_title)
+#+++<
 		self.__marked = self.servicelist.getRootServices()
 		for x in self.__marked:
 			self.servicelist.addMarked(eServiceReference(x))
@@ -1102,6 +1110,9 @@ class ChannelSelectionEdit:
 		self.bouquet_mark_edit = OFF
 		self.mutableList = None
 		self.setTitle(self.saved_title)
+#+++>
+#		self["title"].setText(self.saved_title)
+#+++<
 		self.saved_title = None
 		# self.servicePath is just a reference to servicePathTv or Radio...
 		# so we never ever do use the asignment operator in self.servicePath
@@ -1178,6 +1189,9 @@ class ChannelSelectionEdit:
 			self.mutableList.flushChanges() # FIXME add check if changes was made
 			self.mutableList = None
 			self.setTitle(self.saved_title)
+#+++>
+#			self["title"].setText(self.saved_title)
+#+++<
 			self.saved_title = None
 			self.servicelist.resetRoot()
 			self.servicelist.l.setHideNumberMarker(config.usage.hide_number_markers.value)
@@ -1244,6 +1258,11 @@ class ChannelSelectionBase(Screen):
 
 		self["list"] = ServiceList(self)
 		self.servicelist = self["list"]
+
+#+++>
+#		self["boquet"] = Label(_("Channel Selection"))
+#		self["title"] = StaticText()
+#+++<
 
 		self.numericalTextInput = NumericalTextInput(handleTimeout=False)
 		self.numericalTextInput.setUseableChars(u'1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ')
@@ -1337,6 +1356,9 @@ class ChannelSelectionBase(Screen):
 			title = title[:pos]
 		title += _(" (TV)")
 		self.setTitle(title)
+#+++>
+#		self["title"].setText(title)
+#+++<
 
 	def setRadioMode(self):
 		self.mode = MODE_RADIO
@@ -1348,6 +1370,9 @@ class ChannelSelectionBase(Screen):
 			title = title[:pos]
 		title += _(" (Radio)")
 		self.setTitle(title)
+#+++>
+#		self["title"].setText(title)
+#+++<
 
 	def setRoot(self, root, justSet=False):
 		if self.startRoot is None:
@@ -1402,6 +1427,9 @@ class ChannelSelectionBase(Screen):
 					end_ref = None
 				nameStr = self.getServiceName(base_ref)
 				titleStr += ' - ' + nameStr
+#+++>
+#				self["boquet"].setText("Channel Selection")
+#+++<
 				if end_ref is not None:
 					if Len > 2:
 						titleStr += '/../'
@@ -1409,7 +1437,13 @@ class ChannelSelectionBase(Screen):
 						titleStr += '/'
 					nameStr = self.getServiceName(end_ref)
 					titleStr += nameStr
+#+++>
+#					self["boquet"].setText(nameStr)
+#+++<
 				self.setTitle(titleStr)
+#+++>
+#				self["title"].setText(titleStr)
+#+++<
 
 	def moveUp(self):
 		self.servicelist.moveUp()
@@ -1638,7 +1672,7 @@ class ChannelSelectionBase(Screen):
 	def keyRecord(self):
 		ref = self.getCurrentSelection()
 		if ref and not(ref.flags & (eServiceReference.isMarker|eServiceReference.isDirectory)):
-			Screens.InfoBar.InfoBar.instance.instantRecord(serviceRef=ref)
+			Screens.InfoBar.InfoBar.instance.instantRecord(ref)
 
 	def showFavourites(self):
 		if not self.pathChangeDisabled:

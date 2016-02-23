@@ -29,6 +29,7 @@ def getHotkeys():
 		(_("Yellow"), "yellow", ""),
 		(_("Blue"), "blue", ""),
 		("Rec", "rec", ""),
+		("Rec" + " " + _("long"), "Rec_long", ""),
 		("Radio", "radio", ""),
 		("Radio" + " " + _("long"), "radio_long", ""),
 		("TV", "showTv", ""),
@@ -38,14 +39,18 @@ def getHotkeys():
 		("Help" + " " + _("long"), "displayHelp_long", ""),
 		("Subtitle", "subtitle", ""),
 		("Menu", "mainMenu", ""),
-		("Info (EPG)", "info", "Infobar/openEventView"),
-		("Info (EPG)" + " " + _("long"), "info_long", "Infobar/showEventInfoPlugins"),
+		("Info", "info", ""),
+		("Info" + " - " + _("Channel Selection"), "info_cs", "Infobar/openEventView"),
+		("Info" + " " + _("long"), "info_long", "Infobar/showEventInfoPlugins"),
+		("Info" + " " + _("long") + " - " + _("Channel Selection"), "info_long_cs", "Infobar/showEventInfoPlugins"),
 		("List/Fav/PVR", "list", ""),
 		("Back/Recall", "back", ""),
 		("Back/Recall" + " " + _("long"), "back_long", ""),
 		("End", "end", ""),
 		("Epg/Guide", "epg", "Plugins/Extensions/GraphMultiEPG/1"),
+		("Epg/Guide" + " - " + _("Channel Selection"), "epg_cs", "Infobar/openSingleServiceEPG"),
 		("Epg/Guide" + " " + _("long"), "epg_long", "Infobar/showEventInfoPlugins"),
+		("Epg/Guide" + " " + _("long") + " - " + _("Channel Selection"), "epg_long_cs", "Plugins/Extensions/GraphMultiEPG/1"),
 		("Left", "cross_left", ""),
 		("Right", "cross_right", ""),
 		("Up", "cross_up", ""),
@@ -81,6 +86,21 @@ def getHotkeys():
 		("Video Mode", "vmode", ""),
 		("Video Mode" + " " + _("long"), "vmode_long", ""),
 		("Home", "home", ""),
+		("Home" + " " + _("long"), "home_long", ""),
+		("Recall", "refresh", ""),
+		("Recall" + " " + _("long"), "refresh_long", ""),
+		("N/TV", "n", ""),
+		("N/TV" + " " + _("long"), "n_long", ""),
+		("VOD", "vod", ""),
+		("VOD" + " " + _("long"), "vod_long", ""),
+		("OPT", "opt", ""),
+		("OPT" + " " + _("long"), "opt_long", ""),
+		("APP/Menu", "app", ""),
+		("APP/Menu" + " " + _("long"), "app_long", ""),
+		("Star", "star", ""),
+		("Star" + " " + _("long"), "star_long", ""),
+		("@", "monkey", ""),
+		("@" + " " + _("long"), "monkey_long", ""),
 		("Power", "power", ""),
 		("Power" + " " + _("long"), "power_long", ""),
 		("HDMIin", "HDMIin", "Infobar/HDMIIn"),
@@ -115,6 +135,8 @@ def getHotkeyFunctions():
 				twinPaths[plugin.path[24:]] = 1
 			hotkeyFunctions.append((plugin.name, plugin.path[24:] + "/" + str(twinPaths[plugin.path[24:]]) , "Plugins"))
 			twinPlugins.append(plugin.name)
+	if os.path.isdir('/usr/lib/enigma2/python/Plugins/Extensions/FreePlayer'):
+		hotkeyFunctions.append((_("FreePlayer"), "Infobar/FreePlayer", "Plugins"))
 	hotkeyFunctions.append((_("Main menu"), "Infobar/mainMenu", "InfoBar"))
 	hotkeyFunctions.append((_("Show help"), "Infobar/showHelp", "InfoBar"))
 	hotkeyFunctions.append((_("Show extension selection"), "Infobar/showExtensionSelection", "InfoBar"))
@@ -136,6 +158,8 @@ def getHotkeyFunctions():
 	hotkeyFunctions.append((_("Show Audioselection"), "Infobar/audioSelection", "InfoBar"))
 	hotkeyFunctions.append((_("Switch to radio mode"), "Infobar/showRadio", "InfoBar"))
 	hotkeyFunctions.append((_("Switch to TV mode"), "Infobar/showTv", "InfoBar"))
+	hotkeyFunctions.append((_("Switch between TV and Radio"), "Infobar/toogleTvRadio", "InfoBar"))
+	hotkeyFunctions.append((_("Show movies"), "Infobar/showMovies", "InfoBar"))
 	hotkeyFunctions.append((_("Instant record"), "Infobar/instantRecord", "InfoBar"))
 	hotkeyFunctions.append((_("Start instant recording"), "Infobar/startInstantRecording", "InfoBar"))
 	hotkeyFunctions.append((_("Activate timeshift End"), "Infobar/activateTimeshiftEnd", "InfoBar"))
@@ -148,7 +172,10 @@ def getHotkeyFunctions():
 	hotkeyFunctions.append((_("Show InfoBar"), "Infobar/showFirstInfoBar", "InfoBar"))
 	hotkeyFunctions.append((_("Show second InfoBar"), "Infobar/showSecondInfoBar", "InfoBar"))
 	hotkeyFunctions.append((_("Toggle infoBar"), "Infobar/toggleShow", "InfoBar"))
-	hotkeyFunctions.append((_("Letterbox zoom"), "Infobar/vmodeSelection", "InfoBar"))
+	hotkeyFunctions.append((_("Aspect switch"), "Infobar/vmodeSelection", "InfoBar"))
+	hotkeyFunctions.append((_("Aspect selection"), "Infobar/aspectSelection", "InfoBar"))
+	hotkeyFunctions.append((_("Restart Softcam"), "Infobar/restartSoftcam", "InfoBar"))
+	hotkeyFunctions.append((_("Switch Scart/HDMI"), "Infobar/ScartHdmi", "InfoBar"))
 	if SystemInfo["PIPAvailable"]:
 		hotkeyFunctions.append((_("Show PIP"), "Infobar/showPiP", "InfoBar"))
 		hotkeyFunctions.append((_("Swap PIP"), "Infobar/swapPiP", "InfoBar"))
@@ -192,8 +219,8 @@ def getHotkeyFunctions():
 		for x in [x for x in os.listdir("/etc/ppanels") if x.endswith(".xml")]:
 			x = x[:-4]
 			hotkeyFunctions.append((_("PPanel") + " " + x, "PPanel/" + x, "PPanels"))
-	if os.path.isdir("/usr/script"):
-		for x in [x for x in os.listdir("/usr/script") if x.endswith(".sh")]:
+	if os.path.isdir("/etc/sysconfig/user_scripts"):
+		for x in [x for x in os.listdir("/etc/sysconfig/user_scripts") if x.endswith(".sh")]:
 			x = x[:-3]
 			hotkeyFunctions.append((_("Shellscript") + " " + x, "Shellscript/" + x, "Shellscripts"))
 	return hotkeyFunctions
@@ -208,11 +235,12 @@ class HotkeySetup(Screen):
 		self.list = []
 		self.hotkeys = getHotkeys()
 		self.hotkeyFunctions = getHotkeyFunctions()
+
 		for x in self.hotkeys:
 			self.list.append(ChoiceEntryComponent('',(x[0], x[1])))
 		self["list"] = ChoiceList(list=self.list[:config.misc.hotkey.additional_keys.value and len(self.hotkeys) or 10], selection = 0)
 		self["choosen"] = ChoiceList(list=[])
-		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions", "MenuActions"],
+		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions"],
 		{
 			"ok": self.keyOk,
 			"cancel": self.close,
@@ -493,7 +521,7 @@ class InfoBarHotkey():
 		self.longkeyPressed = False
 
 	def getKeyFunctions(self, key):
-		if key in ("play", "playpause", "Stop", "stop", "pause", "rewind", "next", "previous", "fastforward", "skip_back", "skip_forward") and (self.__class__.__name__ == "MoviePlayer" or hasattr(self, "timeshiftActivated") and self.timeshiftActivated()):
+		if key in ("play", "playpause", "Stop", "stop", "pause", "rewind", "next", "previous", "fastforward", "skip_back", "skip_forward", "red", "green", "yellow", "blue", "cross_left", "cross_right", "cross_up", "cross_down", "ok") and (self.__class__.__name__ == "MoviePlayer" or hasattr(self, "timeshiftActivated") and self.timeshiftActivated()):
 			return False
 		selection = eval("config.misc.hotkey." + key + ".value.split(',')")
 		selected = []
@@ -601,16 +629,13 @@ class InfoBarHotkey():
 					from Plugins.Extensions.PPanel.ppanel import PPanel
 					self.session.open(PPanel, name=selected[1] + ' PPanel', node=None, filename=ppanelFileName, deletenode=None)
 			elif selected[0] == "Shellscript":
-				command = '/usr/script/' + selected[1] + ".sh"
-				if os.path.isfile(command) and os.path.isdir('/usr/lib/enigma2/python/Plugins/Extensions/PPanel'):
-					from Plugins.Extensions.PPanel.ppanel import Execute
-					self.session.open(Execute, selected[1] + " shellscript", None, command)
+				command = '/etc/sysconfig/user_scripts/' + selected[1] + ".sh"
+				if os.path.isfile(command):
+					from Screens.Console import Console
+					self.session.open(Console, selected[1], [command], closeOnSuccess = True)
 
 	def showServiceListOrMovies(self):
 		if hasattr(self, "openServiceList"):
 			self.openServiceList()
 		elif hasattr(self, "showMovies"):
 			self.showMovies()
-
-	def ToggleLCDLiveTV(self):
-		config.lcd.showTv.value = not config.lcd.showTv.value

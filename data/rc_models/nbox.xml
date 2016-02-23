@@ -1,0 +1,47 @@
+<rcs>
+	<rc id="2">
+            <button name="POWER" pos="106,28"/>
+            <button name="MUTE" pos="31,61"/>
+            <button name="1" pos="40,308"/>
+            <button name="2" pos="73,308"/>
+            <button name="3" pos="106,308"/>
+            <button name="4" pos="40,333"/>
+            <button name="5" pos="73,333"/>
+            <button name="6" pos="106,333"/>
+            <button name="7" pos="40,358"/>
+            <button name="8" pos="73,358"/>
+            <button name="9" pos="106,358"/>
+            <button name="0" pos="73,383"/>
+            <button name="VOL+" pos="22,148"/>
+            <button name="VOL-" pos="22,190"/>
+            <button name="BOUQUET+" pos="124,148"/>
+            <button name="BOUQUET-" pos="124,190"/>
+            <button name="INFO" pos="52,116"/>
+            <button name="EPG" pos="31,92"/>
+            <button name="MENU" pos="36,385"/>
+			<button name="EXIT" pos="73,223"/>
+            <button name="UP" pos="73,137"/>
+            <button name="LEFT" pos="41,167"/>
+            <button name="OK" pos="73,167"/>
+            <button name="RIGHT" pos="103,167"/>
+            <button name="DOWN" pos="73,198"/>
+            <button name="RED" pos="36,436"/>
+            <button name="GREEN" pos="61,441"/>
+            <button name="YELLOW" pos="86,441"/>
+            <button name="BLUE" pos="111,436"/>
+            <button name="REWIND" pos="40,254"/>
+            <button name="PLAY" pos="73,269"/>
+            <button name="PAUSE" pos="73,250"/>
+            <button name="FASTFORWARD" pos="105,254"/>
+            <button name="STOP" pos="27,281"/>
+            <button name="RECORD" pos="116,281"/>
+            <button name="TV" pos="73,85"/>
+            <button name="RADIO" pos="73,85"/>
+            <button name="PVR" pos="115,92"/>
+			<button name="TEXT" pos="111,411"/>
+			<button name="AUDIO" pos="93,116"/>
+			<button name="PLAYLIST" pos="73,57"/>
+			<button name="CONTEXT" pos="115,61"/>
+			<button name="HELP" pos="109,385"/>
+	</rc>
+</rcs>
