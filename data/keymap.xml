@@ -179,6 +179,7 @@
 		<key id="KEY_OK" mapto="toggleShowLong" flags="l"/>
 		<key id="KEY_ENTER" mapto="toggleShowLong" flags="l"/>
 		<key id="KEY_EXIT" mapto="hideLong" flags="l"/>
+		<key id="KEY_HOME" mapto="hideLong" flags="l"/>
 		<key id="KEY_ESC" mapto="hideLong" flags="l"/>
 	</map>
 
