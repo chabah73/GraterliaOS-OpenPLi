@@ -15,7 +15,7 @@ from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 from Screens.Console import Console
 from Plugins.Plugin import PluginDescriptor
-from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_CURRENT_SKIN
+from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS, SCOPE_CURRENT_SKIN
 from Tools.LoadPixmap import LoadPixmap
 
 from time import time
@@ -53,9 +53,6 @@ class PluginBrowser(Screen, ProtectedScreen):
 
 		self.firsttime = True
 
-		self["key_red"] = self["red"] = Label(_("Remove plugins"))
-		self["key_green"] = self["green"] = Label(_("Download plugins"))
-
 		self.list = []
 		self["list"] = PluginList(self.list)
 
@@ -65,15 +62,27 @@ class PluginBrowser(Screen, ProtectedScreen):
 			"back": self.close,
 			"menu": self.exit,
 		})
-		self["PluginDownloadActions"] = ActionMap(["ColorActions"],
-		{
-			"red": self.delete,
-			"green": self.download
-		})
+
+		if fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/GOSmanager/GOSopkg.pyo")):
+			self["key_red"] = self["red"] = Label(_("Manage extensions"))
+			self["key_green"] = self["green"] = Label("")
+			self["PluginDownloadActions"] = ActionMap(["ColorActions"],
+			{
+				"red": self.openGOSopkg
+			})
+		else:
+			self["key_red"] = self["red"] = Label(_("Remove plugins"))
+			self["key_green"] = self["green"] = Label(_("Download plugins"))
+			self["PluginDownloadActions"] = ActionMap(["ColorActions"],
+				{
+					"red": self.delete,
+					"green": self.download
+				})
+
 		self["DirectionActions"] = ActionMap(["DirectionActions"],
 		{
-			"moveUp": self.moveUp,
-			"moveDown": self.moveDown
+			"moveUp2": self.moveUp,
+			"moveDown0": self.moveDown
 		})
 		self["NumberActions"] = NumberActionMap(["NumberActions"],
 		{
@@ -197,7 +206,7 @@ class PluginBrowser(Screen, ProtectedScreen):
 		self.session.openWithCallback(self.PluginDownloadBrowserClosed, PluginDownloadBrowser, PluginDownloadBrowser.DOWNLOAD, self.firsttime)
 		self.firsttime = False
 
-	def PluginDownloadBrowserClosed(self):
+	def PluginDownloadBrowserClosed(self, ret = 0):
 		self.updateList()
 		self.checkWarnings()
 
@@ -209,6 +218,15 @@ class PluginBrowser(Screen, ProtectedScreen):
 				self.session.open(MessageBox, _("The software management extension is not installed!\nPlease install it."), type = MessageBox.TYPE_INFO,timeout = 10 )
 			else:
 				self.session.openWithCallback(self.PluginDownloadBrowserClosed, PluginManager)
+
+	def openGOSopkg(self):
+		if fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/GOSmanager/GOSopkg.pyo")):
+			try:
+				from Plugins.Extensions.GOSmanager.GOSopkg import GOSopkg
+			except ImportError:
+				self.session.open(MessageBox, _("GOS manager is not installed!\nPlease install it."), type = MessageBox.TYPE_INFO,timeout = 10 )
+			else:
+				self.session.openWithCallback(self.PluginDownloadBrowserClosed, GOSopkg, self)
 
 class PluginDownloadBrowser(Screen):
 	DOWNLOAD = 0

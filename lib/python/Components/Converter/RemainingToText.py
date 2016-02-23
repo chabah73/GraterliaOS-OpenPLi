@@ -8,6 +8,9 @@ class RemainingToText(Converter, object):
 	IN_SECONDS = 3
 	PROGRESS = 4
 	WITH_SECONDSPROGRESS = 5
+#+++>
+	FOLLOW = 6
+#+++<
 
 	def __init__(self, type):
 		Converter.__init__(self, type)
@@ -21,6 +24,10 @@ class RemainingToText(Converter, object):
 			self.type = self.PROGRESS
 		elif type == "WithSecondsProgress":
 			self.type = self.WITH_SECONDSPROGRESS
+#+++>
+		elif type == "FOLLOW":
+			self.type = self.FOLLOW
+#+++<
 		else:
 			self.type = self.DEFAULT
 

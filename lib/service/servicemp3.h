@@ -6,7 +6,18 @@
 #include <lib/dvb/pmt.h>
 #include <lib/dvb/subtitle.h>
 #include <lib/dvb/teletext.h>
+#ifdef ENABLE_MEDIAFWGSTREAMER
 #include <gst/gst.h>
+#else
+#include <common.h>
+#include <subtitle.h>
+#define gint int
+#define gint64 int64_t
+extern OutputHandler_t		OutputHandler;
+extern PlaybackHandler_t	PlaybackHandler;
+extern ContainerHandler_t	ContainerHandler;
+extern ManagerHandler_t	ManagerHandler;
+#endif
 /* for subtitles */
 #include <lib/gui/esubtitle.h>
 
@@ -68,7 +79,9 @@ class eServiceMP3InfoContainer: public iServiceInfoContainer
 	DECLARE_REF(eServiceMP3InfoContainer);
 
 	double doubleValue;
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	GstBuffer *bufferValue;
+#endif
 
 	unsigned char *bufferData;
 	unsigned int bufferSize;
@@ -83,9 +96,12 @@ public:
 	double getDouble(unsigned int index) const;
 	unsigned char *getBuffer(unsigned int &size) const;
 	void setDouble(double value);
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	void setBuffer(GstBuffer *buffer);
+#endif
 };
 
+#ifdef ENABLE_MEDIAFWGSTREAMER
 class GstMessageContainer: public iObject
 {
 	DECLARE_REF(GstMessageContainer);
@@ -115,6 +131,7 @@ public:
 };
 
 typedef struct _GstElement GstElement;
+#endif
 
 typedef enum { atUnknown, atMPEG, atMP3, atAC3, atDTS, atAAC, atPCM, atOGG, atFLAC, atWMA } audiotype_t;
 typedef enum { stUnknown, stPlainText, stSSA, stASS, stSRT, stVOB, stPGS } subtype_t;
@@ -179,7 +196,9 @@ public:
 	RESULT getEvent(ePtr<eServiceEvent> &evt, int nownext);
 	int getInfo(int w);
 	std::string getInfoString(int w);
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	ePtr<iServiceInfoContainer> getInfoObject(int w);
+#endif
 
 		// iAudioTrackSelection
 	int getNumberOfTracks();
@@ -208,6 +227,7 @@ public:
 	void setAC3Delay(int);
 	void setPCMDelay(int);
 
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	struct audioStream
 	{
 		GstPad* pad;
@@ -240,6 +260,38 @@ public:
 		{
 		}
 	};
+#else
+	struct audioStream
+	{
+		audiotype_t type;
+		std::string language_code; /* iso-639, if available. */
+		std::string codec; /* clear text codec description */
+		audioStream()
+			:type(atUnknown)
+		{
+		}
+	};
+	struct subtitleStream
+	{
+		subtype_t type;
+		std::string language_code; /* iso-639, if available. */
+		int id;
+		subtitleStream()
+		{
+		}
+	};
+	struct sourceStream
+	{
+		audiotype_t audiotype;
+		containertype_t containertype;
+		bool is_video;
+		bool is_streaming;
+		sourceStream()
+			:audiotype(atUnknown), containertype(ctNone), is_video(false), is_streaming(false)
+		{
+		}
+	};
+#endif
 	struct bufferInfo
 	{
 		gint bufferPercent;
@@ -292,10 +344,15 @@ private:
 	std::vector<audioStream> m_audioStreams;
 	std::vector<subtitleStream> m_subtitleStreams;
 	iSubtitleUser *m_subtitle_widget;
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	gdouble m_currentTrickRatio;
+#else
+	int m_currentTrickRatio;
+#endif
 	friend class eServiceFactoryMP3;
 	eServiceReference m_ref;
 	int m_buffer_size;
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	int m_ignore_buffering_messages;
 	bool m_is_live;
 	bool m_use_prefillbuffer;
@@ -319,6 +376,8 @@ private:
 		stIdle, stRunning, stStopped,
 	};
 	int m_state;
+#endif
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	GstElement *m_gst_playbin, *audioSink, *videoSink;
 	GstTagList *m_stream_tags;
 
@@ -342,6 +401,22 @@ private:
 	static gint match_sinktype(const GValue *velement, const gchar *type);
 #endif
 	static void handleElementAdded(GstBin *bin, GstElement *element, gpointer user_data);
+#else
+	Context_t * player;
+
+	struct Message
+	{
+		Message()
+			:type(-1)
+		{}
+		Message(int type)
+			:type(type)
+		{}
+		int type;
+	};
+	eFixedMessagePump<Message> m_pump;
+	static void eplayerCBsubtitleAvail(long int duration_ns, size_t len, char * buffer, void* user_data);
+#endif
 
 	struct subtitle_page_t
 	{
@@ -364,17 +439,23 @@ private:
 	int m_decoder_time_valid_state;
 
 	void pushSubtitles();
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	void pullSubtitle(GstBuffer *buffer);
+#endif
 	void sourceTimeout();
 	sourceStream m_sourceinfo;
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	gulong m_subs_to_pull_handler_id;
+#endif
 
 	RESULT seekToImpl(pts_t to);
 
 	gint m_aspect, m_width, m_height, m_framerate, m_progressive;
 	std::string m_useragent;
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	std::string m_extra_headers;
 	RESULT trickSeek(gdouble ratio);
+#endif
 };
 
 #endif

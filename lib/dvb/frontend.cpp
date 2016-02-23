@@ -1011,7 +1011,27 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 		ret = (int)(snr / 75);
 		ter_max = 1700;
 	}
-
+#ifdef __sh__
+	else if ((!strcmp(m_description, "STB0899 Multistandard"))||(!strcmp(m_description, "STB0899 Multistandard ID1"))||(!strcmp(m_description, "STB0899 Multistandard ID2")))
+	{
+			eDVBFrontendParametersSatellite parm;
+			oparm.getDVBS(parm);
+				if (parm.system == eDVBFrontendParametersSatellite::System_DVB_S) // DVB-S1 / QPSK
+				{
+					float snrdb;
+					snrdb = snr;
+					signalqualitydb = (int)(snrdb / 327.675);
+				}
+				else
+				{
+					signalqualitydb = (snr / 1285) + 79;
+				}
+	signalqualitydb = signalqualitydb * 10;
+	signalquality = snr;
+	return;
+	}
+		
+#endif
 	signalqualitydb = ret;
 	if (ret == 0x12345678) // no snr db calculation avail.. return untouched snr value..
 	{
@@ -1052,6 +1072,41 @@ int eDVBFrontend::readFrontendData(int type)
 					if (ioctl(m_fd, FE_READ_BER, &ber) < 0 && errno != ERANGE)
 						eDebug("[eDVBFrontend] FE_READ_BER failed: %m");
 				}
+                
+                eDVBFrontendParametersSatellite parm;
+				oparm.getDVBS(parm);
+                
+                if ((!strcmp(m_description, "STB0899 Multistandard"))||(!strcmp(m_description, "STB0899 Multistandard ID1"))||(!strcmp(m_description, "STB0899 Multistandard ID2")))//freebox 25.01.2012
+				{
+					if (parm.system == eDVBFrontendParametersSatellite::System_DVB_S) // DVB-S1 / QPSK
+					{
+					//eDebug("STB0899 Multistandard DVBS BER:%d",ber);
+					return ber;
+					}
+					else
+					{
+					ber = (int)(ber * 256.0) / 4.1472;//100 * 256 / 4.1472 = 6172.8 / 1000000 = 0.006172 = 6.172 e-3
+					//eDebug("STB0899 Multistandard DVBS2 BER:%d",ber);
+					return ber;
+					}
+				}
+				else if ((!strcmp(m_description, "STV090x Multistandard"))||(!strcmp(m_description, "STV090x Multistandard ID1"))||(!strcmp(m_description, "STV090x Multistandard ID2")))//freebox 25.01.2012
+				{
+					if (parm.system == eDVBFrontendParametersSatellite::System_DVB_S) // DVB-S1 / QPSK
+					{
+					//eDebug("STV090x Multistandard DVBS BER:%d",ber);
+					ber=0;
+					return ber;
+					}
+					else
+					{
+//					ber = (int)(ber / 1.230000 );//1230000
+					ber = (int)(ber / 1.100000 );
+					//eDebug("STV090x Multistandard DVBS2 BER:%d",ber);
+					return ber;
+					}
+				}
+                
 				return ber;
 			}
 			break;

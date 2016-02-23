@@ -9,11 +9,13 @@ from Components.MovieList import AUDIO_EXTENSIONS, MOVIE_EXTENSIONS, DVD_EXTENSI
 from Components.PluginComponent import plugins
 from Components.ServiceEventTracker import ServiceEventTracker
 from Components.Sources.Boolean import Boolean
-from Components.config import config, ConfigBoolean, ConfigClock, ConfigText
+from Components.config import config, ConfigBoolean, ConfigClock, ConfigSubsection, ConfigYesNo, ConfigText
 from Components.SystemInfo import SystemInfo
 from Components.UsageConfig import preferredInstantRecordPath, defaultMoviePath, ConfigSelection
 from Components.VolumeControl import VolumeControl
 from Components.Sources.StaticText import StaticText
+from Components.Pixmap import Pixmap
+from Components.Renderer.Picon import getPiconName
 from EpgSelection import EPGSelection
 from Plugins.Plugin import PluginDescriptor
 
@@ -37,6 +39,7 @@ from ServiceReference import ServiceReference, isPlayableForCur
 
 from Tools import Notifications, ASCIItranslit
 from Tools.Directories import fileExists, getRecordingFilename, moveFiles
+from Tools.Command import command
 
 from enigma import eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, \
 	iPlayableService, eServiceReference, eEPGCache, eActionMap
@@ -105,7 +108,7 @@ def saveResumePoints():
 	global resumePointCache, resumePointCacheLast
 	import cPickle
 	try:
-		f = open('/home/root/resumepoints.pkl', 'wb')
+		f = open('/etc/enigma2/resumepoints.pkl', 'wb')
 		cPickle.dump(resumePointCache, f, cPickle.HIGHEST_PROTOCOL)
 	except Exception, ex:
 		print "[InfoBar] Failed to write resumepoints:", ex
@@ -114,7 +117,7 @@ def saveResumePoints():
 def loadResumePoints():
 	import cPickle
 	try:
-		return cPickle.load(open('/home/root/resumepoints.pkl', 'rb'))
+		return cPickle.load(open('/etc/enigma2/resumepoints.pkl', 'rb'))
 	except Exception, ex:
 		print "[InfoBar] Failed to load resumepoints:", ex
 		return {}
@@ -158,7 +161,7 @@ class InfoBarUnhandledKey:
 	def checkUnused(self):
 		if self.flags == self.uflags:
 			self.unhandledKeyDialog.show()
-			self.hideUnhandledKeySymbolTimer.start(2000, True)
+			self.hideUnhandledKeySymbolTimer.start(300, True)
 
 class InfoBarScreenSaver:
 	def __init__(self):
@@ -221,11 +224,12 @@ class InfoBarShowHide(InfoBarScreenSaver):
 	STATE_HIDING = 1
 	STATE_SHOWING = 2
 	STATE_SHOWN = 3
+	STATE_EPG = 4
 
 	def __init__(self):
 		self["ShowHideActions"] = ActionMap( ["InfobarShowHideActions"] ,
 			{
-				"toggleShow": self.okButtonCheck,
+				"toggleShow": self.toggleShow,
 				"hide": self.keyHide,
 				"toggleShowLong" : self.toggleShowLong,
 				"hideLong" : self.hideLong,
@@ -299,8 +303,8 @@ class InfoBarShowHide(InfoBarScreenSaver):
 				self.session.openWithCallback(self.hidePipOnExitCallback, MessageBox, _("Disable Picture in Picture"), simple=True)
 			else:
 				self.hidePipOnExitCallback(True)
-		elif config.usage.ok_is_channelselection.value and hasattr(self, "openServiceList"):
-			self.toggleShow()
+#		elif config.usage.ok_is_channelselection.value and hasattr(self, "openServiceList"):
+#			self.toggleShow()
 		elif self.__state == self.STATE_SHOWN:
 			self.hide()
 
@@ -339,12 +343,12 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		self.hideTimer.stop()
 		if self.__state == self.STATE_SHOWN:
 			self.hide()
-
-	def okButtonCheck(self):
-		if config.usage.ok_is_channelselection.value and hasattr(self, "openServiceList"):
-			self.openServiceList()
-		else:
-			self.toggleShow()
+			
+	def epg(self):
+		self.__state = self.STATE_EPG
+		self.hide()
+		self.hideTimer.stop()
+		self.openEventView()
 
 	def toggleShow(self):
 		if self.__state == self.STATE_HIDDEN:
@@ -360,7 +364,9 @@ class InfoBarShowHide(InfoBarScreenSaver):
 			self.show()
 			self.actualSecondInfoBarScreen.show()
 			self.startHideTimer()
-		else:
+		elif self.__state == self.STATE_SHOWN:
+			self.epg()
+		elif self.__state == self.STATE_EPG:
 			self.hide()
 			self.hideTimer.stop()
 
@@ -427,14 +433,20 @@ class NumberZap(Screen):
 	def keyOK(self):
 		self.Timer.stop()
 		self.close(self.service, self.bouquet)
-
+		
 	def handleServiceName(self):
 		if self.searchNumber:
 			self.service, self.bouquet = self.searchNumber(int(self["number"].getText()))
 			self["servicename"].text = self["servicename_summary"].text = ServiceReference(self.service).getServiceName()
 			if not self.startBouquet:
 				self.startBouquet = self.bouquet
-
+	
+	def handlePicon(self):
+		if self.service is not None:
+			sname = self.service.toString()
+			pngname = getPiconName(sname)
+			self["picon"].instance.setPixmapFromFile(pngname)
+			
 	def keyBlue(self):
 		self.startTimer()
 		if self.searchNumber:
@@ -450,7 +462,8 @@ class NumberZap(Screen):
 		self["number"].text = self["number_summary"].text = self.numberString
 
 		self.handleServiceName()
-
+		self.handlePicon()
+		
 		if len(self.numberString) >= 5:
 			self.keyOK()
 
@@ -466,8 +479,7 @@ class NumberZap(Screen):
 		self["channel_summary"] = StaticText(_("Channel:"))
 		self["number_summary"] = StaticText(self.numberString)
 		self["servicename_summary"] = StaticText()
-
-		self.handleServiceName()
+		self["picon"] = Pixmap()
 
 		self["actions"] = NumberActionMap( [ "SetupActions", "ShortcutActions" ],
 			{
@@ -489,8 +501,16 @@ class NumberZap(Screen):
 		self.Timer = eTimer()
 		self.Timer.callback.append(self.endTimer)
 		self.Timer.start(250)
-		self.startTimer()
+		self.onFirstExecBegin.append(self.onLayoutReady)
 
+	def onLayoutReady(self):
+			self.updateData()
+			self.startTimer()
+
+	def updateData(self):
+		self.handleServiceName()
+		self.handlePicon()
+		
 	def startTimer(self, repeat=False):
 		self.timer_target = repeat and self.timer_counter < 6 and [4,4,4,5,8,10][self.timer_counter] or 12
 		self.timer_counter = 0
@@ -499,6 +519,8 @@ class NumberZap(Screen):
 		self.timer_counter += 1
 		if self.timer_counter > self.timer_target:
 			self.keyOK()
+
+		self.onLayoutFinish.append(self.handlePicon)
 
 class InfoBarNumberZap:
 	""" Handles an initial number for NumberZapping """
@@ -603,13 +625,14 @@ class InfoBarChannelSelection:
 		self["ChannelSelectActions"] = HelpableActionMap(self, "InfobarChannelSelection",
 			{
 				"keyUp": (self.keyUpCheck, self.getKeyUpHelptext),
-				"keyDown": (self.keyDownCheck, self.getKeyDownHelpText),
+				"keyDown": (self.keyDownCheck, self.getKeyDownHelptext),
 				"keyLeft": (self.keyLeftCheck, self.getKeyLeftHelptext),
 				"keyRight": (self.keyRightCheck, self.getKeyRightHelptext),
 				"historyBack": (self.historyBack, _("Switch to previous channel in history")),
 				"historyNext": (self.historyNext, _("Switch to next channel in history")),
 				"keyChannelUp": (self.keyChannelUpCheck, self.getKeyChannelUpHelptext),
 				"keyChannelDown": (self.keyChannelDownCheck, self.getKeyChannelDownHelptext),
+				"openServiceList": (self.openServiceList, _("Open service list")), 	
 			})
 
 	def showTvChannelList(self, zap=False):
@@ -700,7 +723,7 @@ class InfoBarChannelSelection:
 					value += " " + _("and select previous channel")
 		return value
 
-	def getKeyDownHelpText(self):
+	def getKeyDownHelptext(self):
 		if config.usage.oldstyle_zap_controls.value:
 			value = _("Switch to previous channel")
 		else:
@@ -924,6 +947,8 @@ class InfoBarEPG:
 				"showEventInfoSingleEPG": (self.showSingleEPG, _("Show single service EPG")),
 				"showEventInfoMultiEPG": (self.showMultiEPG, _("Show multi channel EPG")),
 				"showInfobarOrEpgWhenInfobarAlreadyVisible": self.showEventInfoWhenNotVisible,
+				"showSingleEPG": self.openSingleServiceEPG,
+				"showMultiEPG": self.openMultiServiceEPG,
 			})
 
 	def getEPGPluginList(self, getAll=False):
@@ -934,6 +959,14 @@ class InfoBarEPG:
 			pluginlist.append((_("Show EPG for current channel..."), self.openSingleServiceEPG, "current_channel"))
 		pluginlist.append((_("Multi EPG"), self.openMultiServiceEPG, "multi_epg"))
 		pluginlist.append((_("Current event EPG"), self.openEventView, "event_epg"))
+#		pluginlist.reverse()
+#		if pluginlist:
+#			from Components.ServiceEventTracker import InfoBarCount
+#			pluginlist.append((_("Current event EPG"), self.openEventView, "event_epg"))
+#			pluginlist.append((_("Multi EPG"), self.openMultiServiceEPG, "multi_epg"))
+#			if getAll or InfoBarCount == 1:
+#				pluginlist.append((_("Show EPG for current channel..."), self.openSingleServiceEPG, "current_channel"))
+#			pluginlist.reverse()
 		return pluginlist
 
 	def showEventInfoWhenNotVisible(self):
@@ -2014,7 +2047,7 @@ class InfoBarExtensions:
 
 	def updateExtensions(self):
 		self.extensionsList = []
-		self.availableKeys = [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "red", "green", "yellow", "blue" ]
+		self.availableKeys = [ "red", "green", "yellow", "blue", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" ]
 		self.extensionKeys = {}
 		for x in self.list:
 			if x[0] == self.EXTENSION_SINGLE:
@@ -2661,16 +2694,16 @@ class InfoBarSubserviceSelection:
 				idx += 1
 
 			if cnt_parent and self.bouquets and len(self.bouquets):
-				keys = ["red", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
+				keys = ["red", "blue", "yellow", "",  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
 				if config.usage.multibouquet.value:
-					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to bouquet"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("--", "")] + tlist
+					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to bouquet"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("Exit", "exit"), ("--", "")] + tlist
 				else:
-					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to favourites"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("--", "")] + tlist
-				selection += 3
+					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to favourites"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("Exit", "exit"), ("--", "")] + tlist
+				selection += 4
 			else:
-				tlist = [(_("Quick zap"), "quickzap", service.subServices()), ("--", "")] + tlist
-				keys = ["red", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
-				selection += 2
+				tlist = [(_("Quick zap"), "quickzap", service.subServices()), ("Exit", "exit"), ("--", "")] + tlist
+				keys = ["red", "yellow", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
+				selection += 3
 
 			self.session.openWithCallback(self.subserviceSelected, ChoiceBox, title=_("Please select a sub service..."), list = tlist, selection = selection, keys = keys, skin_name = "SubserviceSelection")
 
@@ -2760,9 +2793,6 @@ class VideoMode(Screen):
 			{
 				"vmodeSelection": self.selectVMode
 			})
-
-		self.Timer = eTimer()
-		self.Timer.callback.append(self.quit)
 		self.selectVMode()
 
 	def selectVMode(self):
@@ -2773,17 +2803,13 @@ class VideoMode(Screen):
 		idx = (idx + 1) % len(policy.choices)
 		policy.value = policy.choices[idx]
 		self["videomode"].setText(policy.value)
-		self.Timer.start(1000, True)
-
+		self.close()
+		
 	def isWideScreen(self):
 		from Components.Converter.ServiceInfo import WIDESCREEN
 		service = self.session.nav.getCurrentService()
 		info = service and service.info()
 		return info.getInfo(iServiceInformation.sAspect) in WIDESCREEN
-
-	def quit(self):
-		self.Timer.stop()
-		self.close()
 
 class InfoBarAdditionalInfo:
 	def __init__(self):
@@ -3348,6 +3374,143 @@ class InfoBarPowersaver:
 		if not Screens.Standby.inStandby:
 			print "[InfoBarPowersaver] goto standby"
 			self.session.open(Screens.Standby.Standby)
+
+class InfoBarAspectSelection:
+	def __init__(self):
+		self["AspectSelectionAction"] = HelpableActionMap(self, "InfobarAspectSelectionActions",
+			{
+				"aspectSelection": (self.ExGreen_toggleGreen, _("Aspect list...")),
+			})
+
+		self["key_green"] = Boolean(True)
+		self["key_yellow"] = Boolean(True)
+		self["key_blue"] = Boolean(True)
+
+	def ExGreen_doResolution(self):
+		self.resolutionSelection()
+
+	def ExGreen_toggleGreen(self, arg=""):
+		self.aspectSelection()
+
+	def aspectSelection(self):
+		selection = 0
+		tlist = []
+		tlist.append((_("Subservice list..."), "subservice"))
+		tlist.append((_("Resolution"), "resolution"))
+		tlist.append((_("3D Modus"), "tdmodus"))
+		tlist.append(("--", ""))
+		tlist.append(("Letterbox", "letterbox"))
+		tlist.append(("PanScan", "panscan"))
+		tlist.append(("Non Linear", "non"))
+		tlist.append(("Bestfit", "bestfit"))
+
+		mode = open("/proc/stb/video/policy").read()[:-1]
+		print mode
+		for x in range(len(tlist)):
+			if tlist[x][1] == mode:
+				selection = x
+
+		keys = ["green", "yellow", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+		self.session.openWithCallback(self.aspectSelected, ChoiceBox, title=_("Please select an aspect ratio..."), list = tlist, selection = selection, keys = keys) 
+
+	def aspectSelected(self, aspect):
+		if not aspect is None:
+			if isinstance(aspect[1], str):
+				if aspect[1] == "resolution":
+					self.ExGreen_doResolution()
+				elif aspect[1] == "tdmodus":
+					self.tdmodus()
+				elif aspect[1] == "subservice":
+					self.subserviceSelection()
+				else:
+					open("/proc/stb/video/policy", "w").write(aspect[1])
+		return
+
+	def tdmodus(self):
+		selection = 0
+		tlist = []
+		tlist.append((_("off"), "off"))
+		tlist.append((_("Side-by-Side"), "sbs"))
+		tlist.append((_("Top and Bottom"), "tab"))
+		keys = ["green", "yellow", "blue"]
+		self.session.openWithCallback(self.tdSelected, ChoiceBox, title=_("Please select an 3D modus..."), list = tlist, selection = selection, keys = keys)
+
+	def tdSelected(self, tdmod):
+		if not tdmod is None:
+			if isinstance(tdmod[1], str):
+				if tdmod[1] == "off":
+					config.av.threedmode.value = "off"
+					config.av.threedmode.save()
+					command('killall 3d-mode')
+				elif tdmod[1] == "sbs":
+					config.av.threedmode.value = "sbs"
+					config.av.threedmode.save()
+					command('3d-mode 40 &')
+				elif tdmod[1] == "tab":
+					config.av.threedmode.value = "tab"
+					config.av.threedmode.save()
+		return
+
+	def resolutionSelection(self):
+		xresString = open("/proc/stb/vmpeg/0/xres", "r").read()
+		yresString = open("/proc/stb/vmpeg/0/yres", "r").read()
+		fpsString = open("/proc/stb/vmpeg/0/framerate", "r").read()
+		xres = int(xresString, 16)
+		yres = int(yresString, 16)
+		fps = int(fpsString, 16)
+		fpsFloat = float(fps)
+		fpsFloat = fpsFloat/1000
+
+		selection = 0
+		tlist = []
+		tlist.append((_("Exit"), "exit"))
+		tlist.append((_("Auto(not available)"), "auto"))
+		tlist.append(("Video: " + str(xres) + "x" + str(yres) + "@" + str(fpsFloat) + "hz", ""))
+		tlist.append(("--", ""))
+		tlist.append(("576i", "576i50"))
+		tlist.append(("576p", "576p50"))
+		tlist.append(("720p@50hz", "720p50"))
+		tlist.append(("720p@60hz", "720p60"))
+		tlist.append(("1080i@50hz", "1080i50"))
+		tlist.append(("1080i@60hz", "1080i60"))
+		tlist.append(("1080p@23.976hz", "1080p23"))
+		tlist.append(("1080p@24hz", "1080p24"))
+		tlist.append(("1080p@25hz", "1080p25"))
+		tlist.append(("1080p@29hz", "1080p29"))
+		tlist.append(("1080p@30hz", "1080p30"))
+		tlist.append(("1080p@50hz", "1080p50"))
+		tlist.append(("1080p@59hz", "1080p59"))
+		tlist.append(("1080p@60hz", "1080p60"))
+
+		keys = ["green", "yellow", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+
+		mode = open("/proc/stb/video/videomode").read()[:-1]
+		print mode
+		for x in range(len(tlist)):
+			if tlist[x][1] == mode:
+				selection = x
+
+		self.session.openWithCallback(self.ResolutionSelected, ChoiceBox, title=_("Please select a resolution..."), list = tlist, selection = selection, keys = keys)
+
+	def ResolutionSelected(self, Resolution):
+		if not Resolution is None:
+			if isinstance(Resolution[1], str):
+				if Resolution[1] != "auto":
+					open("/proc/stb/video/videomode", "w").write(Resolution[1])
+					from enigma import gMainDC
+					gMainDC.getInstance().setResolution(-1, -1)
+		return
+
+class InfoBarSleepTimer:
+	def __init__(self):
+		self.addExtension((self.getSleepTimerName, self.showSleepTimerSetup, lambda: True), "blue")
+
+	def getSleepTimerName(self):
+		return _("Sleep Timer")
+
+	def showSleepTimerSetup(self):
+		from Screens.SleepTimerEdit import SleepTimerEdit
+		self.session.open(SleepTimerEdit)
 
 class InfoBarHDMI:
 	def HDMIIn(self):

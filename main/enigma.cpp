@@ -30,10 +30,15 @@
 #include <lib/python/python.h>
 #include <lib/python/pythonconfig.h>
 
+#if defined(__sh__)
+#include <lib/driver/vfd.h>
+#endif
 #include "bsod.h"
 #include "version_info.h"
 
+#ifdef ENABLE_MEDIAFWGSTREAMER
 #include <gst/gst.h>
+#endif
 
 #ifdef OBJECT_DEBUG
 int object_total_remaining;
@@ -178,7 +183,9 @@ int main(int argc, char **argv)
 	atexit(object_dump);
 #endif
 
+#ifdef ENABLE_MEDIAFWGSTREAMER
 	gst_init(&argc, &argv);
+#endif
 
 	// set pythonpath if unset
 	setenv("PYTHONPATH", eEnv::resolve("${libdir}/enigma2/python").c_str(), 0);
@@ -216,7 +223,11 @@ int main(int argc, char **argv)
 	eWidgetDesktop dsk_lcd(my_lcd_dc->size());
 
 	dsk.setStyleID(0);
+#ifdef HAVE_GRAPHLCD
+	dsk_lcd.setStyleID(my_lcd_dc->size().width() == 320 ? 1 : 2);
+#else
 	dsk_lcd.setStyleID(1);
+#endif
 
 /*	if (double_buffer)
 	{
@@ -262,15 +273,21 @@ int main(int argc, char **argv)
 			}
 		}
 		if (i)
-			my_dc->setSpinner(eRect(ePoint(100, 100), wait[0]->size()), wait, i);
+			my_dc->setSpinner(eRect(ePoint(35, 35), wait[0]->size()), wait, i);
 		else
-			my_dc->setSpinner(eRect(100, 100, 0, 0), wait, 1);
+			my_dc->setSpinner(eRect(40, 40, 0, 0), wait, 1);
 	}
 
 	gRC::getInstance()->setSpinnerDC(my_dc);
 
 	eRCInput::getInstance()->keyEvent.connect(slot(keyEvent));
 
+#if defined(__sh__) // initialise the vfd class
+	evfd * vfd = new evfd;
+	vfd->init();
+	delete vfd;
+#endif
+	
 	printf("[MAIN] executing main\n");
 
 	bsodCatchSignals();
@@ -281,6 +298,9 @@ int main(int argc, char **argv)
 	/* start at full size */
 	eVideoWidget::setFullsize(true);
 
+//	j00zek, let's start TV 20seconds earlier
+	system("/usr/bin/bootTV &");
+	
 //	python.execute("mytest", "__main__");
 	python.execFile(eEnv::resolve("${libdir}/enigma2/python/mytest.py").c_str());
 
