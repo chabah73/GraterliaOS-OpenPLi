@@ -63,7 +63,7 @@ class PluginBrowser(Screen, ProtectedScreen):
 			"menu": self.exit,
 		})
 
-		if fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/GOSmanager/GOSopkg.pyo")):
+		if fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/J00zekOPKGmgr/GOSopkg.pyo")):
 			self["key_red"] = self["red"] = Label(_("Manage extensions"))
 			self["key_green"] = self["green"] = Label("")
 			self["PluginDownloadActions"] = ActionMap(["ColorActions"],
