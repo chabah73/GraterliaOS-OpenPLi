@@ -220,11 +220,11 @@ class PluginBrowser(Screen, ProtectedScreen):
 				self.session.openWithCallback(self.PluginDownloadBrowserClosed, PluginManager)
 
 	def openGOSopkg(self):
-		if fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/GOSmanager/GOSopkg.pyo")):
+		if fileExists(resolveFilename(SCOPE_PLUGINS, "Extensions/J00zekOPKGmgr/GOSopkg.pyo")):
 			try:
-				from Plugins.Extensions.GOSmanager.GOSopkg import GOSopkg
+				from Plugins.Extensions.J00zekOPKGmgr.GOSopkg import GOSopkg
 			except ImportError:
-				self.session.open(MessageBox, _("GOS manager is not installed!\nPlease install it."), type = MessageBox.TYPE_INFO,timeout = 10 )
+				self.session.open(MessageBox, _("J00zekOPKGmgr*is not installed!\nPlease install it."), type = MessageBox.TYPE_INFO,timeout = 10 )
 			else:
 				self.session.openWithCallback(self.PluginDownloadBrowserClosed, GOSopkg, self)
 
