@@ -229,7 +229,8 @@ class InfoBarShowHide(InfoBarScreenSaver):
 	def __init__(self):
 		self["ShowHideActions"] = ActionMap( ["InfobarShowHideActions"] ,
 			{
-				"toggleShow": self.toggleShow,
+				"toggleShow": self.okButtonCheck,
+				"toggleShowInfo": self.toggleShow,
 				"hide": self.keyHide,
 				"toggleShowLong" : self.toggleShowLong,
 				"hideLong" : self.hideLong,
@@ -350,6 +351,12 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		self.hideTimer.stop()
 		self.openEventView()
 
+	def okButtonCheck(self):
+		if config.usage.ok_is_channelselection.value and hasattr(self, "openServiceList"):
+			self.openServiceList()
+		else:
+			self.toggleShow()
+			
 	def toggleShow(self):
 		if self.__state == self.STATE_HIDDEN:
 			self.showFirstInfoBar()
@@ -3531,3 +3538,4 @@ class InfoBarHDMI:
 				self.session.nav.playService(slist.servicelist.getCurrent())
 			else:
 				self.session.nav.playService(self.cur_service)
+				
