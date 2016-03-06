@@ -229,9 +229,11 @@ class InfoBarShowHide(InfoBarScreenSaver):
 	def __init__(self):
 		self["ShowHideActions"] = ActionMap( ["InfobarShowHideActions"] ,
 			{
-				"toggleShow": self.toggleShow,
+				"toggleShow": self.okButtonCheck,
+				"toggleShowInfo": self.toggleShow,
 				"hide": self.keyHide,
-				"toggleSecondInfoBar" : self.toggleSecondInfoBar,
+				"toggleShowLong" : self.toggleShowLong,
+				"hideLong" : self.hideLong,
 			}, 1) # lower prio to make it possible to override ok and cancel..
 
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap=
@@ -279,6 +281,14 @@ class InfoBarShowHide(InfoBarScreenSaver):
 			self.actualSecondInfoBarScreen.hide()
 		for x in self.onShowHideNotifiers:
 			x(False)
+
+	def toggleShowLong(self):
+		if not config.usage.ok_is_channelselection.value:
+			self.toggleSecondInfoBar()
+
+	def hideLong(self):
+		if config.usage.ok_is_channelselection.value:
+			self.toggleSecondInfoBar()
 
 	def toggleSecondInfoBar(self):
 		if self.actualSecondInfoBarScreen and not self.shown and not self.actualSecondInfoBarScreen.shown and self.secondInfoBarScreenSimple.skinAttributes and self.secondInfoBarScreen.skinAttributes:
@@ -341,6 +351,12 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		self.hideTimer.stop()
 		self.openEventView()
 
+	def okButtonCheck(self):
+		if config.usage.ok_is_channelselection.value and hasattr(self, "openServiceList"):
+			self.openServiceList()
+		else:
+			self.toggleShow()
+			
 	def toggleShow(self):
 		if self.__state == self.STATE_HIDDEN:
 			self.showFirstInfoBar()
